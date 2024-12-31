@@ -1,12 +1,9 @@
 import Card from "./components/card";
+import Layout from "./components/layout";
 
 export default function Index() {
   return (
-    <div className="p-8 space-y-8 w-full">
-      {/* Header Section */}
-      <h1 className="text-3xl font-extrabold text-gray-800">Overview</h1>
-
-      {/* Cards */}
+    <Layout title="Overview">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card title="Active Competitions">
           <p className="mt-2 text-gray-600">3 ongoing competitions</p>
@@ -44,6 +41,6 @@ export default function Index() {
           </tbody>
         </table>
       </div>
-    </div>
+    </Layout>
   );
 }

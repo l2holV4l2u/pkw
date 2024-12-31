@@ -4,7 +4,7 @@ interface InputProps {
   field: string;
   setField: React.Dispatch<React.SetStateAction<string>>;
   label: string;
-  type: "text" | "password" | "email" | "number";
+  type: "text" | "password" | "email" | "number" | "date" | "url";
 }
 
 export default function Input({ field, setField, label, type }: InputProps) {

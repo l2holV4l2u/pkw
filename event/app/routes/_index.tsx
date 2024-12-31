@@ -72,7 +72,6 @@ export default function Index() {
             </Link>
           </div>
         </div>
-        <div></div>
       </header>
 
       {/* Features Section */}
