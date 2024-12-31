@@ -2,6 +2,7 @@ import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
 import { createCookie } from "@remix-run/node";
+import Input from "./components/input";
 
 // Create a cookie
 const loginCookie = createCookie("Zentry", {
@@ -23,16 +24,16 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
-  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  if (!username || !password) {
+  if (!email || !password) {
     return { error: "Both fields are required." };
   }
 
   // Dummy authentication logic
-  if (username === "12345" && password === "12345") {
-    const cookie = await loginCookie.serialize({ username, password });
+  if (email === "12345@gmail.com" && password === "12345") {
+    const cookie = await loginCookie.serialize({ email, password });
     return redirect("/dashboard", {
       headers: {
         "Set-Cookie": cookie,
@@ -45,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function LoginPage() {
   const actionData = useActionData<{ error?: string }>();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -55,51 +56,24 @@ export default function LoginPage() {
           Sign in to your account
         </h2>
         {actionData?.error && (
-          <div className="text-red-500 text-sm text-center">
+          <div className="text-red-500 mt-4 text-sm text-center">
             {actionData.error}
           </div>
         )}
-        <Form method="post" className="mt-6">
-          <div className="mb-4">
-            <label
-              htmlFor="username"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full mt-2 p-2 border border-gray-300 bg-white text-gray-500 rounded-md focus:outline-none focus:ring-4 transition-all focus:ring-blue-200"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-gray-600"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-2 p-2 border border-gray-300 bg-white text-gray-500 rounded-md focus:outline-none focus:ring-4 transition-all focus:ring-blue-200"
-              required
-            />
-          </div>
+        <Form method="post" className="mt-4">
+          <Input field={email} setField={setEmail} label="Email" type="email" />
+          <Input
+            field={password}
+            setField={setPassword}
+            label="Password"
+            type="password"
+          />
           <div className="flex items-center justify-between mb-6">
             <label className="flex items-center text-gray-600 text-sm">
               <input
                 type="checkbox"
                 name="remember"
-                className="mr-2 w-4 h-4 appearance-none border-2 border-gray-300 bg-white rounded checked:bg-blue-500 checked:border-blue-500"
+                className="mr-2 w-4 h-4 appearance-none transition border-2 border-gray-300 bg-white rounded checked:bg-blue-500 checked:border-blue-500"
               />
               Remember this device
             </label>
