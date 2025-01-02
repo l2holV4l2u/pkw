@@ -15,32 +15,6 @@ export default function Index() {
           <p className="mt-2 text-gray-600">5 upcoming events this month</p>
         </Card>
       </div>
-
-      {/* Recent Activities Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-bold text-gray-800">Recent Activities</h3>
-        <table className="w-full mt-4">
-          <thead>
-            <tr>
-              <th className="text-left py-2 px-4 text-gray-600">Activity</th>
-              <th className="text-left py-2 px-4 text-gray-600">Date</th>
-              <th className="text-left py-2 px-4 text-gray-600">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="py-2 px-4 text-gray-600">New Registration</td>
-              <td className="py-2 px-4 text-gray-600">Dec 25, 2024</td>
-              <td className="py-2 px-4 text-success">Completed</td>
-            </tr>
-            <tr>
-              <td className="py-2 px-4 text-gray-600">Event Scheduled</td>
-              <td className="py-2 px-4 text-gray-600">Dec 28, 2024</td>
-              <td className="py-2 px-4 text-blue-500">Scheduled</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </Layout>
   );
 }
