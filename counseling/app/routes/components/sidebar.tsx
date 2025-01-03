@@ -3,7 +3,7 @@ import placeholder from "../utils/placeholder.png";
 
 export default function Sidebar() {
   const location = useLocation();
-  const currentPath = location.pathname.split("/")[2];
+  const currentPath = location.pathname.split("/")[1];
   const menus = ["Home", "Academic", "Settings"];
   const menuLinks = ["", "academic", "settings"];
   const menuSVG = [
@@ -18,11 +18,11 @@ export default function Sidebar() {
     </svg>,
   ];
   return (
-    <div className="w-64 fixed h-screen border-gray-200 border-x-2 border-grad py-8 px-4 flex flex-col justify-between">
+    <div className="w-64 fixed h-screen py-8 px-4 flex flex-col justify-between">
       {/* Top Section: Navigation */}
       <div>
         <h2 className="text-2xl font-extrabold text-gray-800 mb-8">
-          Dashboard
+          PKW Counseling
         </h2>
         <ul className="space-y-2">
           {menus.map((item, index) => (
@@ -30,7 +30,7 @@ export default function Sidebar() {
               <Link
                 to={"./" + menuLinks[index]}
                 className={`flex items-center space-x-2 p-1.5 font-medium rounded-md hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition duration-200 ${
-                  currentPath == menuLinks[index] ? "bg-gray-300" : ""
+                  currentPath == menuLinks[index] ? "bg-white shadow-sm" : ""
                 }`}
               >
                 {menuSVG[index]} <div>{item}</div>
