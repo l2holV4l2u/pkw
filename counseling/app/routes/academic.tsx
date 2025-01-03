@@ -1,6 +1,7 @@
-import AdmissionComparison from "./components/admission";
-import Card from "./components/card";
 import Layout from "./components/layout";
+import LollipopChart from "./components/lollipopchart";
+import ScoreCard from "./components/scorecard";
+import Card from "./components/card";
 
 // Define score categories
 const score = {
@@ -38,109 +39,35 @@ const score = {
 
 const universityScores = [
   {
-    university: "Chulalongkorn University",
+    university: "Chulalongkorn",
     program: "Engineering",
     minScore: 85,
     maxScore: 100,
+    userScore: 90,
   },
   {
-    university: "Mahidol University",
+    university: "Mahidol",
     program: "Medicine",
-    minScore: 90,
-    maxScore: 105,
+    minScore: 70,
+    maxScore: 86,
+    userScore: 90,
   },
   {
-    university: "Kasetsart University",
+    university: "Kasetsart",
     program: "Agriculture",
-    minScore: 70,
+    minScore: 64,
     maxScore: 85,
+    userScore: 70,
   },
 ];
 
 export default function Academic() {
   return (
     <Layout title="Academic">
-      <Card title="Academic Scores">
-        <div className="space-y-6">
-          {/* TGAT Scores */}
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold text-gray-700 mb-4 flex items-center">
-              TGAT
-            </h3>
-            <div className="space-y-2">
-              {Object.entries(score.TGAT).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-gray-600">TGAT {key}</span>
-                  <span className="font-semibold text-gray-800">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* TPAT Scores */}
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold text-gray-700 mb-4 flex items-center">
-              TPAT
-            </h3>
-            <div className="space-y-2">
-              {Object.entries(score.TPAT).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-gray-600">TPAT {key}</span>
-                  <span className="font-semibold text-gray-800">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* A-Level Scores */}
-          <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold text-gray-700 mb-4 flex items-center">
-              A-Level
-            </h3>
-            <div className="space-y-2">
-              {Object.entries(score.ALevel).map(([key, { score, name }]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-gray-600">{name}</span>
-                  <span className="font-semibold text-gray-800">{score}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      <ScoreCard scores={score} />
+      <Card>
+        <LollipopChart universityScores={universityScores} />
       </Card>
-
-      {/* University Comparison Card */}
-      <Card title="University Score Comparison">
-        <div className="space-y-6">
-          {universityScores.map(
-            ({ university, program, minScore, maxScore }) => (
-              <div
-                key={university + program}
-                className="bg-gray-50 p-6 rounded-lg shadow-md"
-              >
-                <h3 className="text-lg font-bold text-gray-700 mb-2">
-                  {university}
-                </h3>
-                <p className="text-gray-600 mb-4">Program: {program}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Minimum Score</span>
-                  <span className="font-semibold text-gray-800">
-                    {minScore}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Maximum Score</span>
-                  <span className="font-semibold text-gray-800">
-                    {maxScore}
-                  </span>
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </Card>
-
-      <AdmissionComparison />
     </Layout>
   );
 }

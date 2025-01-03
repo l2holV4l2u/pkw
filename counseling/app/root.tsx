@@ -50,7 +50,7 @@ export default function App() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1">
+      <div className="flex-1 p-2 min-h-screen">
         <Outlet />
       </div>
     </div>
