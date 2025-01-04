@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import Card from "./card";
 
 // Define types for the props
 interface UniversityScore {
@@ -14,9 +15,7 @@ interface LollipopChartProps {
   universityScores: UniversityScore[];
 }
 
-export default function LollipopChart({
-  universityScores,
-}: LollipopChartProps) {
+export default function LollipopCard({ universityScores }: LollipopChartProps) {
   const chartRef = useRef<SVGSVGElement>(null);
   const [chartDimensions, setChartDimensions] = useState({
     width: 0,
@@ -150,19 +149,21 @@ export default function LollipopChart({
   }, [universityScores, chartDimensions]);
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="grid grid-cols-3 gap-8">
-        {colors.map((color, index) => (
-          <div className="flex items-center" key={index}>
-            <div
-              className="w-4 h-4 rounded-full mr-2"
-              style={{ backgroundColor: color }}
-            />
-            <div className="text-gray-600">{labels[index]}</div>
-          </div>
-        ))}
+    <Card>
+      <div className="flex flex-col justify-center items-center">
+        <div className="grid grid-cols-3 gap-8">
+          {colors.map((color, index) => (
+            <div className="flex items-center" key={index}>
+              <div
+                className="w-4 h-4 rounded-full mr-2"
+                style={{ backgroundColor: color }}
+              />
+              <div className="text-gray-600">{labels[index]}</div>
+            </div>
+          ))}
+        </div>
+        <svg ref={chartRef} />
       </div>
-      <svg ref={chartRef} />
-    </div>
+    </Card>
   );
 }

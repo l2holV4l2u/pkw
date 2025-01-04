@@ -8,7 +8,7 @@ interface ScoreCardProps {
   };
 }
 
-const ScoreCard = ({ scores }: ScoreCardProps) => {
+export default function ScoreCard({ scores }: ScoreCardProps) {
   const [activeTab, setActiveTab] = useState("TGAT");
 
   interface ButtonProps {
@@ -35,7 +35,7 @@ const ScoreCard = ({ scores }: ScoreCardProps) => {
   const renderScores = () => {
     if (activeTab === "TGAT") {
       return (
-        <div className="p-6 rounded-lg shadow-md">
+        <div className="p-6 rounded-lg">
           <div className="space-y-2">
             {Object.entries(scores.TGAT).map(([key, value]) => (
               <div key={key} className="flex justify-between items-center">
@@ -48,7 +48,7 @@ const ScoreCard = ({ scores }: ScoreCardProps) => {
       );
     } else if (activeTab === "TPAT") {
       return (
-        <div className="p-6 rounded-lg shadow-md space-y-2">
+        <div className="p-6 rounded-lg space-y-2">
           {Object.entries(scores.TPAT).map(([key, value]) => (
             <div key={key} className="flex justify-between items-center">
               <span className="text-gray-600">TPAT {key}</span>
@@ -59,7 +59,7 @@ const ScoreCard = ({ scores }: ScoreCardProps) => {
       );
     } else if (activeTab === "A-Level") {
       return (
-        <div className="p-6 rounded-lg shadow-md space-y-2">
+        <div className="p-6 rounded-lg space-y-2">
           {Object.entries(scores.ALevel).map(([key, { score, name }]) => (
             <div key={key} className="flex justify-between items-center">
               <span className="text-gray-600">{name}</span>
@@ -72,7 +72,7 @@ const ScoreCard = ({ scores }: ScoreCardProps) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border-2 border-gray-200 shadow-sm">
+    <div className="bg-white rounded-xl border-2 border-gray-200">
       <div className="flex justify-around border-b-2 border-gray-200">
         <Button name="TGAT" activeTab={activeTab} setActiveTab={setActiveTab} />
         <Button name="TPAT" activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -85,6 +85,4 @@ const ScoreCard = ({ scores }: ScoreCardProps) => {
       {renderScores()}
     </div>
   );
-};
-
-export default ScoreCard;
+}

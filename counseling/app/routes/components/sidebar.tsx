@@ -30,7 +30,7 @@ export default function Sidebar() {
               <Link
                 to={"./" + menuLinks[index]}
                 className={`flex items-center space-x-2 p-1.5 font-medium rounded-md hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition duration-200 ${
-                  currentPath == menuLinks[index] ? "bg-white shadow-sm" : ""
+                  currentPath == menuLinks[index] ? "bg-white shadow-md" : ""
                 }`}
               >
                 {menuSVG[index]} <div>{item}</div>

@@ -3,16 +3,22 @@ import Layout from "./components/layout";
 
 export default function Index() {
   return (
-    <Layout title="Overview">
+    <Layout title="Home">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card title="Active Competitions">
-          <p className="mt-2 text-gray-600">3 ongoing competitions</p>
+        <Card title="Check Admission Eligibility">
+          <p className="mt-2 text-gray-600">
+            Compare your score to last year's minimum accepted score.
+          </p>
         </Card>
-        <Card title="Participants Registered">
-          <p className="mt-2 text-gray-600">156 registered participants</p>
+        <Card title="Calculate Your Percentile">
+          <p className="mt-2 text-gray-600">
+            Find out where you stand among other students.
+          </p>
         </Card>
-        <Card title="Upcoming Events">
-          <p className="mt-2 text-gray-600">5 upcoming events this month</p>
+        <Card title="Insights & Trends">
+          <p className="mt-2 text-gray-600">
+            Analyze trends in admission scores over the years.
+          </p>
         </Card>
       </div>
     </Layout>
