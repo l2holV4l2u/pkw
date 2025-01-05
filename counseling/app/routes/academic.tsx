@@ -43,9 +43,9 @@ const initialUniversityScores = [
   {
     university: "Chulalongkorn",
     program: "Engineering",
-    minScore: 85,
-    maxScore: 100,
-    userScore: 90,
+    minScore: 75,
+    maxScore: 90,
+    userScore: 80,
   },
   {
     university: "Mahidol",

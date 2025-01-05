@@ -1,4 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 interface Course {
   _id: string;
@@ -21,25 +22,17 @@ export default function UniCard({
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: unidata._id,
-    data: unidata,
   });
-
-  const style = transform
-    ? {
-        transform: `translate(${transform.x}px, ${transform.y}px)`,
-      }
-    : undefined;
 
   return (
     <div
-      className={`flex flex-col items-start p-4 rounded-lg ${
+      className={`flex flex-col items-start p-4 rounded-xl w-full ${
         index % 2 === 0 ? "bg-white" : "bg-gray-100"
-      } ${transform ? "border-2 border-gray-200" : ""}
+      } 
       `}
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      style={style}
     >
       <img src={"/logo/001.png"} className="w-12 h-12 object-cover" />
       <h3 className="text-gray-800 text-sm font-bold">

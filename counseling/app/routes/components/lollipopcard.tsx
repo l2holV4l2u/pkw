@@ -177,7 +177,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
   }, [universityScores, chartDimensions]);
 
   return (
-    <Card>
+    <Card className="p-6">
       <div
         ref={setNodeRef}
         onDragOver={(e) => e.preventDefault()}
