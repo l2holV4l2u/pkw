@@ -1,73 +1,94 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "./card";
 import Input from "./input";
-import Button from "./button";
 import UniCard from "./unicard";
+import SearchIcon from "../utils/icon/search";
+import courseDataJSON from "../utils/course.json";
 
-// Define the type for university data
-interface University {
+// Define the structure of the course.json file
+interface Course {
   _id: string;
-  university_name: string;
+  university_type_id: string;
+  university_type_name_th: string;
+  university_id: string;
+  university_name_th: string;
   university_name_en: string;
-  is_accepted_round1: boolean;
-  is_accepted_round2: boolean;
-  is_accepted_round3: boolean;
-  is_accepted_round4: boolean;
+  campus_id: string;
+  campus_name_th: string;
+  campus_name_en: string;
+  faculty_id: string;
+  faculty_name_th: string;
+  faculty_name_en: string;
+  group_field_id: string;
+  group_field_th: string;
+  field_id: string;
+  field_name_th: string;
+  field_name_en: string;
+  program_running_number: string;
+  program_name_th: string;
+  program_name_en: string;
+  program_type_id: string;
+  program_type_name_th: string;
+  program_id: string;
+  number_acceptance_mko2: number;
+  program_partners_id: string;
+  program_partners_inter_name: string;
+  country_partners_name: string;
+  major_id: string;
+  major_name_th: string;
+  major_name_en: string;
+  major_acceptance_number: number;
+  cost: string;
+  graduate_rate: string;
+  employment_rate: string;
+  median_salary: string;
+  created_at: string;
 }
 
-// Example static data for universities (replace with API integration if needed)
-const universityData: University[] = [
-  {
-    _id: "6183b148ee214bbbe863301d",
-    university_name: "จุฬาลงกรณ์มหาวิทยาลัย",
-    university_name_en: "Chulalongkorn University",
-    is_accepted_round1: false,
-    is_accepted_round2: false,
-    is_accepted_round3: false,
-    is_accepted_round4: false,
-  },
-  {
-    _id: "6715fb30deea14086a61f76f",
-    university_name: "มหาวิทยาลัยธรรมศาสตร์",
-    university_name_en: "Thammasat University",
-    is_accepted_round1: true,
-    is_accepted_round2: true,
-    is_accepted_round3: false,
-    is_accepted_round4: true,
-  },
-];
+interface CourseData {
+  course: Course[];
+}
 
 export default function SearchBar() {
   const [query, setQuery] = useState<string>("");
-  const [results, setResults] = useState<University[]>([]);
+  const [results, setResults] = useState<Course[]>([]);
+
+  // Explicitly type the JSON import
+  const courseData: Course[] = (courseDataJSON as CourseData).course;
 
   const handleSearch = () => {
-    const filteredResults = universityData.filter(
-      (uni) =>
-        uni.university_name_en.toLowerCase().includes(query.toLowerCase()) ||
-        uni.university_name.toLowerCase().includes(query.toLowerCase())
+    const filteredResults = courseData.filter(
+      (course) =>
+        course.university_name_en.toLowerCase().includes(query.toLowerCase()) ||
+        course.program_name_en.toLowerCase().includes(query.toLowerCase())
     );
     setResults(filteredResults);
   };
 
+  useEffect(() => {
+    handleSearch();
+  }, [query]);
+
   return (
-    <Card className="space-y-6">
-      {/* Search Input */}
-      <div className="flex items-center gap-2 w-full">
-        <Input field={query} setField={setQuery} label="" type="text" />
-        <Button onClick={handleSearch}>Search</Button>
-      </div>
-      <Card className="h-fit">
-        {/* Search Results */}
-        <div className="flex flex-wrap gap-4">
-          {results.length > 0 ? (
-            results.map((uni) => <UniCard unidata={uni} />)
-          ) : (
-            <p className="text-gray-500 text-center w-full">
-              No results found. Try another search query.
-            </p>
-          )}
-        </div>
+    <Card className="space-y-4 h-full">
+      <Input
+        field={query}
+        setField={setQuery}
+        label=""
+        type="text"
+        placeholder="search for university"
+        icon={<SearchIcon width={20} height={20} />}
+      />
+      <Card className="flex flex-wrap h-fit p-0">
+        {results.length > 0 ? (
+          results
+            .slice(0, 5) // Limit results to at most 10
+            .map((course, index) => (
+              <UniCard unidata={course} key={course._id} index={index} />
+            ))
+        ) : (
+          <p className="text-gray-500 text-center">No results found</p>
+        )}
       </Card>
     </Card>
   );

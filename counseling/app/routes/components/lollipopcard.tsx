@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Card from "./card";
+import { useDroppable } from "@dnd-kit/core";
 
 // Define types for the props
 interface UniversityScore {
@@ -22,6 +23,15 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     height: 0,
   });
 
+  const [scores, setScores] = useState(universityScores);
+
+  const handleDrop = (event: any) => {
+    const draggedData = event.active.data.current;
+    if (draggedData) {
+      setScores((prev) => [...prev, draggedData]);
+    }
+  };
+
   const minscore = Math.min(
     ...universityScores.map((d) => Math.min(d.minScore, d.userScore))
   );
@@ -32,8 +42,12 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
 
   const colors = ["#D94A4A", "#28a745", "orange"];
   const labels = ["Min Score", "Max Score", "User Score"];
-  const margin = { top: 0, right: 80, bottom: 40, left: 120 };
+  const margin = { top: 0, right: 100, bottom: 40, left: 100 };
   const { width, height } = chartDimensions;
+
+  const { setNodeRef } = useDroppable({
+    id: "lollipop",
+  });
 
   useEffect(() => {
     const chartContainer = chartRef.current?.parentElement;
@@ -47,6 +61,9 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
 
   useEffect(() => {
     if (!width || !height) return;
+
+    // Clear previous SVG contents to avoid duplications
+    d3.select(chartRef.current).selectAll("*").remove();
 
     // Create SVG
     const svg = d3
@@ -77,15 +94,26 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
       .selectAll("text")
       .style("font-size", "14px");
 
-    // Y Axis
-    svg
-      .append("g")
-      .call(d3.axisLeft(y))
+    // Left Y Axis (Universities)
+    const yAxisLeft = svg.append("g").call(d3.axisLeft(y));
+
+    yAxisLeft
       .selectAll("text")
       .style("font-size", "14px")
       .style("color", "gray");
 
-    // Y Dotted Lines
+    // Right Y Axis (Programs)
+    const yAxisRight = svg
+      .append("g")
+      .attr("transform", `translate(${width}, 0)`)
+      .call(d3.axisRight(y).tickFormat((_, i) => universityScores[i].program));
+
+    yAxisRight
+      .selectAll("text")
+      .style("font-size", "14px")
+      .style("color", "gray");
+
+    // Dotted Lines
     svg
       .selectAll(".dotted-line")
       .data(universityScores)
@@ -150,7 +178,12 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
 
   return (
     <Card>
-      <div className="flex flex-col justify-center items-center">
+      <div
+        ref={setNodeRef}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleDrop}
+        className="flex flex-col justify-center items-center"
+      >
         <div className="grid grid-cols-3 gap-8">
           {colors.map((color, index) => (
             <div className="flex items-center" key={index}>
