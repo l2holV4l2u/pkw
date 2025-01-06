@@ -5,7 +5,7 @@ import placeholder from "./utils/placeholder.png";
 export default function Profile() {
   return (
     <Layout title="Profile">
-      <Card title="">
+      <Card title="" className="p-4">
         <div className="flex items-start space-x-6">
           {/* Profile Picture */}
           <img
