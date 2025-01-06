@@ -1,10 +1,10 @@
 import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 
 interface Course {
   _id: string;
   university_name_en: string;
   university_name_th: string;
+  university_id: string;
   program_name_en: string;
   program_name_th: string;
   cost: string;
@@ -35,7 +35,10 @@ export default function UniCard({
       {...listeners}
       {...attributes}
     >
-      <img src={"/logo/001.png"} className="w-12 h-12 object-cover" />
+      <img
+        src={"/logo/" + unidata.university_id + ".png"}
+        className="w-12 h-12 object-cover"
+      />
       <h3 className="text-gray-800 text-sm font-bold">
         {unidata.university_name_en}
       </h3>

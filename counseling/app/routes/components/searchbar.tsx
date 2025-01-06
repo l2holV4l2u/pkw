@@ -11,6 +11,7 @@ interface Course {
   _id: string;
   university_name_en: string;
   university_name_th: string;
+  university_id: string;
   program_name_en: string;
   program_name_th: string;
   cost: string;
@@ -65,7 +66,7 @@ export default function SearchBar({
                 <UniCard key={course._id} unidata={course} index={index} />
               ))
           ) : (
-            <p className="text-gray-500 text-center">No results found</p>
+            <p className="text-gray-500 text-center p-4">No results found</p>
           )}
         </Card>
       </Card>

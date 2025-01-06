@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Card from "./card";
-import { useDroppable, DragEndEvent, DndContext } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 
 // Define types for the props
 interface UniversityScore {
@@ -17,147 +17,33 @@ export default function LollipopCard({
 }: {
   scores: UniversityScore[];
 }) {
-  const chartRef = useRef<SVGSVGElement>(null);
   const colors = ["#D94A4A", "#28a745", "orange"];
   const labels = ["Min Score", "Max Score", "User Score"];
-  const margin = { top: 0, right: 100, bottom: 40, left: 100 };
   const { setNodeRef } = useDroppable({
     id: "lollipop",
   });
-  var second = false;
+  const svgRef = useRef<SVGSVGElement>(null); // Reference to the SVG element
+  const [width, setWidth] = useState(600); // Default width
+  const margin = { right: 12, left: 12 };
+  const extendedMin = Math.max(
+    0,
+    Math.min(...scores.map((d) => d.minScore)) - 10
+  );
+  const extendedMax = Math.min(
+    100,
+    Math.max(...scores.map((d) => d.maxScore)) + 10
+  );
+  const xScale = (value: number) =>
+    ((value - extendedMin) / (extendedMax - extendedMin)) *
+      (width - margin.left - margin.right) +
+    margin.left;
+  const ticks = d3.scaleLinear().domain([extendedMin, extendedMax]).ticks(8);
 
   useEffect(() => {
-    const chartContainer = chartRef.current?.parentElement;
-    if (!chartContainer) return;
-
-    // Dimensions
-    const width = chartContainer.clientWidth - margin.left - margin.right;
-    const height = scores.length * 80 - margin.top - margin.bottom;
-    const minscore = Math.min(
-      ...scores.map((d) => Math.min(d.minScore, d.userScore))
-    );
-    const maxscore = Math.max(
-      ...scores.map((d) => Math.max(d.maxScore, d.userScore))
-    );
-
-    console.log(scores);
-
-    // Clear previous SVG content
-    d3.select(chartRef.current).selectAll("*").remove();
-
-    console.log(second);
-    console.log(chartRef.current);
-
-    if (second) return;
-    else if (chartRef.current) second = true;
-
-    // Create SVG
-    const svg = d3
-      .select(chartRef.current)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    // Scales
-    const x = d3
-      .scaleLinear()
-      .domain([Math.max(minscore - 20, 0), Math.min(maxscore + 20, 100)])
-      .range([0, width]);
-
-    const y = d3
-      .scaleBand()
-      .domain(scores.map((d) => d.university))
-      .range([0, height])
-      .padding(1);
-
-    // X Axis
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height})`)
-      .style("color", "gray")
-      .call(d3.axisBottom(x).ticks(10).tickSize(-5).tickPadding(10))
-      .selectAll("text")
-      .style("font-size", "14px");
-
-    // Left Y Axis (Universities)
-    const yAxisLeft = svg.append("g").call(d3.axisLeft(y));
-    yAxisLeft
-      .selectAll("text")
-      .style("font-size", "14px")
-      .style("color", "gray");
-
-    // Right Y Axis (Programs)
-    const yAxisRight = svg
-      .append("g")
-      .attr("transform", `translate(${width}, 0)`)
-      .call(d3.axisRight(y).tickFormat((_, i) => scores[i].program));
-    yAxisRight
-      .selectAll("text")
-      .style("font-size", "14px")
-      .style("color", "gray");
-
-    // Dotted Lines
-    svg
-      .selectAll(".dotted-line")
-      .data(scores)
-      .enter()
-      .append("line")
-      .attr("x1", 0)
-      .attr("x2", width)
-      .attr("y1", (d) => y(d.university)!)
-      .attr("y2", (d) => y(d.university)!)
-      .attr("stroke", "gray")
-      .attr("stroke-width", 1)
-      .attr("stroke-dasharray", "4");
-
-    // Lines
-    svg
-      .selectAll(".line")
-      .data(scores)
-      .enter()
-      .append("line")
-      .attr("x1", (d) => x(d.minScore))
-      .attr("x2", (d) => x(d.maxScore))
-      .attr("y1", (d) => y(d.university)!)
-      .attr("y2", (d) => y(d.university)!)
-      .attr("stroke", "gray")
-      .attr("stroke-width", 2);
-
-    // Min Circles
-    svg
-      .selectAll(".min-circle")
-      .data(scores)
-      .enter()
-      .append("circle")
-      .attr("cx", (d) => x(d.minScore))
-      .attr("cy", (d) => y(d.university)!)
-      .attr("r", 6)
-      .style("fill", colors[0]);
-
-    // Max Circles
-    svg
-      .selectAll(".max-circle")
-      .data(scores)
-      .enter()
-      .append("circle")
-      .attr("cx", (d) => x(d.maxScore))
-      .attr("cy", (d) => y(d.university)!)
-      .attr("r", 6)
-      .style("fill", colors[1]);
-
-    // User Score Dots
-    svg
-      .selectAll(".user-dot")
-      .data(scores)
-      .enter()
-      .append("circle")
-      .attr("cx", (d) => x(d.userScore))
-      .attr("cy", (d) => y(d.university)!)
-      .attr("r", 7)
-      .style("fill", colors[2])
-      .style("stroke", "black")
-      .style("stroke-width", 2);
+    if (svgRef.current) {
+      const svgWidth = svgRef.current.getBoundingClientRect().width;
+      setWidth(svgWidth); // Update the width dynamically
+    }
   }, [scores]);
 
   return (
@@ -165,7 +51,7 @@ export default function LollipopCard({
       <div
         ref={setNodeRef}
         onDragOver={(e) => e.preventDefault()}
-        className="flex flex-col justify-center items-center"
+        className="flex flex-col w-full justify-center items-center space-y-8"
       >
         <div className="grid grid-cols-3 gap-8">
           {colors.map((color, index) => (
@@ -178,7 +64,98 @@ export default function LollipopCard({
             </div>
           ))}
         </div>
-        <svg ref={chartRef} />
+        <div className="flex flex-col w-full space-y-6">
+          {scores.map((d, i) => (
+            <div className="grid grid-cols-5 gap-2 text-sm items-center">
+              <div className="text-gray-600 col-span-1 text-right">
+                {d.university.split(" ")[0]}
+              </div>
+              <div className="col-span-3">
+                <svg className="w-full h-[80px]" ref={svgRef}>
+                  {/* Dotted Lines */}
+                  <line
+                    key={`dotted-line-${i}`}
+                    x1={margin.left}
+                    x2={width - margin.right}
+                    y1={41}
+                    y2={41}
+                    stroke="gray"
+                    strokeWidth={1}
+                    strokeDasharray="4"
+                  />
+                  {/* Range Lines */}
+                  <line
+                    key={`line-${i}`}
+                    x1={xScale(d.minScore)}
+                    x2={xScale(d.maxScore)}
+                    y1={41}
+                    y2={41}
+                    stroke="gray"
+                    strokeWidth={2}
+                  />
+                  {/* Min Score Dots */}
+                  <circle
+                    key={`min-dot-${i}`}
+                    cx={xScale(d.minScore)}
+                    cy={41}
+                    r={6}
+                    fill={colors[0]} // Color for Min Score
+                  />
+                  {/* Max Score Dots */}
+                  <circle
+                    key={`max-dot-${i}`}
+                    cx={xScale(d.maxScore)}
+                    cy={41}
+                    r={6}
+                    fill={colors[1]} // Color for Max Score
+                  />
+                  {/* User Score Dots */}
+                  <circle
+                    key={`user-dot-${i}`}
+                    cx={xScale(d.userScore)}
+                    cy={41}
+                    r={7}
+                    fill={colors[2]} // Color for User Score
+                    stroke="black"
+                    strokeWidth={2}
+                  />
+                </svg>
+              </div>
+              <div className="text-gray-600 col-span-1">{d.program}</div>
+            </div>
+          ))}
+          {/* Scale Row */}
+          <div className="grid grid-cols-5 gap-2 text-sm items-center">
+            <div className="col-span-1"></div>
+            <div className="col-span-3 relative">
+              <svg className="w-full h-[40px]">
+                {/* Horizontal Axis Line */}
+                <line
+                  x1={margin.left}
+                  x2={width - margin.right}
+                  y1={15}
+                  y2={15}
+                  stroke="black"
+                  strokeWidth={1}
+                />
+                {ticks.map((tick, idx) => (
+                  <g
+                    key={`tick-${idx}`}
+                    transform={`translate(${xScale(tick)}, 0)`}
+                  >
+                    {/* Tick Lines */}
+                    <line y1={5} y2={15} stroke="gray" strokeWidth={1} />
+                    {/* Tick Labels */}
+                    <text y={35} textAnchor="middle" fontSize="14" fill="gray">
+                      {tick}
+                    </text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+            <div className="col-span-1"></div>
+          </div>
+        </div>
       </div>
     </Card>
   );

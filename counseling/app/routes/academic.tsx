@@ -43,21 +43,21 @@ const score = {
 const initialScores = [
   {
     university: "Chulalongkorn",
-    program: "Engineering",
+    program: "Bachelor of Engineering",
     minScore: 75,
     maxScore: 90,
     userScore: 80,
   },
   {
     university: "Mahidol",
-    program: "Medicine",
+    program: "Doctor of Medicine",
     minScore: 70,
     maxScore: 86,
     userScore: 90,
   },
   {
     university: "Kasetsart",
-    program: "Agriculture",
+    program: "Bachelor of Arts",
     minScore: 64,
     maxScore: 85,
     userScore: 70,
@@ -88,7 +88,7 @@ export default function Academic() {
             university: draggedData.university_name_en.split(" ")[0],
             program: draggedData.program_name_en,
             minScore: 10,
-            maxScore: 90,
+            maxScore: 50,
             userScore: 80,
           },
         ]);
