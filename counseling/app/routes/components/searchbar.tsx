@@ -4,7 +4,7 @@ import Input from "./input";
 import UniCard from "./unicard";
 import SearchIcon from "../utils/icon/search";
 import courseDataJSON from "../utils/course.json";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { DragOverlay } from "@dnd-kit/core";
 
 // Define the structure of the course.json file
 interface Course {
@@ -23,15 +23,16 @@ interface CourseData {
   course: Course[];
 }
 
-export default function SearchBar() {
+export default function SearchBar({
+  isDragging,
+  activeID,
+}: {
+  isDragging: boolean;
+  activeID: string | null;
+}) {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Course[]>([]);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  // Explicitly type the JSON import
   const courseData: Course[] = (courseDataJSON as CourseData).course;
-
   const handleSearch = () => {
     const filteredResults = courseData.filter(
       (course) =>
@@ -46,17 +47,7 @@ export default function SearchBar() {
   }, [query]);
 
   return (
-    <DndContext
-      onDragStart={(event) => {
-        // Cast to string to resolve the type mismatch error
-        setActiveId(event.active.id as string);
-        setIsDragging(true);
-      }}
-      onDragEnd={() => {
-        setIsDragging(false);
-        setActiveId(null);
-      }}
-    >
+    <div>
       <Card className="space-y-4 h-full p-4">
         <Input
           field={query}
@@ -80,15 +71,15 @@ export default function SearchBar() {
       </Card>
 
       <DragOverlay>
-        {isDragging && activeId ? (
+        {isDragging && activeID ? (
           <div className="rounded-xl pointer-events-none border-2 border-gray-200">
             <UniCard
-              unidata={results.find((course) => course._id === activeId)!}
+              unidata={results.find((course) => course._id === activeID)!}
               index={0}
             />
           </div>
         ) : null}
       </DragOverlay>
-    </DndContext>
+    </div>
   );
 }

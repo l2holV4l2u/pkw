@@ -1,9 +1,10 @@
+// academic.tsx
 import Layout from "./components/layout";
-import LollipopChart from "./components/lollipopcard";
 import ScoreCard from "./components/scorecard";
 import SearchBar from "./components/searchbar";
 import { useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import LollipopCard from "./components/lollipopcard";
 
 // Define score categories
 const score = {
@@ -39,7 +40,7 @@ const score = {
   },
 };
 
-const initialUniversityScores = [
+const initialScores = [
   {
     university: "Chulalongkorn",
     program: "Engineering",
@@ -64,40 +65,58 @@ const initialUniversityScores = [
 ];
 
 export default function Academic() {
-  const [universityScores, setUniversityScores] = useState(
-    initialUniversityScores
-  );
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [activeID, setActiveId] = useState<string | null>(null);
+  const [scores, setScores] = useState(initialScores);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
-    // If the drag ends over the search bar, process the dropped data
     if (over?.id === "lollipop") {
       const draggedData = active.data.current as {
-        university: string;
-        program: string;
-        minScore: number;
-        maxScore: number;
-        userScore: number;
-      }; // Ensure the type matches the state structure
+        university_name_en: string;
+        program_name_en: string;
+        cost: string;
+        graduate_rate: string;
+        employment_rate: string;
+        median_salary: string;
+      };
 
       if (draggedData) {
-        // Update LollipopCard with the new data
-        setUniversityScores((prevScores) => [...prevScores, draggedData]);
+        setScores((prevScores) => [
+          ...prevScores,
+          {
+            university: draggedData.university_name_en.split(" ")[0],
+            program: draggedData.program_name_en,
+            minScore: 10,
+            maxScore: 90,
+            userScore: 80,
+          },
+        ]);
       }
     }
   };
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
+    <DndContext
+      onDragStart={(event) => {
+        setActiveId(event.active.id as string);
+        setIsDragging(true);
+      }}
+      onDragEnd={(event) => {
+        setIsDragging(false);
+        setActiveId(null);
+        handleDragEnd(event);
+      }}
+    >
       <Layout title="Academic" className="grid grid-cols-10 gap-6">
         <div className="col-span-7 row-span-1" id="score">
           <ScoreCard scores={score} />
         </div>
         <div className="col-span-3 row-span-5" id="search">
-          <SearchBar />
+          <SearchBar isDragging={isDragging} activeID={activeID} />
         </div>
         <div className="col-span-7 row-span-1" id="lollipop">
-          <LollipopChart universityScores={universityScores} />
+          <LollipopCard scores={scores} />
         </div>
       </Layout>
     </DndContext>

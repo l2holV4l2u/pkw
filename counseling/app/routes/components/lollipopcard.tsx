@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import Card from "./card";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, DragEndEvent, DndContext } from "@dnd-kit/core";
 
 // Define types for the props
 interface UniversityScore {
@@ -12,58 +12,44 @@ interface UniversityScore {
   userScore: number;
 }
 
-interface LollipopChartProps {
-  universityScores: UniversityScore[];
-}
-
-export default function LollipopCard({ universityScores }: LollipopChartProps) {
+export default function LollipopCard({
+  scores,
+}: {
+  scores: UniversityScore[];
+}) {
   const chartRef = useRef<SVGSVGElement>(null);
-  const [chartDimensions, setChartDimensions] = useState({
-    width: 0,
-    height: 0,
-  });
-
-  const [scores, setScores] = useState(universityScores);
-
-  const handleDrop = (event: any) => {
-    const draggedData = event.active.data.current;
-    if (draggedData) {
-      setScores((prev) => [...prev, draggedData]);
-    }
-  };
-
-  const minscore = Math.min(
-    ...universityScores.map((d) => Math.min(d.minScore, d.userScore))
-  );
-
-  const maxscore = Math.max(
-    ...universityScores.map((d) => Math.max(d.maxScore, d.userScore))
-  );
-
   const colors = ["#D94A4A", "#28a745", "orange"];
   const labels = ["Min Score", "Max Score", "User Score"];
   const margin = { top: 0, right: 100, bottom: 40, left: 100 };
-  const { width, height } = chartDimensions;
-
   const { setNodeRef } = useDroppable({
     id: "lollipop",
   });
+  var second = false;
 
   useEffect(() => {
     const chartContainer = chartRef.current?.parentElement;
-    if (chartContainer) {
-      setChartDimensions({
-        width: chartContainer.clientWidth - margin.left - margin.right,
-        height: 240 - margin.top - margin.bottom,
-      });
-    }
-  }, []);
+    if (!chartContainer) return;
 
-  useEffect(() => {
-    if (!width || !height) return;
+    // Dimensions
+    const width = chartContainer.clientWidth - margin.left - margin.right;
+    const height = scores.length * 80 - margin.top - margin.bottom;
+    const minscore = Math.min(
+      ...scores.map((d) => Math.min(d.minScore, d.userScore))
+    );
+    const maxscore = Math.max(
+      ...scores.map((d) => Math.max(d.maxScore, d.userScore))
+    );
 
-    // Clear previous SVG contents to avoid duplications
+    console.log(scores);
+
+    // Clear previous SVG content
     d3.select(chartRef.current).selectAll("*").remove();
+
+    console.log(second);
+    console.log(chartRef.current);
+
+    if (second) return;
+    else if (chartRef.current) second = true;
 
     // Create SVG
     const svg = d3
@@ -81,7 +67,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
 
     const y = d3
       .scaleBand()
-      .domain(universityScores.map((d) => d.university))
+      .domain(scores.map((d) => d.university))
       .range([0, height])
       .padding(1);
 
@@ -96,7 +82,6 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
 
     // Left Y Axis (Universities)
     const yAxisLeft = svg.append("g").call(d3.axisLeft(y));
-
     yAxisLeft
       .selectAll("text")
       .style("font-size", "14px")
@@ -106,8 +91,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     const yAxisRight = svg
       .append("g")
       .attr("transform", `translate(${width}, 0)`)
-      .call(d3.axisRight(y).tickFormat((_, i) => universityScores[i].program));
-
+      .call(d3.axisRight(y).tickFormat((_, i) => scores[i].program));
     yAxisRight
       .selectAll("text")
       .style("font-size", "14px")
@@ -116,7 +100,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     // Dotted Lines
     svg
       .selectAll(".dotted-line")
-      .data(universityScores)
+      .data(scores)
       .enter()
       .append("line")
       .attr("x1", 0)
@@ -130,7 +114,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     // Lines
     svg
       .selectAll(".line")
-      .data(universityScores)
+      .data(scores)
       .enter()
       .append("line")
       .attr("x1", (d) => x(d.minScore))
@@ -143,7 +127,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     // Min Circles
     svg
       .selectAll(".min-circle")
-      .data(universityScores)
+      .data(scores)
       .enter()
       .append("circle")
       .attr("cx", (d) => x(d.minScore))
@@ -154,7 +138,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     // Max Circles
     svg
       .selectAll(".max-circle")
-      .data(universityScores)
+      .data(scores)
       .enter()
       .append("circle")
       .attr("cx", (d) => x(d.maxScore))
@@ -165,7 +149,7 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
     // User Score Dots
     svg
       .selectAll(".user-dot")
-      .data(universityScores)
+      .data(scores)
       .enter()
       .append("circle")
       .attr("cx", (d) => x(d.userScore))
@@ -174,14 +158,13 @@ export default function LollipopCard({ universityScores }: LollipopChartProps) {
       .style("fill", colors[2])
       .style("stroke", "black")
       .style("stroke-width", 2);
-  }, [universityScores, chartDimensions]);
+  }, [scores]);
 
   return (
     <Card className="p-6">
       <div
         ref={setNodeRef}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDrop}
         className="flex flex-col justify-center items-center"
       >
         <div className="grid grid-cols-3 gap-8">

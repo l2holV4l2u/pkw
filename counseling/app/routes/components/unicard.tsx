@@ -22,6 +22,7 @@ export default function UniCard({
 }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: unidata._id,
+    data: unidata,
   });
 
   return (
