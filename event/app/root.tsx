@@ -5,13 +5,15 @@ import {
   Scripts,
   ScrollRestoration,
   useLocation,
+  useNavigate,
 } from "@remix-run/react";
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { createCookie } from "@remix-run/node";
 
 import "./tailwind.css";
 import Sidebar from "./routes/components/sidebar";
+import { useCookies } from "react-cookie";
+import { useEffect } from "react";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,30 +27,6 @@ export const links: LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
-
-const loginCookie = createCookie("EventManager", {
-  maxAge: 60 * 60 * 24 * 7, // 1 week
-});
-/*
-export const loader: LoaderFunction = async ({ request }) => {
-  const cookieHeader = request.headers.get("EventManager");
-  const cookie = (await loginCookie.parse(cookieHeader)) || {};
-  // Parse the current URL to get the pathname
-  const url = new URL(request.url);
-  const pathname = url.pathname;
-  // If user is not logged in, redirect to login unless already on it
-  if (
-    !(cookie.email && cookie.password) &&
-    pathname !== "/login" &&
-    pathname !== "/register"
-  ) {
-    return redirect("/login");
-  }
-  console.log(pathname);
-  console.log("Bruh");
-  return null;
-};
-*/
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -69,11 +47,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const location = useLocation();
+  const location = useLocation().pathname;
+  const [cookie, setCookie] = useCookies();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      !cookie.EventManager &&
+      location !== "/login" &&
+      location !== "/register"
+    ) {
+      navigate("/login");
+    } else if (
+      cookie.EventManager &&
+      (location == "/login" || location == "/register")
+    ) {
+      console.log("Huh", location);
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar with responsiveness */}
-      {!(location.pathname == "/login" || location.pathname == "/register") && (
+      {!(location === "/login" || location === "/register") && (
         <div className="w-64">
           <Sidebar />
         </div>
