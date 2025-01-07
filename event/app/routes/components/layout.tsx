@@ -1,19 +1,21 @@
 export default function Layout({
   children,
   title,
+  className,
 }: {
   children: React.ReactNode;
   title: string;
+  className?: string;
 }) {
   return (
-    <div className="p-8 space-y-6 w-full">
+    <div className={`p-6 space-y-6 h-full bg-white rounded-3xl`}>
       {/* Page Title */}
       <div className="mb-3 flex justify-between items-center">
         <h1 className="text-3xl font-extrabold text-gray-800">{title}</h1>
       </div>
 
       {/* Main Content */}
-      {children}
+      <div className={`${className}`}>{children}</div>
     </div>
   );
 }

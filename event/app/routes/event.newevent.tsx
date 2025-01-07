@@ -12,7 +12,7 @@ export default function NewEvent() {
 
   return (
     <Layout title="New Event">
-      <form className="space-y-6">
+      <form className="space-y-4">
         {/* Event Name */}
         <Input
           field={eventName}
@@ -42,7 +42,7 @@ export default function NewEvent() {
             name="description"
             value={eventDescription}
             onChange={(e) => setEventDescription(e.target.value)}
-            className="w-full mt-2 p-2 border border-gray-300 bg-white text-gray-500 rounded-md focus:outline-none focus:ring-4 transition focus:ring-blue-200"
+            className="w-full mt-2 p-2 border border-gray-300 bg-white text-gray-500 rounded-md focus:outline-none focus:ring-4 transition focus:ring-slate-200"
             rows={4}
             placeholder="Enter event description"
             required
@@ -61,28 +61,9 @@ export default function NewEvent() {
         <Input
           field={paymentAmount}
           setField={setPaymentAmount}
-          label="Payment Amount (USD)"
+          label="Payment Amount (THB)"
           type="number"
         />
-
-        {/* Stripe Payment Gateway Section */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800">
-            Stripe Payment Integration
-          </h3>
-          <p className="text-sm text-gray-500">
-            Set up Stripe to handle payments for your event.
-          </p>
-          {/* You can integrate the Stripe Checkout button or form here */}
-          <div>
-            <button
-              type="button"
-              className="mt-4 px-4 py-2 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 transition"
-            >
-              Set up Stripe Payment
-            </button>
-          </div>
-        </div>
 
         {/* Submit Button */}
         <div>

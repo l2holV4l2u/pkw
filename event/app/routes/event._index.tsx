@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import Card from "./components/card";
 import Layout from "./components/layout";
+import Button from "./components/button";
 
 export default function EventIndex() {
   // dummy event for now -> retrieve from api end point in the future
@@ -62,19 +63,15 @@ export default function EventIndex() {
   ];
 
   return (
-    <Layout title="Events">
+    <Layout title="Events" className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="text-gray-700 font-bold text-2xl">Your Event</div>
-        <Link to="./newevent">
-          <button className="px-4 py-2 bg-blue-600 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
-            + New Event
-          </button>
-        </Link>
+        <Button link="./newevent" />
       </div>
 
       {events.map((item) => (
         <Card title={item.name}>
-          <div className="text-gray-700 space-y-2">
+          <div className="text-gray-700 space-y-1">
             <p>Date: {item.date}</p>
             <p>Location: {item.location}</p>
             <p>Status: {item.status}</p>
