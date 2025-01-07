@@ -5,7 +5,7 @@ const pool = new Pool({
   host: "localhost",
   password: "milmo100",
   port: 5432,
-  database: "pkwevent",
+  database: "eventmanager",
 });
 
 module.exports = pool;

@@ -3,7 +3,6 @@ import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
 import Input from "./components/input";
 
-// Handle form submission
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email") as string;
@@ -18,15 +17,37 @@ export const action: ActionFunction = async ({ request }) => {
     return { error: "Passwords do not match." };
   }
 
-  // Mock user creation logic (replace with actual backend API)
-  if (email === "existingUser") {
-    return { error: "Username already exists." };
-  }
+  // Create a new user object
+  const user = {
+    email,
+    password, // Password should be hashed before sending to the server (consider adding hashing here)
+  };
 
-  return redirect("/dashboard");
+  try {
+    // Send POST request to localhost:5000/adduser
+    const response = await fetch("http://localhost:5000/adduser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user), // Sending user data in JSON format
+    });
+
+    if (!response.ok) {
+      // Handle error if the response status is not OK
+      const errorData = await response.json();
+      return { error: errorData.message || "Failed to create user." };
+    }
+
+    // Redirect to the dashboard after successful user creation
+    return redirect("/");
+  } catch (error) {
+    // Catch any network or other errors
+    return { error: "An error occurred while creating the user." };
+  }
 };
 
-export default function SignupPage() {
+export default function Register() {
   const actionData = useActionData<{ error?: string }>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,32 +78,17 @@ export default function SignupPage() {
             label="Confirm Password"
             type="password"
           />
-          <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              name="terms"
-              id="terms"
-              className="mr-2 w-4 h-4 appearance-none transition border-2 border-gray-300 bg-white rounded checked:bg-blue-500 checked:border-blue-500"
-              required
-            />
-            <label htmlFor="terms" className="text-sm text-gray-600">
-              I agree to the{" "}
-              <a href="#" className="text-blue-500 hover:underline">
-                Terms and Conditions
-              </a>
-            </label>
-          </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition"
+            className="px-4 py-2 text-sm text-gray-600 font-semibold rounded-lg hover:ring-slate-300 hover:ring-4 w-full border-gray-800 border-2 transition"
           >
-            Sign Up
+            Create your account
           </button>
         </Form>
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <a href="/signin" className="text-blue-500 hover:underline">
-            Log In
+          <a href="/login" className="text-blue-500 hover:underline">
+            Log in
           </a>
         </p>
       </div>

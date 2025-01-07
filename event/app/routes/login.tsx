@@ -3,24 +3,27 @@ import { Form, useActionData } from "@remix-run/react";
 import { useState } from "react";
 import { createCookie } from "@remix-run/node";
 import Input from "./components/input";
+import { sha256 } from "js-sha256";
 
 // Create a cookie
-const loginCookie = createCookie("Zentry", {
+const loginCookie = createCookie("EventManager", {
   maxAge: 60 * 60 * 24 * 7, // 1 week
 });
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const cookieHeader = request.headers.get("Cookie");
-  const cookie = (await loginCookie.parse(cookieHeader)) || {};
-  /*
-  // Redirect if already authenticated
-  if (cookie.username && cookie.password) {
-    return redirect("/dashboard");
-  }
-  */
+// Define the type for user data
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  password_hash: string;
+  created_at: string;
+  updated_at: string;
+}
 
-  return null;
-};
+// Function to hash the password using SHA-256 (from js-sha256)
+function hashPassword(password: string): string {
+  return sha256(password); // Hash the password using sha256
+}
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -31,20 +34,47 @@ export const action: ActionFunction = async ({ request }) => {
     return { error: "Both fields are required." };
   }
 
-  // Dummy authentication logic
-  if (email === "12345@gmail.com" && password === "12345") {
-    const cookie = await loginCookie.serialize({ email, password });
-    return redirect("/dashboard", {
-      headers: {
-        "Set-Cookie": cookie,
-      },
-    });
+  // Fetch user data from localhost:5000/getuser
+  const response = await fetch("http://localhost:5000/getuser", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    return { error: errorData.message || "Invalid username or password." };
   }
 
-  return { error: "Invalid username or password." };
+  const userData: User[] = await response.json();
+
+  // Find the user by email
+  const user = userData.find((d: User) => d.email === email);
+
+  if (!user) {
+    return { error: "Invalid username or password." };
+  }
+
+  // Hash the provided password using SHA-256
+  const hashedPassword = hashPassword(password);
+
+  // Compare the hashed password with the stored hash
+  if (hashedPassword !== user.password_hash) {
+    return { error: "Invalid username or password." };
+  }
+
+  // Password is valid, proceed to create a session/cookie
+  const cookie = await loginCookie.serialize({ email, id: user.id });
+  console.log("Yes!");
+  return redirect("/", {
+    headers: {
+      "Set-Cookie": cookie,
+    },
+  });
 };
 
-export default function LoginPage() {
+export default function Login() {
   const actionData = useActionData<{ error?: string }>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +83,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-lg bg-white p-16 rounded-lg shadow-lg">
         <h2 className="text-2xl text-left font-bold text-gray-700">
-          Sign in to your account
+          Log in to your account
         </h2>
         {actionData?.error && (
           <div className="text-red-500 mt-4 text-sm text-center">
@@ -77,15 +107,18 @@ export default function LoginPage() {
               />
               Remember this device
             </label>
-            <a href="/signup" className="text-sm text-blue-500 hover:underline">
+            <a
+              href="/register"
+              className="text-sm text-blue-500 hover:underline"
+            >
               Create an account
             </a>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 transition"
+            className="px-4 py-2 text-sm text-gray-600 font-semibold rounded-lg hover:ring-slate-300 hover:ring-4 w-full border-gray-800 border-2 transition"
           >
-            Sign in
+            Log in
           </button>
         </Form>
         <p className="mt-4 text-sm text-center text-gray-600">
