@@ -20,22 +20,49 @@ app.get("/getuser", async (req, res) => {
   }
 });
 
-// Add user
+// add user
 app.post("/adduser", async (req, res) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
-
-    // Hash the password using SHA-256
-    const password_hash = sha256(password); // Hash the password
-
-    // Add user
+    const password_hash = sha256(password);
     const newUser = await pool.query(
       "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING *",
       [email, password_hash]
     );
+    res.status(201).json(newUser.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 
-    res.status(201).json(newUser.rows[0]); // Respond with the new user's data
+// get user's events
+app.get("/getevent/:id", async (req, res) => {
+  try {
+    const events = await pool.query(
+      "SELECT * FROM events WHERE $1 = ANY(admins)",
+      [req.params.id]
+    );
+    return res.json(events.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// add event
+app.post("/addevent", async (req, res) => {
+  try {
+    const { user, name, description, location, start, end } = req.body;
+    if (!user || !name || !description || !location || !start || !end) {
+      return res.status(400).send("Missing required event details");
+    }
+    const newEvent = await pool.query(
+      "INSERT INTO events (name, description, location, start_time, end_time, created_by, admins) " +
+        "VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [name, description, location, start, end, user, [user]]
+    );
+    res.status(201).json(newEvent.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -46,3 +73,15 @@ app.post("/adduser", async (req, res) => {
 app.listen(5000, () => {
   console.log("Server has started on port 5000");
 });
+
+/*
+// template
+app.get("/", async (req, res) => {
+  try {
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+*/

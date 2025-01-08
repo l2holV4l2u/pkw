@@ -20,7 +20,6 @@ export default function NewEvent() {
           label="Event Name"
           type="text"
         />
-
         {/* Event Date */}
         <Input
           field={eventDate}
@@ -28,7 +27,6 @@ export default function NewEvent() {
           label="Event Date"
           type="date"
         />
-
         {/* Event Description */}
         <div className="mb-4">
           <label
@@ -48,7 +46,6 @@ export default function NewEvent() {
             required
           />
         </div>
-
         {/* Google Form Link */}
         <Input
           field={googleFormLink}
@@ -56,7 +53,6 @@ export default function NewEvent() {
           label="Google Form Link"
           type="url"
         />
-
         {/* Payment Amount */}
         <Input
           field={paymentAmount}
@@ -64,7 +60,6 @@ export default function NewEvent() {
           label="Payment Amount (THB)"
           type="number"
         />
-
         {/* Submit Button */}
         <div>
           <button
