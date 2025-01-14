@@ -2,32 +2,47 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
-const bcrypt = require("bcrypt");
 const sha256 = require("js-sha256");
-
 app.use(cors());
 app.use(express.json());
 
 // ROUTES
 // get all user
-app.get("/getuser", async (req, res) => {
+app.post("/login", async (req, res) => {
   try {
-    const event = await pool.query("SELECT * FROM users");
-    res.json(event.rows);
+    const { email, password } = req.body;
+    const hashed = sha256(password).toString();
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const dbPassword = user.rows[0].password;
+    if (hashed !== dbPassword) {
+      return res.status(401).json({ error: "Password incorrect" });
+    }
+    res.json({
+      message: "Login successful",
+      user: {
+        id: user.rows[0].id,
+        email: user.rows[0].email,
+      },
+    });
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
     res.status(500).send("Server error");
   }
 });
 
 // add user
-app.post("/adduser", async (req, res) => {
+app.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const password_hash = sha256(password);
+    const hashed = sha256(password).toString();
     const newUser = await pool.query(
-      "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING *",
-      [email, password_hash]
+      "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
+      [email, hashed]
     );
     res.status(201).json(newUser.rows[0]);
   } catch (err) {
@@ -40,7 +55,7 @@ app.post("/adduser", async (req, res) => {
 app.get("/getevent/:id", async (req, res) => {
   try {
     const events = await pool.query(
-      "SELECT * FROM events WHERE $1 = ANY(admins)",
+      "SELECT * FROM event_admins WHERE $1 = user_id",
       [req.params.id]
     );
     return res.json(events.rows);

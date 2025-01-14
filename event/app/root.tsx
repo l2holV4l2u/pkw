@@ -4,16 +4,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLocation,
   useNavigate,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-
 import "./tailwind.css";
 import Sidebar from "./routes/components/sidebar";
-import { useCookies } from "react-cookie";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Login from "./routes/components/login";
+import Authenticate from "./routes/components/authenticate";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,33 +44,31 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  const location = useLocation().pathname;
-  const [cookie, setCookie] = useCookies();
-  const navigate = useNavigate();
+function App() {
+  const [token, setToken] = useState<string | null>(null);
+
   useEffect(() => {
-    if (
-      !cookie.EventManager &&
-      location !== "/login" &&
-      location !== "/register"
-    ) {
-      navigate("/login");
-    } else if (
-      cookie.EventManager &&
-      (location == "/login" || location == "/register")
-    ) {
-      console.log("Huh", location);
-      navigate("/");
+    const savedToken = sessionStorage.getItem("token");
+    if (savedToken) {
+      const parsedToken = JSON.parse(savedToken);
+      setToken(parsedToken);
     }
   }, []);
+
+  const handleSetToken = (userToken: string) => {
+    sessionStorage.setItem("token", JSON.stringify(userToken));
+    setToken(userToken);
+  };
+  if (!token) {
+    return <Authenticate setToken={handleSetToken} />;
+  }
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar with responsiveness */}
-      {!(location === "/login" || location === "/register") && (
-        <div className="w-64">
-          <Sidebar />
-        </div>
-      )}
+      <div className="w-64">
+        <Sidebar />
+      </div>
 
       {/* Content Area */}
       <div className="flex-1 min-h-screen">
@@ -81,3 +77,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;

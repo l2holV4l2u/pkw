@@ -20,6 +20,9 @@ interface Event {
 export const loader: LoaderFunction = async ({ request }) => {
   const cookies = request.headers.get("Cookie") || "";
   const cookie = getCookie(cookies);
+  if (!cookie) {
+    return null;
+  }
   const response = await fetch(`http://localhost:5000/getevent/${cookie.id}`);
 
   if (!response.ok) {
@@ -30,6 +33,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const events: Event[] = await response.json();
+  console.log(events);
   return events;
 };
 
@@ -46,7 +50,12 @@ export default function EventIndex() {
         <div className="text-gray-500">No events found.</div>
       ) : (
         events.map((item) => (
-          <Card title={item.name} key={item.id}>
+          <Card
+            title={item.name}
+            key={item.id}
+            clickable={true}
+            link={"./" + item.id}
+          >
             <div className="text-gray-700 space-y-1">
               <p>
                 Date: {new Date(item.start_time).toLocaleString()} -{" "}
@@ -54,20 +63,6 @@ export default function EventIndex() {
               </p>
               <p>Location: {item.location}</p>
               <p className="text-sm text-gray-600">{item.description}</p>
-            </div>
-            <div className="mt-3 flex justify-between">
-              <Link
-                to={`./${item.id}`}
-                className="text-blue-600 hover:underline text-sm font-medium"
-              >
-                View Details
-              </Link>
-              <Link
-                to={`./${item.id}/edit`}
-                className="text-gray-600 hover:underline text-sm font-medium"
-              >
-                Edit Event
-              </Link>
             </div>
           </Card>
         ))
