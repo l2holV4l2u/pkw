@@ -7,7 +7,8 @@ export default {
       colors: {
         primary: "#2C6E49", // Deep Green
         secondary: "#C06E52", // Warm Terracotta
-        background: "#f4f5f9", // Gray
+        background: "#f7f7f7", // Gray
+        border: "#efeded", // Some shade of gray idk
         text: "#43281C", // Deep Brown
         accent: "#C06E52", // Warm Terracotta
         hover: "#245836", // Darker Green for hover

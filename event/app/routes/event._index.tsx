@@ -28,7 +28,7 @@ export default function EventIndex() {
     <Layout title="Events" className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="text-gray-700 font-bold text-2xl">Your Events</div>
-        <Button link="./newevent" />
+        <Button link="./newevent" content="+ add event" />
       </div>
 
       {events.length === 0 ? (
