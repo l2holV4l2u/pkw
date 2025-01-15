@@ -1,6 +1,6 @@
 import { Form } from "@remix-run/react";
-import Input from "./input";
 import { LoginProps } from "../types/authenticate";
+import Input from "../components/input";
 
 export default function Login({
   email,

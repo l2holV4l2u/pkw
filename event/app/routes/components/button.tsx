@@ -1,11 +1,24 @@
 import { Link } from "@remix-run/react";
 
-export default function Button({ link }: { link: string }) {
+interface ButtonProps {
+  link?: string;
+  content: string;
+}
+
+export default function Button({ link, content }: ButtonProps) {
   return (
-    <Link to={link}>
-      <button className="px-4 py-2 bg-blue-600 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
-        + New Event
-      </button>
-    </Link>
+    <>
+      {link ? (
+        <Link to={link}>
+          <button className="px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition">
+            {content}
+          </button>
+        </Link>
+      ) : (
+        <button className="px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition">
+          {content}
+        </button>
+      )}
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { Form } from "@remix-run/react";
 import { useState } from "react";
-import Input from "./input";
 import { RegisterProps } from "../types/authenticate";
+import Input from "../components/input";
 
 export default function Register({
   email,

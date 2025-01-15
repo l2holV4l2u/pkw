@@ -10,8 +10,7 @@ import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 import Sidebar from "./routes/components/sidebar";
 import { useEffect, useState } from "react";
-import Login from "./routes/components/login";
-import Authenticate from "./routes/components/authenticate";
+import Authenticate from "./routes/pagecomponents/authenticate";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -71,7 +70,7 @@ function App() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 min-h-screen">
+      <div className="flex-1 min-h-screen p-2">
         <Outlet />
       </div>
     </div>
