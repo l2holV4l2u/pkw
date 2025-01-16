@@ -2,6 +2,7 @@ import { useState } from "react";
 import GeneralInfo from "./pagecomponents/generalinfo";
 import FormBuilder from "./pagecomponents/formbuilder";
 import Layout from "./components/layout";
+import ProgressBar from "./pagecomponents/components/progressbar";
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");
@@ -12,7 +13,8 @@ export default function NewEvent() {
   const [step, setStep] = useState<number>(1);
 
   return (
-    <Layout title="New Event">
+    <Layout title="New Event" className="space-y-6">
+      <ProgressBar step={step} />
       {step == 1 && (
         <GeneralInfo
           eventName={eventName}

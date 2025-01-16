@@ -5,13 +5,9 @@ import { DragOverlay, useDraggable } from "@dnd-kit/core";
 const BuilderElement = ({
   children,
   title,
-  isDragging,
-  activeID,
 }: {
   title: string;
   children: string[];
-  isDragging: boolean;
-  activeID: string | null;
 }) => {
   return (
     <div className="flex flex-col space-y-2">
@@ -53,33 +49,17 @@ export default function FormElement({
         <BuilderElement
           title="Layout Elements"
           children={["Section", "Table"]}
-          isDragging={isDragging}
-          activeID={activeID}
         />
         <BuilderElement
           title="Text Elements"
           children={["Short Answer", "Long Answer"]}
-          isDragging={isDragging}
-          activeID={activeID}
         />
         <BuilderElement
           title="Multi Elements"
           children={["Multiple Choice", "Checkbox", "Dropdown"]}
-          isDragging={isDragging}
-          activeID={activeID}
         />
-        <BuilderElement
-          title="Media Elements"
-          children={["File Upload"]}
-          isDragging={isDragging}
-          activeID={activeID}
-        />
-        <BuilderElement
-          title="Date Elements"
-          children={["Date", "Time"]}
-          isDragging={isDragging}
-          activeID={activeID}
-        />
+        <BuilderElement title="Media Elements" children={["File Upload"]} />
+        <BuilderElement title="Date Elements" children={["Date", "Time"]} />
       </div>
       <DragOverlay>
         {isDragging && activeID ? (

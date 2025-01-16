@@ -31,9 +31,6 @@ export default function GeneralInfo({
   // State to store the form fields
   return (
     <div className="flex flex-col space-y-6 items-center w-full">
-      <h2 className="text-gray-800 font-semibold text-xl">
-        Step 1 - General Information
-      </h2>
       <div className="flex flex-col space-y-4 items-start w-[50%]">
         <Input
           field={eventName}
