@@ -46,10 +46,7 @@ export default function FormElement({
   return (
     <Card className="w-full h-full col-span-3 p-4">
       <div className="space-y-4">
-        <BuilderElement
-          title="Layout Elements"
-          children={["Section", "Table"]}
-        />
+        <BuilderElement title="Layout Elements" children={["Section"]} />
         <BuilderElement
           title="Text Elements"
           children={["Short Answer", "Long Answer"]}

@@ -4,33 +4,84 @@ import ShortAnswer from "./shortanswer";
 import Card from "~/routes/components/card";
 import LongAnswer from "./longanswer";
 import MultipleChoice from "./multiplechoice";
+import { FormDataElement } from "../types/formtype";
 
 export default function FormDroppable({
   formData,
   setFormData,
 }: {
-  formData: string[];
-  setFormData: React.Dispatch<React.SetStateAction<string[]>>; // The type for setFormData
+  formData: FormDataElement[];
+  setFormData: React.Dispatch<React.SetStateAction<FormDataElement[]>>; // The type for setFormData
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: "FormElementDropArea" });
-  const renderComponent = (type: string, index: number) => {
-    switch (type) {
-      case "Short Answer":
-        return <ShortAnswer key={index} />;
-      case "Long Answer":
-        return <LongAnswer key={index} />;
-      case "Multiple Choice":
-        return <MultipleChoice key={index} />;
+  const renderComponent = (type: FormDataElement, index: number) => {
+    switch (type.type) {
       case "Section":
-        return <Section key={index} />;
+        return (
+          <Section
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "Short Answer":
+        return (
+          <ShortAnswer
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "Long Answer":
+        return (
+          <LongAnswer
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "Multiple Choice":
+        return (
+          <MultipleChoice
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "Checkbox":
+        return (
+          <MultipleChoice
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "File Upload":
+        return (
+          <MultipleChoice
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
+      case "Date":
+        return (
+          <MultipleChoice
+            key={index}
+            formData={formData}
+            setFormData={setFormData}
+            index={index}
+          />
+        );
       default:
         return null;
     }
-  };
-
-  // Handle the deletion of the component from formData
-  const handleDelete = (index: number) => {
-    setFormData((prevData) => prevData.filter((_, i) => i !== index));
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/layout";
-import GeneralInfo from "./components/generalinfo";
+import GeneralInfo from "./generalinfo";
 import Stepper from "./components/stepper";
 import FormBuilder from "./formbuilder";
 

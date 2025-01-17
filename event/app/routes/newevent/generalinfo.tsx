@@ -1,5 +1,5 @@
-import FormNavigation from "./formnavigation";
-import Input from "./input";
+import FormNavigation from "./components/formnavigation";
+import Input from "./components/input";
 
 interface GeneralInfoProps {
   eventName: string;

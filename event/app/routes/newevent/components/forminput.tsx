@@ -1,42 +1,63 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
 
 export default function FormInput({
   placeholder,
   className,
-  longtext,
   participant,
   type,
+  data,
+  index,
+  setData,
 }: {
   placeholder: string;
   className?: string;
-  longtext?: boolean;
   participant?: boolean;
-  type: "text" | "password" | "email" | "number" | "date" | "url";
+  type: "text" | "longtext" | "choice";
+  data?: string | string[];
+  index?: number;
+  setData?:
+    | Dispatch<SetStateAction<string>>
+    | Dispatch<SetStateAction<string[]>>;
 }) {
-  const [data, setData] = useState("");
+  const [temp, setTemp] = useState("");
+  const handleUpdateData = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setTemp(e.target.value);
+    if (!setData) return;
+    if (typeof data === "string") {
+      (setData as Dispatch<SetStateAction<string>>)(e.target.value);
+    } else if (Array.isArray(data) && index) {
+      const updatedData = [...data];
+      updatedData[index] = e.target.value;
+      (setData as Dispatch<SetStateAction<string[]>>)(updatedData);
+    }
+  };
   return (
     <div
-      className={`relative w-full  ${className} ${
+      className={`relative w-full ${className} ${
         participant ? "border-2 border-border bg-gray-100 p-3 rounded-lg" : ""
       }`}
     >
-      {longtext ? (
+      {type === "longtext" ? (
         <textarea
-          value={data}
-          onChange={(e) => setData(e.target.value)}
+          value={typeof data === "string" ? data : ""}
+          onChange={handleUpdateData}
           className="w-full bg-transparent border-none focus:ring-0 focus:outline-none"
           placeholder={placeholder}
           rows={4}
+          disabled={participant ? true : false}
         />
       ) : (
         <input
-          type={type}
-          value={data}
-          onChange={(e) => setData(e.target.value)}
+          type="text"
+          value={temp}
+          onChange={handleUpdateData}
           className="w-full bg-transparent border-none focus:outline-none focus:ring-0"
+          disabled={participant ? true : false}
         />
       )}
-      {data ? null : (
+      {!temp && (
         <label
           className={`absolute left-0 top-0 transition-all duration-200 pointer-events-none ${
             participant ? "p-3" : "text-gray-400"

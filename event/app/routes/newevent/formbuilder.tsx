@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import FormElement from "./components/formelements";
+import FormElement from "./components/formelement";
 import FormDroppable from "./components/formdroppable";
 import FormNavigation from "./components/formnavigation";
+import { FormDataElement } from "./types/formtype";
 
 export default function FormBuilder({
   setStep,
@@ -11,17 +12,18 @@ export default function FormBuilder({
 }) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
-  const [formData, setFormData] = useState<string[]>([]);
+  const [formData, setFormData] = useState<FormDataElement[]>([]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    console.log(active);
-    console.log(over);
+    const blank = {
+      type: active.id as string,
+    };
     if (over?.id == "FormElementDropArea") {
       let updatedFormData = formData;
-      updatedFormData.push(active.id as string);
-      setFormData(formData);
-      console.log(formData);
+      updatedFormData.push(blank);
+      setFormData(updatedFormData);
+      console.log(updatedFormData);
     }
   };
 

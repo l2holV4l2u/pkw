@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import FormInput from "./forminput";
 import { FormDataElement } from "../types/formtype";
 
-export default function ShortAnswer({
+export default function FileUpload({
   formData,
   setFormData,
   index,
@@ -15,7 +15,7 @@ export default function ShortAnswer({
   useEffect(() => {
     const updatedFormData = [...formData];
     updatedFormData[index] = {
-      type: "Short Answer",
+      type: "File Upload",
       question,
     };
     setFormData(updatedFormData);
@@ -28,12 +28,6 @@ export default function ShortAnswer({
         type="text"
         data={question}
         setData={setQuestion}
-      />
-      <FormInput
-        placeholder="Short Answer"
-        className="text-sm font-normal text-gray-600"
-        type="text"
-        participant={true}
       />
     </div>
   );
