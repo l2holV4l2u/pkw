@@ -2,7 +2,7 @@ import { useState } from "react";
 import GeneralInfo from "./pagecomponents/generalinfo";
 import FormBuilder from "./pagecomponents/formbuilder";
 import Layout from "./components/layout";
-import ProgressBar from "./pagecomponents/components/progressbar";
+import Stepper from "./pagecomponents/components/stepper";
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");
@@ -11,10 +11,11 @@ export default function NewEvent() {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
   const [step, setStep] = useState<number>(1);
+  const [inProgress, setInProgress] = useState(true);
 
   return (
     <Layout title="New Event" className="space-y-6">
-      <ProgressBar step={step} />
+      <Stepper step={step} inProgress={inProgress} />
       {step == 1 && (
         <GeneralInfo
           eventName={eventName}

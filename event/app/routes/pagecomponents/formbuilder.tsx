@@ -21,7 +21,6 @@ export default function FormBuilder({
       onDragStart={(event) => {
         setActiveID(event.active.id as string);
         setIsDragging(true);
-        console.log(event.active.id);
       }}
       onDragEnd={(event) => {
         setIsDragging(false);
@@ -30,9 +29,6 @@ export default function FormBuilder({
       }}
     >
       <div className="flex flex-col space-y-6 items-center w-full flex-grow">
-        <h2 className="text-gray-800 font-semibold text-xl">
-          Step 2 - Build Your Own Form
-        </h2>
         <div className="grid grid-cols-10 gap-4 w-full h-full">
           <FormElement isDragging={isDragging} activeID={activeID} />
           <FormDroppable />

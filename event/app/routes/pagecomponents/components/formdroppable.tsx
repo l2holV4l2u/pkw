@@ -1,4 +1,5 @@
 import { useDroppable } from "@dnd-kit/core";
+import FormInput from "./forminput";
 
 export default function FormDroppable() {
   const { setNodeRef } = useDroppable({ id: "formdroppable" });
@@ -8,7 +9,7 @@ export default function FormDroppable() {
       onDragOver={(e) => e.preventDefault()}
       className="p-4 border-dashed border-2 rounded-lg border-gray-300 h-full col-span-7"
     >
-      <h3 className="text-gray-800 font-semibold">Your Form</h3>
+      <FormInput placeholder="Form Title" />
       {/* Render dropped form elements here */}
     </div>
   );
