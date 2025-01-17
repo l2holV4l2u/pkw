@@ -11,9 +11,18 @@ export default function FormBuilder({
 }) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
+  const [formData, setFormData] = useState<string[]>([]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    console.log(active);
+    console.log(over);
+    if (over?.id == "FormElementDropArea") {
+      let updatedFormData = formData;
+      updatedFormData.push(active.id as string);
+      setFormData(formData);
+      console.log(formData);
+    }
   };
 
   return (
@@ -31,7 +40,7 @@ export default function FormBuilder({
       <div className="flex flex-col space-y-6 items-center w-full flex-grow">
         <div className="grid grid-cols-10 gap-4 w-full h-full">
           <FormElement isDragging={isDragging} activeID={activeID} />
-          <FormDroppable />
+          <FormDroppable formData={formData} setFormData={setFormData} />
         </div>
         <FormNavigation
           onClickPrev={() => {
