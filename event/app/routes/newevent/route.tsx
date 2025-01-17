@@ -1,8 +1,8 @@
 import { useState } from "react";
-import GeneralInfo from "./pagecomponents/generalinfo";
-import FormBuilder from "./pagecomponents/formbuilder";
-import Layout from "./components/layout";
-import Stepper from "./pagecomponents/components/stepper";
+import Layout from "../components/layout";
+import GeneralInfo from "./components/generalinfo";
+import Stepper from "./components/stepper";
+import FormBuilder from "./formbuilder";
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");

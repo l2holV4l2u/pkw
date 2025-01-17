@@ -1,20 +1,57 @@
 import Card from "./components/card";
 import Layout from "./components/layout";
+import Button from "./components/button";
+import { useEffect, useState } from "react";
+import { Event } from "../types/event";
 
-export default function Index() {
+export default function EventIndex() {
+  const [events, setEvents] = useState<Event[]>([]);
+  useEffect(() => {
+    const loadEvent = async () => {
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`http://localhost:5000/getevent/${token}`);
+
+      if (!response.ok) {
+        throw new Response("Failed to fetch events", {
+          status: response.status,
+          statusText: response.statusText,
+        });
+      }
+
+      const temp: Event[] = await response.json();
+      setEvents(temp);
+    };
+    loadEvent();
+  }, []);
+
   return (
-    <Layout title="Overview">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card title="Active Competitions">
-          <p className="mt-2 text-gray-600">3 ongoing competitions</p>
-        </Card>
-        <Card title="Participants Registered">
-          <p className="mt-2 text-gray-600">156 registered participants</p>
-        </Card>
-        <Card title="Upcoming Events">
-          <p className="mt-2 text-gray-600">5 upcoming events this month</p>
-        </Card>
+    <Layout title="Events" className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div className="text-gray-700 font-bold text-2xl">Your Events</div>
+        <Button link="./newevent" content="+ add event" />
       </div>
+
+      {events.length === 0 ? (
+        <div className="text-gray-500">No events found</div>
+      ) : (
+        events.map((item) => (
+          <Card
+            title={item.name}
+            key={item.id}
+            clickable={true}
+            link={"./" + item.id}
+          >
+            <div className="text-gray-700 space-y-1">
+              <p>
+                Date: {new Date(item.start_time).toLocaleString()} -{" "}
+                {new Date(item.end_time).toLocaleString()}
+              </p>
+              <p>Location: {item.location}</p>
+              <p className="text-sm text-gray-600">{item.description}</p>
+            </div>
+          </Card>
+        ))
+      )}
     </Layout>
   );
 }

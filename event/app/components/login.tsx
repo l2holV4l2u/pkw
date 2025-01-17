@@ -1,6 +1,6 @@
 import { Form } from "@remix-run/react";
 import { LoginProps } from "../types/authenticate";
-import Input from "../components/input";
+import Input from "./input";
 
 export default function Login({
   email,
@@ -23,7 +23,7 @@ export default function Login({
         {/* Login Form */}
         <Form
           method="post"
-          className="mt-4"
+          className="mt-4 space-y-4"
           onSubmit={(e) => {
             e.preventDefault(); // Prevent default form submission
             handleLogin(email, password);

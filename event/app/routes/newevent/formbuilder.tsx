@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import FormElement from "./components/formelements";
 import FormDroppable from "./components/formdroppable";
-import FormNavigation from "../components/formnavigation";
-import { useState } from "react";
+import FormNavigation from "./components/formnavigation";
 
 export default function FormBuilder({
   setStep,
@@ -39,8 +39,8 @@ export default function FormBuilder({
     >
       <div className="flex flex-col space-y-6 items-center w-full flex-grow">
         <div className="grid grid-cols-10 gap-4 w-full h-full">
-          <FormElement isDragging={isDragging} activeID={activeID} />
           <FormDroppable formData={formData} setFormData={setFormData} />
+          <FormElement isDragging={isDragging} activeID={activeID} />
         </div>
         <FormNavigation
           onClickPrev={() => {

@@ -1,29 +1,26 @@
 import { Link, useLocation } from "@remix-run/react";
 import placeholder from "../utils/placeholder.png";
 import { useState } from "react";
+import { Curve, CurveWithLine } from "./icons";
+import { HiOutlineCog, HiOutlineHome, HiOutlineTicket } from "react-icons/hi";
 import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ChevronUpIcon,
-  Cog6ToothIcon,
-  Curve,
-  CurveWithLine,
-  HomeIcon,
-  TicketIcon,
-} from "./icons";
+  IoChevronDownOutline,
+  IoChevronForwardOutline,
+  IoChevronUpOutline,
+} from "react-icons/io5";
 
 export default function Sidebar() {
   const location = useLocation();
   const currentPath = location.pathname.slice(1);
   const menus = ["Home", "Event", "Setting"];
   const menuLinks = ["", "event", "setting"];
-  const submenus = [[], ["Overview", "Your Event", "Your Ticket"], []];
-  const submenuLinks = [[], ["", "yourevent", "yourticket"], []];
+  const submenus = [[], ["Your Event", "Your Ticket"], []];
+  const submenuLinks = [[], ["yourevent", "yourticket"], []];
   const [openSub, setOpenSub] = useState<boolean[]>([false, true, false]);
   const menuSVG = [
-    <HomeIcon width="18px" height="18px" />,
-    <TicketIcon width="18px" height="18px" />,
-    <Cog6ToothIcon width="18px" height="18px" />,
+    <HiOutlineHome size={18} />,
+    <HiOutlineTicket size={18} />,
+    <HiOutlineCog size={18} />,
   ];
 
   const toggleSubmenu = (index: number) => {
@@ -51,9 +48,9 @@ export default function Sidebar() {
                     {menuSVG[index]} <div>{item}</div>
                   </div>
                   {openSub[index] ? (
-                    <ChevronDownIcon width="18px" height="18px" />
+                    <IoChevronDownOutline size={18} />
                   ) : (
-                    <ChevronUpIcon width="18px" height="18px" />
+                    <IoChevronUpOutline size={18} />
                   )}
                 </button>
               ) : (
@@ -69,11 +66,7 @@ export default function Sidebar() {
                     {menuSVG[index]} <div>{item}</div>
                   </div>
                   {currentPath == menuLinks[index] && (
-                    <ChevronRightIcon
-                      width="18px"
-                      height="18px"
-                      stroke="black"
-                    />
+                    <IoChevronDownOutline size={18} />
                   )}
                 </Link>
               )}
@@ -111,11 +104,7 @@ export default function Sidebar() {
                           menuLinks[index] +
                             "/" +
                             submenuLinks[index][subindex] && (
-                          <ChevronRightIcon
-                            width="18px"
-                            height="18px"
-                            stroke="black"
-                          />
+                          <IoChevronForwardOutline size={18} />
                         )}
                       </Link>
                     </li>

@@ -4,13 +4,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useNavigate,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
-import Sidebar from "./routes/components/sidebar";
 import { useEffect, useState } from "react";
-import Authenticate from "./routes/pagecomponents/authenticate";
+import Authenticate from "./components/authenticate";
+import Sidebar from "./components/sidebar";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
