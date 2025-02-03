@@ -1,34 +1,22 @@
-import FormNavigation from "./components/formnavigation";
-import Input from "./components/input";
+import { useContext } from "react";
+import { NewEventContext } from "../context";
+import Input from "../components/input";
+import FormNavigation from "../components/formnavigation";
 
-interface GeneralInfoProps {
-  eventName: string;
-  setEventName: React.Dispatch<React.SetStateAction<string>>;
-  description: string;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
-  location: string;
-  setLocation: React.Dispatch<React.SetStateAction<string>>;
-  fromDate: string;
-  setFromDate: React.Dispatch<React.SetStateAction<string>>;
-  toDate: string;
-  setToDate: React.Dispatch<React.SetStateAction<string>>;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-}
-
-export default function GeneralInfo({
-  eventName,
-  setEventName,
-  description,
-  setDescription,
-  location,
-  setLocation,
-  fromDate,
-  setFromDate,
-  toDate,
-  setToDate,
-  setStep,
-}: GeneralInfoProps) {
-  // State to store the form fields
+export default function GeneralInfo() {
+  const {
+    eventName,
+    setEventName,
+    description,
+    setDescription,
+    location,
+    setLocation,
+    fromDate,
+    setFromDate,
+    toDate,
+    setToDate,
+    setStep,
+  } = useContext(NewEventContext);
   return (
     <div className="flex flex-col space-y-6 items-center w-full">
       <div className="flex flex-col space-y-4 items-start w-[50%]">

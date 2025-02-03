@@ -1,8 +1,8 @@
-import Card from "./components/card";
-import Layout from "./components/layout";
-import Button from "./components/button";
 import { useEffect, useState } from "react";
-import { Event } from "../types/event";
+import Layout from "../components/layout";
+import Button from "../components/button";
+import Card from "../components/card";
+import { Event } from "~/types/event";
 
 export default function EventIndex() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -25,10 +25,10 @@ export default function EventIndex() {
   }, []);
 
   return (
-    <Layout title="Events" className="space-y-4">
+    <Layout title="Hosted Event" className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="text-gray-700 font-bold text-2xl">Your Events</div>
-        <Button link="./newevent" content="+ add event" />
+        <Button link="/newevent" content="+ add event" />
       </div>
 
       {events.length === 0 ? (

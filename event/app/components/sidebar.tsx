@@ -14,8 +14,8 @@ export default function Sidebar() {
   const currentPath = location.pathname.slice(1);
   const menus = ["Home", "Event", "Setting"];
   const menuLinks = ["", "event", "setting"];
-  const submenus = [[], ["Your Event", "Your Ticket"], []];
-  const submenuLinks = [[], ["yourevent", "yourticket"], []];
+  const submenus = [[], ["Hosted Event", "Registered Event"], []];
+  const submenuLinks = [[], ["hosted", "registered"], []];
   const [openSub, setOpenSub] = useState<boolean[]>([false, true, false]);
   const menuSVG = [
     <HiOutlineHome size={18} />,
@@ -66,7 +66,7 @@ export default function Sidebar() {
                     {menuSVG[index]} <div>{item}</div>
                   </div>
                   {currentPath == menuLinks[index] && (
-                    <IoChevronDownOutline size={18} />
+                    <IoChevronForwardOutline size={18} />
                   )}
                 </Link>
               )}
@@ -86,24 +86,15 @@ export default function Sidebar() {
                         )}
                       </div>
                       <Link
-                        to={
-                          "./" +
-                          menuLinks[index] +
-                          "/" +
-                          submenuLinks[index][subindex]
-                        }
+                        to={"/" + submenuLinks[index][subindex]}
                         className={`p-1.5 w-full text-sm rounded-md hover:bg-gray-200 hover:text-gray-900 text-gray-700 transition duration-200 ${
-                          currentPath ===
-                          menuLinks[index] + "/" + submenuLinks[index][subindex]
+                          currentPath === submenuLinks[index][subindex]
                             ? "bg-white shadow-md font-semibold flex justify-between"
                             : "font-medium"
                         }`}
                       >
                         {subitem}
-                        {currentPath ===
-                          menuLinks[index] +
-                            "/" +
-                            submenuLinks[index][subindex] && (
+                        {currentPath === submenuLinks[index][subindex] && (
                           <IoChevronForwardOutline size={18} />
                         )}
                       </Link>

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Layout from "../components/layout";
-import GeneralInfo from "./generalinfo";
 import Stepper from "./components/stepper";
-import FormBuilder from "./formbuilder";
+import FormBuilder from "./subpage/formbuilder";
+import GeneralInfo from "./subpage/generalinfo";
+import { NewEventContext } from "./context";
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");
@@ -14,24 +15,33 @@ export default function NewEvent() {
   const [inProgress, setInProgress] = useState(true);
 
   return (
-    <Layout title="New Event" className="space-y-6">
-      <Stepper step={step} inProgress={inProgress} />
-      {step == 1 && (
-        <GeneralInfo
-          eventName={eventName}
-          setEventName={setEventName}
-          description={description}
-          setDescription={setDescription}
-          location={location}
-          setLocation={setLocation}
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
-          setStep={setStep}
-        />
-      )}
-      {step == 2 && <FormBuilder setStep={setStep} />}
-    </Layout>
+    <NewEventContext.Provider
+      value={{
+        eventName,
+        setEventName,
+        description,
+        setDescription,
+        location,
+        setLocation,
+        fromDate,
+        setFromDate,
+        toDate,
+        setToDate,
+        step,
+        setStep,
+        inProgress,
+        setInProgress,
+      }}
+    >
+      <Layout
+        label={["Hosted Event", "New Event"]}
+        link={["hosted", "newevent"]}
+        className="space-y-6"
+      >
+        <Stepper />
+        {step == 1 && <GeneralInfo />}
+        {step == 2 && <FormBuilder />}
+      </Layout>
+    </NewEventContext.Provider>
   );
 }

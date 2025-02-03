@@ -1,15 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import FormElement from "./components/formelement";
-import FormDroppable from "./components/formdroppable";
-import FormNavigation from "./components/formnavigation";
-import { FormDataElement } from "./types/formtype";
+import FormElement from "../components/formelement";
+import FormDroppable from "../components/formdroppable";
+import FormNavigation from "../components/formnavigation";
+import { FormDataElement } from "../types/formtype";
+import { NewEventContext } from "../context";
 
-export default function FormBuilder({
-  setStep,
-}: {
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-}) {
+export default function FormBuilder() {
+  const { setStep } = useContext(NewEventContext);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormDataElement[]>([]);
@@ -23,7 +21,6 @@ export default function FormBuilder({
       let updatedFormData = formData;
       updatedFormData.push(blank);
       setFormData(updatedFormData);
-      console.log(updatedFormData);
     }
   };
 
