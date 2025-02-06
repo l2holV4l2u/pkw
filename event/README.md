@@ -11,3 +11,7 @@ Backend
 Database
 
 - PostgreSQL
+
+Hosting
+
+- AWS RDS(?)

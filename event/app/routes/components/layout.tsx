@@ -15,7 +15,7 @@ export default function Layout({
 }) {
   return (
     <div
-      className={`p-6 space-y-6 h-full bg-white rounded-3xl border-2 border-border`}
+      className={`p-6 flex flex-col space-y-6 h-full bg-white rounded-3xl border-2 border-border ${className}`}
     >
       {title && (
         <div className="mb-3 flex justify-between items-center">
@@ -23,7 +23,7 @@ export default function Layout({
         </div>
       )}
       {link && label && <Breadcrumb link={link} label={label} />}
-      <div className={`${className}`}>{children}</div>
+      {children}
     </div>
   );
 }

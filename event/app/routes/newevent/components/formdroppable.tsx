@@ -88,12 +88,13 @@ export default function FormDroppable({
     <div
       ref={setNodeRef}
       onDragOver={(e) => e.preventDefault()}
-      className="col-span-7"
+      className="col-span-7  flex flex-col"
     >
-      <Card className="p-4 h-full flex flex-col space-y-6">
-        {formData.map((item, index) => {
-          return <div key={index}>{renderComponent(item, index)}</div>;
-        })}
+      <Card className="p-4 flex-1 overflow-auto space-y-6 border rounded-md">
+        {formData.map((item, index) => (
+          <div key={index}>{renderComponent(item, index)}</div>
+        ))}
+
         {isOver && (
           <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg mt-4 border-2 border-dashed" />
         )}

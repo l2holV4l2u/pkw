@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { NewEventContext } from "./context";
 import Layout from "../components/layout";
 import Stepper from "./components/stepper";
 import FormBuilder from "./subpage/formbuilder";
 import GeneralInfo from "./subpage/generalinfo";
-import { NewEventContext } from "./context";
+import Preview from "./subpage/preview";
+import FormNavigation from "./components/formnavigation";
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");
@@ -36,11 +38,13 @@ export default function NewEvent() {
       <Layout
         label={["Hosted Event", "New Event"]}
         link={["hosted", "newevent"]}
-        className="space-y-6"
+        className="space-y-6 items-center"
       >
         <Stepper />
         {step == 1 && <GeneralInfo />}
         {step == 2 && <FormBuilder />}
+        {step == 3 && <Preview />}
+        <FormNavigation enable={[step != 1, step != 4]} className="w-[50%]" />
       </Layout>
     </NewEventContext.Provider>
   );

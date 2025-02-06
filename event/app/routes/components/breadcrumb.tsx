@@ -8,7 +8,7 @@ export default function Breadcrumb({
   label: string[];
 }) {
   return (
-    <nav className="flex items-center space-x-2 text-gray-800 font-semibold">
+    <nav className="flex items-start space-x-2 text-gray-800 font-semibold w-full">
       {label.map((item, index) => (
         <div key={index} className="flex items-center space-x-2">
           {index > 0 && <span className="text-gray-600">/</span>}

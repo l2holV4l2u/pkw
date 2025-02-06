@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  full_name       String
+  profile_picture String?
+  contact_no      String?
+  updated_at      DateTime @updatedAt
+  password        String
+  roles         Role[]
+  formResponses FormResponse[]
+}
+
+model Event {
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  description           String
+  start_date            DateTime
+  end_date              DateTime
+  registration_deadline DateTime
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+  roles         Role[]
+  formQuestions FormQuestion[]
+  formResponses FormResponse[]
+}
+
+model Role {
+  user_id  String
+  event_id Int
+  role     String
+  user  User  @relation(fields: [user_id], references: [id])
+  event Event @relation(fields: [event_id], references: [id])
+  @@id([user_id, event_id])
+}
+
+model FormQuestion {
+  id          Int   @id @default(autoincrement())
+  event_id    Int
+  field_order Int[] 
+  event     Event               @relation(fields: [event_id], references: [id])
+  fields    FormQuestionField[]
+  responses FormResponse[]
+}
+
+model FormQuestionField {
+  id    Int  @id @default(autoincrement())
+  value Json
+  formQuestionId Int?
+  formQuestion   FormQuestion? @relation(fields: [formQuestionId], references: [id])
+  responseFields FormResponseField[]
+}
+
+model FormResponse {
+  id           Int      @id @default(autoincrement())
+  event_id     Int
+  submitted_by String
+  submitted_at DateTime @default(now())
+  event          Event               @relation(fields: [event_id], references: [id])
+  user           User                @relation(fields: [submitted_by], references: [id])
+  responseFields FormResponseField[]
+  FormQuestion   FormQuestion?       @relation(fields: [formQuestionId], references: [id])
+  formQuestionId Int?
+}
+
+model FormResponseField {
+  id                     Int  @id @default(autoincrement())
+  form_question_field_id Int
+  value                  Json
+  formQuestionField FormQuestionField @relation(fields: [form_question_field_id], references: [id])
+  FormResponse      FormResponse?     @relation(fields: [formResponseId], references: [id])
+  formResponseId    Int?
+}

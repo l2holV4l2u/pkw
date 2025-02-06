@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import FormElement from "../components/formelement";
 import FormDroppable from "../components/formdroppable";
-import FormNavigation from "../components/formnavigation";
 import { FormDataElement } from "../types/formtype";
 import { NewEventContext } from "../context";
 
@@ -36,20 +35,11 @@ export default function FormBuilder() {
         handleDragEnd(event);
       }}
     >
-      <div className="flex flex-col space-y-6 items-center w-full flex-grow">
-        <div className="grid grid-cols-10 gap-4 w-full h-full">
+      <div className="flex flex-col space-y-6 items-center h-[60vh]">
+        <div className="grid grid-cols-10 gap-4 h-full">
           <FormDroppable formData={formData} setFormData={setFormData} />
           <FormElement isDragging={isDragging} activeID={activeID} />
         </div>
-        <FormNavigation
-          onClickPrev={() => {
-            setStep(1);
-          }}
-          onClickNext={() => {
-            setStep(2);
-          }}
-          className="w-full"
-        />
       </div>
     </DndContext>
   );

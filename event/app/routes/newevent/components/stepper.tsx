@@ -1,5 +1,5 @@
 import { LuSettings } from "react-icons/lu";
-import { FaEye, FaRegCreditCard } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa6";
 import { FaRegFileAlt } from "react-icons/fa";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { HiCheckCircle } from "react-icons/hi";
@@ -11,15 +11,11 @@ export default function Stepper() {
   const steps = [
     "General Information",
     "Make Your Own Form",
-    "Integrate Payment",
-    "Preference",
     "Preview and Publish",
   ];
   const stepIcons = [
     <IoInformationCircleOutline size={36} color="black" />,
     <FaRegFileAlt size={32} color="black" />,
-    <FaRegCreditCard size={32} color="black" />,
-    <LuSettings size={32} color="black" />,
     <FaEye size={32} color="black" />,
   ];
 
@@ -28,7 +24,7 @@ export default function Stepper() {
       <div className="flex space-x-4 text-gray-700">
         {steps.map((item, index) => (
           <div className="flex flex-col space-y-2 items-start w-fit">
-            <div className="flex space-x-4 items-center">
+            <div className="flex space-x-4 items-center h-[36px]">
               {step > index + 1 ? (
                 <HiCheckCircle size={36} color="green" />
               ) : (
