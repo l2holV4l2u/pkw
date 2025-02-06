@@ -8,8 +8,8 @@ import {
 import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 import { useEffect, useState } from "react";
-import Authenticate from "./components/authenticate";
-import Sidebar from "./components/sidebar";
+import { Authentication } from "@/components/sections";
+import { Sidebar } from "@/components/layouts";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -58,7 +58,7 @@ function App() {
     setToken(userToken);
   };
   if (!token) {
-    return <Authenticate setToken={handleSetToken} />;
+    return <Authentication setToken={handleSetToken} />;
   }
 
   return (
