@@ -18,6 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirm") as string;
+  const fullname = formData.get("full") as string;
   if (!email || !password || !confirmPassword) {
     return new Response(JSON.stringify({ error: "All fields are required." }));
   }
@@ -27,15 +28,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return new Response(JSON.stringify({ error: "Email already in use." }));
+      return new Response("Email already in use.");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { full_name: "John Pork", email, password: hashedPassword },
+      data: { full_name: fullname, email, password: hashedPassword },
     });
     const cookieHeader = cookie.serialize("token", user.id, {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: 60 * 60 * 24 * 365 * 999,
       path: "/",
     });
     return redirect("/", {
@@ -45,13 +46,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Something went wrong. Try again later." })
+      JSON.stringify("Something went wrong. Try again later.")
     );
   }
 };
 
 export default function Register() {
   const actionData = useActionData<ActionData>();
+  const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -68,6 +70,12 @@ export default function Register() {
           </div>
         )}
         <Form method="post" className="mt-4 space-y-4">
+          <Input
+            field={fullname}
+            setField={setFullname}
+            label="Full Name"
+            type="text"
+          />
           <Input field={email} setField={setEmail} label="Email" type="email" />
           <Input
             field={password}

@@ -5,14 +5,11 @@ import { Card } from "@components/ui";
 import { LongAnswer } from "../formui/longanswer";
 import { MultipleChoice } from "../formui/multiplechoice";
 import { FormDataElement } from "../../types/formtype";
+import { useContext } from "react";
+import { NewEventContext } from "@contexts";
 
-export function FormDroppable({
-  formData,
-  setFormData,
-}: {
-  formData: FormDataElement[];
-  setFormData: React.Dispatch<React.SetStateAction<FormDataElement[]>>; // The type for setFormData
-}) {
+export function FormDroppable() {
+  const { formData, setFormData } = useContext(NewEventContext);
   const { setNodeRef, isOver } = useDroppable({ id: "FormElementDropArea" });
   const renderComponent = (type: FormDataElement, index: number) => {
     switch (type.type) {
@@ -83,18 +80,16 @@ export function FormDroppable({
         return null;
     }
   };
-
   return (
     <div
       ref={setNodeRef}
       onDragOver={(e) => e.preventDefault()}
-      className="col-span-7  flex flex-col"
+      className="col-span-7 flex flex-col"
     >
-      <Card className="p-4 flex-1 overflow-auto space-y-6 border rounded-md">
+      <Card className="p-4 flex-1 space-y-6 border rounded-md overflow-auto max-h-[65vh]">
         {formData.map((item, index) => (
           <div key={index}>{renderComponent(item, index)}</div>
         ))}
-
         {isOver && (
           <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg mt-4 border-2 border-dashed" />
         )}

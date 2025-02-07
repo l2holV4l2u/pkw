@@ -1,3 +1,4 @@
+import { FormDataElement } from "@types";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export const NewEventContext = createContext<{
@@ -15,6 +16,8 @@ export const NewEventContext = createContext<{
   setStep: Dispatch<SetStateAction<number>>;
   inProgress: boolean;
   setInProgress: Dispatch<SetStateAction<boolean>>;
+  formData: FormDataElement[];
+  setFormData: Dispatch<SetStateAction<FormDataElement[]>>;
 }>({
   eventName: "",
   setEventName: () => {},
@@ -30,4 +33,6 @@ export const NewEventContext = createContext<{
   setStep: () => {},
   inProgress: false,
   setInProgress: () => {},
+  formData: [],
+  setFormData: () => {},
 });

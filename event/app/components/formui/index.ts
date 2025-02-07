@@ -1,5 +1,4 @@
 export * from "./fileupload";
-export * from "./formelement";
 export * from "./formicon";
 export * from "./forminput";
 export * from "./formnavigation";

@@ -1,15 +1,13 @@
 import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { FormElement } from "@components/formui";
+import { FormElement } from "@components/layouts";
 import { FormDroppable } from "@components/layouts";
-import { FormDataElement } from "@/types";
-import { NewEventContext } from "@/contexts";
+import { NewEventContext } from "@contexts";
 
 export function FormBuilder() {
-  const { setStep } = useContext(NewEventContext);
+  const { formData, setFormData } = useContext(NewEventContext);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
-  const [formData, setFormData] = useState<FormDataElement[]>([]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -35,11 +33,9 @@ export function FormBuilder() {
         handleDragEnd(event);
       }}
     >
-      <div className="flex flex-col space-y-6 items-center h-[60vh]">
-        <div className="grid grid-cols-10 gap-4 h-full">
-          <FormDroppable formData={formData} setFormData={setFormData} />
-          <FormElement isDragging={isDragging} activeID={activeID} />
-        </div>
+      <div className="grid grid-cols-10 gap-4 h-[65vh]">
+        <FormDroppable />
+        <FormElement isDragging={isDragging} activeID={activeID} />
       </div>
     </DndContext>
   );

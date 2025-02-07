@@ -15,7 +15,6 @@ export async function action({ request }: ActionFunctionArgs) {
     const user = await prisma.user.findUnique({
       where: { email },
     });
-
     const passwordMatch = await bcrypt.compare(
       password,
       user ? user.password : ""
@@ -65,7 +64,6 @@ export default function Login() {
             {actionData}
           </div>
         )}
-        {/* Login Form */}
         <Form method="post" className="mt-4 space-y-4">
           <Input field={email} setField={setEmail} label="Email" type="email" />
           <Input

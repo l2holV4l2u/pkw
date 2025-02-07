@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui";
-import { FormElementIcon } from "./formicon";
+import { FormElementIcon } from "../formui/formicon";
 import { DragOverlay, useDraggable } from "@dnd-kit/core";
 
 const BuilderElement = ({
