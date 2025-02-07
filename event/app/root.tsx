@@ -2,13 +2,14 @@ import {
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import "./tailwind.css";
-import { useEffect, useState } from "react";
-import { Authentication } from "@/components/sections";
+import cookie from "cookie";
 import { Sidebar } from "@/components/layouts";
 
 export const links: LinksFunction = () => [
@@ -42,38 +43,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function App() {
-  const [token, setToken] = useState<string | null>(null);
+export async function loader({ request }: LoaderFunctionArgs) {
+  const cookies = cookie.parse(request.headers.get("cookie") || "");
+  const token = cookies.token;
+  const url = request.url;
+  return !token && !url.includes("authentication")
+    ? redirect("./authentication/login")
+    : null;
+}
 
-  useEffect(() => {
-    const savedToken = sessionStorage.getItem("token");
-    if (savedToken) {
-      const parsedToken = JSON.parse(savedToken);
-      setToken(parsedToken);
-    }
-  }, []);
-
-  const handleSetToken = (userToken: string) => {
-    sessionStorage.setItem("token", JSON.stringify(userToken));
-    setToken(userToken);
-  };
-  if (!token) {
-    return <Authentication setToken={handleSetToken} />;
-  }
+export default function App() {
+  const location = useLocation();
+  const isAuthenticationRoute = location.pathname.includes("/authentication");
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar with responsiveness */}
-      <div className="w-64">
-        <Sidebar />
-      </div>
-
-      {/* Content Area */}
+      {!isAuthenticationRoute && (
+        <div className="w-64">
+          <Sidebar />
+        </div>
+      )}
       <div className="flex-1 min-h-screen p-2">
         <Outlet />
       </div>
     </div>
   );
 }
-
-export default App;

@@ -8,9 +8,7 @@ import {
   IoChevronUpOutline,
 } from "react-icons/io5";
 
-import { SVGAttributes } from "react";
-
-function Curve(props?: SVGAttributes<SVGElement>) {
+function Curve() {
   return (
     <svg
       width="18"
@@ -24,7 +22,7 @@ function Curve(props?: SVGAttributes<SVGElement>) {
   );
 }
 
-function CurveWithLine(props?: SVGAttributes<SVGElement>) {
+function CurveWithLine() {
   return (
     <svg
       width="18"
