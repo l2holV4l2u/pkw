@@ -15,8 +15,18 @@ export type MultipleChoice = BaseFormDataElement & {
   choices: string[];
 };
 
+export type FileUpload = BaseFormDataElement & {
+  file: File | null;
+};
+
+export type Date = BaseFormDataElement & {
+  date: string;
+};
+
 export type FormDataElement =
   | BaseFormDataElement
   | Section
   | QA
-  | MultipleChoice;
+  | MultipleChoice
+  | FileUpload
+  | Date;

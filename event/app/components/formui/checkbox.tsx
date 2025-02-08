@@ -1,43 +1,44 @@
 import { useContext, useEffect, useState } from "react";
 import { Input } from "./input";
-import { GoDotFill, GoPlus } from "react-icons/go";
+import { GoPlus } from "react-icons/go";
 import { NewEventContext } from "@contexts";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-export function MultipleChoice({ index }: { index: number }) {
+export function Checkbox({ index }: { index: number }) {
   const { formData, setFormData } = useContext(NewEventContext);
   const [question, setQuestion] = useState("");
-  const [choices, setChoices] = useState<string[]>([]);
+  const [options, setOptions] = useState<string[]>([]);
 
   useEffect(() => {
     const updatedFormData = [...formData];
     updatedFormData[index] = {
-      type: "Multiple Choice",
-      choices,
+      type: "Checkbox",
+      choices: options,
     };
     setFormData(updatedFormData);
-  }, [question, choices]);
+  }, [question, options]);
 
   return (
     <div className="flex flex-col space-y-4">
       <Input data={question} setData={setQuestion} />
-      {choices.map((_, index) => (
-        <div className="flex items-center gap-2" key={index}>
-          <GoDotFill size={16} />
+      {options.map((_, idx) => (
+        <div className="flex items-center gap-2" key={idx}>
+          <MdOutlineCheckBoxOutlineBlank size={24} color="gray" />
           <Input
-            placeholder={`Choice ${index + 1}`}
+            placeholder={`Option ${idx + 1}`}
             className="text-sm font-normal text-gray-600"
-            data={choices}
-            setData={setChoices}
-            index={index}
+            data={options}
+            setData={setOptions}
+            index={idx}
           />
         </div>
       ))}
       <button
         className="flex text-gray-600 items-center gap-2 text-sm"
-        onClick={() => setChoices([...choices, ""])}
+        onClick={() => setOptions([...options, ""])}
       >
         <GoPlus size={16} />
-        Add more choice
+        Add more option
       </button>
     </div>
   );

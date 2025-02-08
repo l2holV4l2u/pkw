@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NewEventContext } from "../contexts/newevent";
 import { Layout, Stepper } from "@/components/layouts";
 import { FormBuilder, GeneralInfo, Preview } from "@components/sections";
-import { FormNavigation } from "@/components/formui";
+import { Navigation } from "@/components/formui";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { prisma } from "@utils/functions/prisma";
 import { FormDataElement } from "@types";
@@ -92,7 +92,7 @@ export default function NewEvent() {
         {step == 1 && <GeneralInfo />}
         {step == 2 && <FormBuilder />}
         {step == 3 && <Preview />}
-        <FormNavigation enable={[step != 1, step != 4]} className="w-[50%]" />
+        <Navigation enable={[step != 1, step != 4]} className="w-[50%]" />
       </Layout>
     </NewEventContext.Provider>
   );

@@ -1,50 +1,72 @@
-import React from "react";
-
-interface InputProps {
-  field: string;
-  setField: React.Dispatch<React.SetStateAction<string>>;
-  label: string;
-  placeholder?: string;
-  longtext?: boolean;
-  type: "text" | "password" | "email" | "number" | "date" | "url";
-}
+import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
 
 export function Input({
-  field,
-  setField,
-  label,
   placeholder,
-  longtext,
+  className,
+  participant,
   type,
-}: InputProps) {
+  data,
+  index,
+  setData,
+}: {
+  placeholder?: string;
+  className?: string;
+  participant?: boolean;
+  type?: "longtext" | "choice";
+  data?: string | string[];
+  index?: number;
+  setData?:
+    | Dispatch<SetStateAction<string>>
+    | Dispatch<SetStateAction<string[]>>;
+}) {
+  const [temp, setTemp] = useState("");
+  const handleUpdateData = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setTemp(e.target.value);
+    if (!setData) return;
+    if (typeof data === "string") {
+      (setData as Dispatch<SetStateAction<string>>)(e.target.value);
+    } else if (Array.isArray(data) && index != undefined) {
+      const updatedData = [...data];
+      updatedData[index] = e.target.value;
+      (setData as Dispatch<SetStateAction<string[]>>)(updatedData);
+    }
+  };
   return (
-    <div className="w-full space-y-2">
-      <label
-        htmlFor={label.toLowerCase()}
-        className="font-semibold text-gray-700"
-      >
-        {label}
-      </label>
-      {longtext ? (
+    <div
+      className={`relative w-full ${
+        className ? className : "text-xl font-semibold text-gray-700"
+      } ${
+        participant ? "border-2 border-border bg-gray-100 p-3 rounded-lg" : ""
+      }`}
+    >
+      {type === "longtext" ? (
         <textarea
-          id={label.toLowerCase()}
-          name={label.toLowerCase().split(" ")[0]}
-          value={field}
-          onChange={(e) => setField(e.target.value)}
-          className="w-full text-sm p-2 border-2 shadow-sm border-gray-300 bg-white text-gray-600 rounded-xl resize-none transition"
+          value={typeof data === "string" ? data : ""}
+          onChange={handleUpdateData}
+          className="w-full bg-transparent border-none focus:ring-0 focus:outline-none"
           placeholder={placeholder}
           rows={4}
+          disabled={participant ? true : false}
         />
       ) : (
         <input
-          type={type}
-          id={label.toLowerCase()}
-          name={label.toLowerCase().split(" ")[0]}
-          value={field}
-          onChange={(e) => setField(e.target.value)}
-          className="w-full text-sm p-2 border-2 shadow-sm border-gray-300 bg-white text-gray-600 rounded-xl transition"
-          placeholder={placeholder}
+          type="text"
+          value={temp}
+          onChange={handleUpdateData}
+          className="w-full bg-transparent border-none focus:outline-none focus:ring-0"
+          disabled={participant ? true : false}
         />
+      )}
+      {!temp && (
+        <label
+          className={`absolute left-0 top-0 transition-all duration-200 pointer-events-none ${
+            participant ? "p-3" : "text-gray-400"
+          }`}
+        >
+          {placeholder ? placeholder : "Question"}
+        </label>
       )}
     </div>
   );

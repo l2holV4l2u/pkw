@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { NewEventContext } from "@/contexts";
 
-export function FormNavigation({
+export function Navigation({
   enable,
   className,
 }: {

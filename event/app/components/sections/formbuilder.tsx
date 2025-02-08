@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { FormElement } from "@components/layouts";
+import { FormSidebar } from "@components/layouts";
 import { FormDroppable } from "@components/layouts";
 import { NewEventContext } from "@contexts";
 
@@ -35,7 +35,7 @@ export function FormBuilder() {
     >
       <div className="grid grid-cols-10 gap-4 h-[65vh]">
         <FormDroppable />
-        <FormElement isDragging={isDragging} activeID={activeID} />
+        <FormSidebar isDragging={isDragging} activeID={activeID} />
       </div>
     </DndContext>
   );

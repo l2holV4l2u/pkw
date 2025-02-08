@@ -1,81 +1,37 @@
 import { useDroppable } from "@dnd-kit/core";
-import { Section } from "../formui/section";
-import { ShortAnswer } from "../formui/shortanswer";
 import { Card } from "@components/ui";
-import { LongAnswer } from "../formui/longanswer";
-import { MultipleChoice } from "../formui/multiplechoice";
-import { FormDataElement } from "../../types/formtype";
-import { useContext } from "react";
 import { NewEventContext } from "@contexts";
+import { FormDataElement } from "@types";
+import { useContext } from "react";
+import {
+  FileUpload,
+  LongAnswer,
+  MultipleChoice,
+  Section,
+  ShortAnswer,
+  Checkbox,
+  Date,
+} from "@components/formui";
 
 export function FormDroppable() {
-  const { formData, setFormData } = useContext(NewEventContext);
+  const { formData } = useContext(NewEventContext);
   const { setNodeRef, isOver } = useDroppable({ id: "FormElementDropArea" });
   const renderComponent = (type: FormDataElement, index: number) => {
     switch (type.type) {
       case "Section":
-        return (
-          <Section
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <Section key={index} index={index} />;
       case "Short Answer":
-        return (
-          <ShortAnswer
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <ShortAnswer key={index} index={index} />;
       case "Long Answer":
-        return (
-          <LongAnswer
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <LongAnswer key={index} index={index} />;
       case "Multiple Choice":
-        return (
-          <MultipleChoice
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <MultipleChoice key={index} index={index} />;
       case "Checkbox":
-        return (
-          <MultipleChoice
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <Checkbox key={index} index={index} />;
       case "File Upload":
-        return (
-          <MultipleChoice
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <FileUpload key={index} index={index} />;
       case "Date":
-        return (
-          <MultipleChoice
-            key={index}
-            formData={formData}
-            setFormData={setFormData}
-            index={index}
-          />
-        );
+        return <Date key={index} index={index} />;
       default:
         return null;
     }
@@ -91,7 +47,7 @@ export function FormDroppable() {
           <div key={index}>{renderComponent(item, index)}</div>
         ))}
         {isOver && (
-          <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg mt-4 border-2 border-dashed" />
+          <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg border-2 border-dashed" />
         )}
       </Card>
     </div>

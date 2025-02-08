@@ -1,16 +1,9 @@
-import { useState, useEffect } from "react";
-import { FormDataElement } from "../../types/formtype";
-import { FormInput } from "./forminput";
+import { useState, useEffect, useContext } from "react";
+import { Input } from "./input";
+import { NewEventContext } from "@contexts";
 
-export function Section({
-  formData,
-  setFormData,
-  index,
-}: {
-  formData: FormDataElement[];
-  setFormData: (data: FormDataElement[]) => void;
-  index: number;
-}) {
+export function Section({ index }: { index: number }) {
+  const { formData, setFormData } = useContext(NewEventContext);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   useEffect(() => {
@@ -24,17 +17,10 @@ export function Section({
   }, [title, description]);
   return (
     <div className="flex flex-col space-y-2">
-      <FormInput
-        placeholder="Section title"
-        className="text-xl font-semibold text-gray-700"
-        type="text"
-        data={title}
-        setData={setTitle}
-      />
-      <FormInput
+      <Input placeholder="Section title" data={title} setData={setTitle} />
+      <Input
         placeholder="Section description"
         className="text-sm text-gray-600"
-        type="text"
         data={description}
         setData={setDescription}
       />
