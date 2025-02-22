@@ -8,15 +8,10 @@ import { NewEventContext } from "../../contexts/newevent";
 
 export function Stepper() {
   const { step, inProgress } = useContext(NewEventContext);
-  const steps = [
-    "General Information",
-    "Make Your Own Form",
-    "Preview and Publish",
-  ];
+  const steps = ["General Information", "Make Your Own Form"];
   const stepIcons = [
     <IoInformationCircleOutline size={36} color="black" />,
     <FaRegFileAlt size={32} color="black" />,
-    <FaEye size={32} color="black" />,
   ];
 
   return (

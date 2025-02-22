@@ -1,7 +1,6 @@
 export * from "./fileupload";
 export * from "./icon";
 export * from "./input";
-export * from "./navigation";
 export * from "./longanswer";
 export * from "./multiplechoice";
 export * from "./section";

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { NewEventContext } from "../contexts/newevent";
 import { Layout, Stepper } from "@/components/layouts";
-import { FormBuilder, GeneralInfo, Preview } from "@components/sections";
-import { Navigation } from "@/components/formui";
+import { FormBuilder, GeneralInfo } from "@components/sections";
+import { Navigation } from "@/components/layouts";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { prisma } from "@utils/functions/prisma";
 import { FormDataElement } from "@types";
@@ -12,45 +12,54 @@ To Add
 - registration date
 - form builder data
 */
-/*
-async function action({ request }: ActionFunctionArgs) {
-  const { eventName, description, location, fromDate, toDate, formFields } = request.body;
+
+export async function action({ request }: ActionFunctionArgs) {
+  const form = await request.formData();
+  const data = JSON.parse(form.get("data") as string); // Retrieve JSON data
+
+  const { eventName, description, location, fromDate, toDate, formData } = data;
+  console.log(data);
   try {
     const event = await prisma.event.create({
       data: {
         name: eventName,
         description: description,
-        start_date: fromDate,
-        end_date: toDate,
-        registration_deadline: fromDate,
+        start_date: new Date(fromDate).toISOString(),
+        end_date: new Date(toDate).toISOString(),
+        registration_deadline: new Date(fromDate).toISOString(),
         location: location,
       },
     });
+
     const form = await prisma.formQuestion.create({
-      data: {event_id: event.id}
-    })
-    const formQuestion = await prisma.formQuestionField.createMany({
-      data: [
-        formFields.map((field) => {
-          return {value: field, formQuestionId: form.id}
-        })
-      ]
-    })
-    const order = formQuestion.id;    
+      data: { event_id: event.id },
+    });
+
+    await prisma.formQuestionField.createMany({
+      data: formData.map((field: any) => ({
+        value: field,
+        formQuestionId: form.id,
+      })),
+    });
+
+    const formQuestionFields = await prisma.formQuestionField.findMany({
+      where: { formQuestionId: form.id },
+      select: { id: true },
+    });
+
     await prisma.formQuestion.update({
-      where:{
-        id: form.id
-      },
-      data: {
-        field_order: order
-      }
-    })
+      where: { id: form.id },
+      data: { field_order: formQuestionFields.map((field) => field.id) },
+    });
+
     return redirect("/hosted");
   } catch (error) {
-    return new Response("Something went wrong. Please try again later.");
+    console.error(error);
+    return new Response("Something went wrong. Please try again later.", {
+      status: 500,
+    });
   }
 }
-*/
 
 export default function NewEvent() {
   const [eventName, setEventName] = useState<string>("");
@@ -91,8 +100,7 @@ export default function NewEvent() {
         <Stepper />
         {step == 1 && <GeneralInfo />}
         {step == 2 && <FormBuilder />}
-        {step == 3 && <Preview />}
-        <Navigation enable={[step != 1, step != 4]} className="w-[50%]" />
+        <Navigation />
       </Layout>
     </NewEventContext.Provider>
   );
