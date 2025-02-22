@@ -19,7 +19,7 @@ const CardContent = ({
   return (
     <div
       className={`rounded-xl border-2 border-border shadow-sm space-y-2 ${className}  ${
-        clickable ? "transform transition-transform hover:scale-[1.01]" : ""
+        clickable ? "transform transition-transform hover:scale-[1.005]" : ""
       }
       ${minicard ? "bg-gray-100" : ""}
       `}

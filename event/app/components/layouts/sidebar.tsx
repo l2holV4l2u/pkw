@@ -116,15 +116,15 @@ export function Sidebar() {
                       <Link
                         to={"/" + submenuLinks[index][subindex]}
                         className={`p-1.5 w-full text-sm rounded-md hover:bg-gray-200 hover:text-gray-900 text-gray-700 transition duration-200 ${
-                          currentPath === submenuLinks[index][subindex]
+                          currentPath.includes(submenuLinks[index][subindex])
                             ? "bg-white shadow-md font-semibold flex justify-between"
                             : "font-medium"
                         }`}
                       >
                         {subitem}
-                        {currentPath === submenuLinks[index][subindex] && (
-                          <IoChevronForwardOutline size={18} />
-                        )}
+                        {currentPath.includes(
+                          submenuLinks[index][subindex]
+                        ) && <IoChevronForwardOutline size={18} />}
                       </Link>
                     </li>
                   ))}
