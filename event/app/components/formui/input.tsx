@@ -62,7 +62,7 @@ export function Input({
       {!temp && (
         <label
           className={`absolute left-0 top-0 transition-all duration-200 pointer-events-none ${
-            participant ? "p-3" : "text-gray-400"
+            participant ? "p-3" : "text-gray-700"
           }`}
         >
           {placeholder ? placeholder : "Question"}

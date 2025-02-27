@@ -20,7 +20,7 @@ model User {
 }
 
 model Event {
-  id                    Int      @id @default(autoincrement())
+  id                    String      @id @default(uuid())
   name                  String
   description           String
   location              String
@@ -36,7 +36,7 @@ model Event {
 
 model Role {
   user_id  String
-  event_id Int
+  event_id String
   role     String
   user  User  @relation(fields: [user_id], references: [id])
   event Event @relation(fields: [event_id], references: [id])
@@ -45,7 +45,7 @@ model Role {
 
 model FormQuestion {
   id          Int   @id @default(autoincrement())
-  event_id    Int
+  event_id    String
   field_order Int[] 
   event     Event               @relation(fields: [event_id], references: [id])
   fields    FormQuestionField[]
@@ -62,7 +62,7 @@ model FormQuestionField {
 
 model FormResponse {
   id           Int      @id @default(autoincrement())
-  event_id     Int
+  event_id     String
   submitted_by String
   submitted_at DateTime @default(now())
   event          Event               @relation(fields: [event_id], references: [id])

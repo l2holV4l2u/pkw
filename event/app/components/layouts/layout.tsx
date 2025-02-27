@@ -1,4 +1,5 @@
 import { Breadcrumb } from "@/components/ui";
+import React from "react";
 
 export function Layout({
   children,
@@ -6,20 +7,23 @@ export function Layout({
   className,
   link,
   label,
+  button,
 }: {
   children: React.ReactNode;
   title?: string;
   className?: string;
   link?: string[];
   label?: string[];
+  button?: React.ReactNode;
 }) {
   return (
     <div
-      className={`p-6 flex flex-col space-y-6 h-full bg-white rounded-3xl border-2 border-border ${className}`}
+      className={`p-6 flex flex-col space-y-4 h-full bg-white rounded-3xl border-2 border-border ${className}`}
     >
       {title && (
-        <div className="mb-3 flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-extrabold text-gray-800">{title}</h1>
+          {button}
         </div>
       )}
       {link && label && <Breadcrumb link={link} label={label} />}

@@ -2,16 +2,18 @@ import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { FormSidebar } from "@components/layouts";
 import { FormDroppable } from "@components/layouts";
-import { NewEventContext } from "@contexts";
+import { EventContext } from "@contexts";
+import { v4 as uuidv4 } from "uuid";
 
 export function FormBuilder() {
-  const { formData, setFormData } = useContext(NewEventContext);
+  const { formData, setFormData } = useContext(EventContext);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     const blank = {
+      id: uuidv4(),
       type: active.id as string,
     };
     if (over?.id == "FormElementDropArea") {

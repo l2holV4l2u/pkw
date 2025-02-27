@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NewEventContext } from "../contexts/newevent";
+import { EventContext } from "../contexts/event";
 import { Layout, Stepper } from "@/components/layouts";
 import { FormBuilder, GeneralInfo } from "@components/sections";
 import { Navigation } from "@/components/layouts";
@@ -7,18 +7,10 @@ import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { prisma } from "@utils/functions/prisma";
 import { FormDataElement } from "@types";
 
-/*
-To Add
-- registration date
-- form builder data
-*/
-
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
-  const data = JSON.parse(form.get("data") as string); // Retrieve JSON data
-
+  const data = JSON.parse(form.get("data") as string);
   const { eventName, description, location, fromDate, toDate, formData } = data;
-  console.log(data);
   try {
     const event = await prisma.event.create({
       data: {
@@ -70,9 +62,10 @@ export default function NewEvent() {
   const [step, setStep] = useState<number>(1);
   const [inProgress, setInProgress] = useState(true);
   const [formData, setFormData] = useState<FormDataElement[]>([]);
+  const isEditing = true;
 
   return (
-    <NewEventContext.Provider
+    <EventContext.Provider
       value={{
         eventName,
         setEventName,
@@ -90,6 +83,7 @@ export default function NewEvent() {
         setInProgress,
         formData,
         setFormData,
+        isEditing,
       }}
     >
       <Layout
@@ -102,6 +96,6 @@ export default function NewEvent() {
         {step == 2 && <FormBuilder />}
         <Navigation />
       </Layout>
-    </NewEventContext.Provider>
+    </EventContext.Provider>
   );
 }

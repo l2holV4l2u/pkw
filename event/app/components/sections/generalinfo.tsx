@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NewEventContext } from "@/contexts";
+import { EventContext } from "@/contexts";
 import { Input } from "@/components/ui";
 
 export function GeneralInfo() {
@@ -14,7 +14,7 @@ export function GeneralInfo() {
     setFromDate,
     toDate,
     setToDate,
-  } = useContext(NewEventContext);
+  } = useContext(EventContext);
   return (
     <div className="flex flex-col space-y-4 items-start w-[50%]">
       <Input

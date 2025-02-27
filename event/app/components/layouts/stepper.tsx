@@ -1,13 +1,11 @@
-import { LuSettings } from "react-icons/lu";
-import { FaEye } from "react-icons/fa6";
 import { FaRegFileAlt } from "react-icons/fa";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { HiCheckCircle } from "react-icons/hi";
 import { useContext } from "react";
-import { NewEventContext } from "../../contexts/newevent";
+import { EventContext } from "../../contexts/event";
 
 export function Stepper() {
-  const { step, inProgress } = useContext(NewEventContext);
+  const { step, inProgress } = useContext(EventContext);
   const steps = ["General Information", "Make Your Own Form"];
   const stepIcons = [
     <IoInformationCircleOutline size={36} color="black" />,

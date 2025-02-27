@@ -1,4 +1,5 @@
 export type BaseFormDataElement = {
+  id: string;
   type: string;
 };
 

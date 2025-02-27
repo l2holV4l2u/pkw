@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import { NewEventContext } from "@/contexts";
+import { EventContext } from "@/contexts";
 import { useFetcher } from "@remix-run/react";
 
 export function Navigation() {
@@ -13,7 +13,7 @@ export function Navigation() {
     location,
     fromDate,
     toDate,
-  } = useContext(NewEventContext);
+  } = useContext(EventContext);
 
   const fetcher = useFetcher();
 

@@ -19,12 +19,10 @@ function convertDate(date: string) {
 export default function EventIndex() {
   const events = useLoaderData<Event[]>();
   return (
-    <Layout title="Hosted Event" className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="text-gray-700 font-bold text-2xl">Your Events</div>
-        <Button link="./newevent" content="+ add event" />
-      </div>
-
+    <Layout
+      title="Hosted Event"
+      button={<Button link="./newevent" content="+ add event" />}
+    >
       {events.length === 0 ? (
         <div className="text-gray-500">No events found</div>
       ) : (
@@ -42,7 +40,7 @@ export default function EventIndex() {
                 {" - "}
                 {convertDate(item.end_date)}
               </p>
-              <p>Location: {item.location}</p>
+              <p className="text-sm">Location: {item.location}</p>
               <p className="text-sm text-gray-600">{item.description}</p>
             </div>
           </Card>
