@@ -3,11 +3,13 @@ import { Input } from "./input";
 import { GoDotFill, GoPlus } from "react-icons/go";
 import { EventContext } from "@contexts";
 import FuLayout from "./fulayout";
+import { MultipleChoice } from "@types";
 
 export function MultipleChoice({ index }: { index: number }) {
-  const { formData, setFormData } = useContext(EventContext);
-  const [question, setQuestion] = useState("");
-  const [choices, setChoices] = useState<string[]>([]);
+  const { formData, setFormData, isEditing } = useContext(EventContext);
+  const data = formData[index] as MultipleChoice;
+  const [question, setQuestion] = useState(data.header);
+  const [choices, setChoices] = useState<string[]>(data.choices);
 
   useEffect(() => {
     const updatedFormData = [...formData];
@@ -22,7 +24,7 @@ export function MultipleChoice({ index }: { index: number }) {
   return (
     <FuLayout index={index}>
       <div className="flex flex-col space-y-4">
-        <Input data={question} setData={setQuestion} />
+        <Input data={question} setData={setQuestion} disabled={!isEditing} />
         {choices.map((_, index) => (
           <div className="flex items-center gap-2" key={index}>
             <GoDotFill size={16} />
@@ -32,6 +34,7 @@ export function MultipleChoice({ index }: { index: number }) {
               data={choices}
               setData={setChoices}
               index={index}
+              disabled={!isEditing}
             />
           </div>
         ))}

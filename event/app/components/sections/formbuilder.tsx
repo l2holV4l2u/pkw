@@ -15,6 +15,7 @@ export function FormBuilder() {
     const blank = {
       id: uuidv4(),
       type: active.id as string,
+      header: "",
     };
     if (over?.id == "FormElementDropArea") {
       let updatedFormData = formData;

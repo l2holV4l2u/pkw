@@ -62,8 +62,6 @@ export default function NewEvent() {
   const [step, setStep] = useState<number>(1);
   const [inProgress, setInProgress] = useState(true);
   const [formData, setFormData] = useState<FormDataElement[]>([]);
-  const isEditing = true;
-
   return (
     <EventContext.Provider
       value={{
@@ -83,7 +81,7 @@ export default function NewEvent() {
         setInProgress,
         formData,
         setFormData,
-        isEditing,
+        isEditing: true,
       }}
     >
       <Layout

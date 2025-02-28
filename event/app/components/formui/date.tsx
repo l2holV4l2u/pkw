@@ -2,16 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import { Input } from "./input";
 import { EventContext } from "@contexts";
 import FuLayout from "./fulayout";
+import { Date } from "@types";
 
 export function Date({ index }: { index: number }) {
-  const { formData, setFormData } = useContext(EventContext);
-  const [question, setQuestion] = useState("");
-  const [date, setDate] = useState("");
+  const { formData, setFormData, isEditing } = useContext(EventContext);
+  const data = formData[index] as Date;
+  const [question, setQuestion] = useState(data.header);
+  const [date, setDate] = useState(data.date);
 
   useEffect(() => {
     const updatedFormData = [...formData];
     updatedFormData[index] = {
       ...updatedFormData[index],
+      header: question,
       type: "Date",
       date,
     };
@@ -25,6 +28,7 @@ export function Date({ index }: { index: number }) {
           data={question}
           setData={setQuestion}
           placeholder="Enter question"
+          disabled={!isEditing}
         />
         <input
           type="date"

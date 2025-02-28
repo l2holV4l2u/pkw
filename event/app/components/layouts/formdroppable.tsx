@@ -1,40 +1,10 @@
 import { DndContext, DragEndEvent, useDroppable } from "@dnd-kit/core";
 import { Card } from "@components/ui";
 import { EventContext } from "@contexts";
-import { FormDataElement } from "@types";
-import { useContext, useState } from "react";
-import {
-  FileUpload,
-  LongAnswer,
-  MultipleChoice,
-  Section,
-  ShortAnswer,
-  Checkbox,
-  Date,
-} from "@components/formui";
+import { useContext } from "react";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
-
-function RenderComponent(type: FormDataElement, index: number) {
-  switch (type.type) {
-    case "Section":
-      return <Section key={index} index={index} />;
-    case "Short Answer":
-      return <ShortAnswer key={index} index={index} />;
-    case "Long Answer":
-      return <LongAnswer key={index} index={index} />;
-    case "Multiple Choice":
-      return <MultipleChoice key={index} index={index} />;
-    case "Checkbox":
-      return <Checkbox key={index} index={index} />;
-    case "File Upload":
-      return <FileUpload key={index} index={index} />;
-    case "Date":
-      return <Date key={index} index={index} />;
-    default:
-      return null;
-  }
-}
+import RenderFormComponent from "./renderformcomponent";
 
 export function FormDroppable() {
   const { formData, setFormData } = useContext(EventContext);
@@ -62,7 +32,7 @@ export function FormDroppable() {
           modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext items={formData.map((item) => item.id)}>
-            {formData.map((item, index) => RenderComponent(item, index))}
+            {formData.map((item, index) => RenderFormComponent(item, index))}
             {isOver && (
               <div className="p-4">
                 <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg border-2 border-dashed" />

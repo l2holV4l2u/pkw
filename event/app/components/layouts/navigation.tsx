@@ -18,15 +18,17 @@ export function Navigation() {
   const fetcher = useFetcher();
 
   function handleSubmit() {
+    const filteredFormData = formData.map(
+      ({ id, ...rest }: { id: string; [key: string]: any }) => rest
+    );
     const data = {
       eventName,
       description,
       location,
       fromDate,
       toDate,
-      formData,
+      formData: filteredFormData,
     };
-
     fetcher.submit({ data: JSON.stringify(data) }, { method: "post" });
   }
 

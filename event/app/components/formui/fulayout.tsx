@@ -30,21 +30,19 @@ export default function FuLayout({
   const style = {
     transform: CSS.Transform.toString(adjustedTransform),
     transition,
-    transformOrigin: "0 0",
-    willChange: "transform",
   };
 
   return (
     <div ref={setNodeRef} style={style}>
       {isEditing ? (
         <div
-          className="flex hover:bg-gray-100 relative w-full"
+          className="flex hover:bg-gray-50 relative w-full"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="p-4 w-full">{children}</div>
+          <div className="p-4 pr-0 w-full">{children}</div>
           {isHovered && (
-            <div className="flex flex-col gap-4 p-4">
+            <div className="flex flex-col gap-2 p-4">
               <FaRegTrashCan
                 size={24}
                 onClick={handleDelete}

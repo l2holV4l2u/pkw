@@ -1,33 +1,28 @@
-export type BaseFormDataElement = {
+export type Base = {
   id: string;
   type: string;
+  header: string;
 };
 
-export type Section = BaseFormDataElement & {
-  title: string;
+export type Section = Base & {
   description: string;
 };
 
-export type QA = BaseFormDataElement & {
-  question: string;
-};
-
-export type MultipleChoice = BaseFormDataElement & {
+export type MultipleChoice = Base & {
   choices: string[];
 };
 
-export type FileUpload = BaseFormDataElement & {
+export type FileUpload = Base & {
   file: File | null;
 };
 
-export type Date = BaseFormDataElement & {
+export type Date = Base & {
   date: string;
 };
 
 export type FormDataElement =
-  | BaseFormDataElement
+  | Base
   | Section
-  | QA
   | MultipleChoice
   | FileUpload
   | Date;

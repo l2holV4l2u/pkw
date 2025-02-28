@@ -8,6 +8,7 @@ export function Input({
   data,
   index,
   setData,
+  disabled,
 }: {
   placeholder?: string;
   className?: string;
@@ -18,6 +19,7 @@ export function Input({
   setData?:
     | Dispatch<SetStateAction<string>>
     | Dispatch<SetStateAction<string[]>>;
+  disabled?: boolean;
 }) {
   const [temp, setTemp] = useState("");
   const handleUpdateData = (
@@ -48,18 +50,18 @@ export function Input({
           className="w-full bg-transparent border-none focus:ring-0 focus:outline-none"
           placeholder={placeholder}
           rows={4}
-          disabled={participant ? true : false}
+          disabled={participant || disabled}
         />
       ) : (
         <input
           type="text"
-          value={temp}
+          value={data}
           onChange={handleUpdateData}
           className="w-full bg-transparent border-none focus:outline-none focus:ring-0"
-          disabled={participant ? true : false}
+          disabled={participant || disabled}
         />
       )}
-      {!temp && (
+      {!data && (
         <label
           className={`absolute left-0 top-0 transition-all duration-200 pointer-events-none ${
             participant ? "p-3" : "text-gray-700"
