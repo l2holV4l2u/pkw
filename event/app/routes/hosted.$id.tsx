@@ -115,7 +115,9 @@ export default function EventInfo() {
         {/* Form Questions */}
         <Card className="p-4 w-full">
           <h2 className="text-xl text-gray-800 font-bold mb-4">Form</h2>
-          {form.map((val, index) => RenderFormComponent(val, index))}
+          <Card>
+            {form.map((val, index) => RenderFormComponent(val, index))}
+          </Card>
         </Card>
         {/* Form Responses */}
         <Card className="p-4 w-full">

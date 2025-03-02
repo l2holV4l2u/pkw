@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  email           String   @unique
-  full_name       String
-  profile_picture String?
-  contact_no      String?
-  updated_at      DateTime @updatedAt
+  id              String        @id @default(uuid())
+  email           String        @unique
+  fullName        String?
+  profilePicture  String?
+  contactNo       String?
+  updatedAt       DateTime      @updatedAt @default(now())
   password        String
-  roles         Role[]
-  formResponses FormResponse[]
+  roles           Role[]
+  responses       Response[]
 }
 
 model Event {
@@ -24,59 +24,60 @@ model Event {
   name                  String
   description           String
   location              String
-  start_date            DateTime
-  end_date              DateTime
-  registration_deadline DateTime
-  created_at            DateTime @default(now())
-  updated_at            DateTime @updatedAt
-  roles         Role[]
-  formQuestions FormQuestion[]
-  formResponses FormResponse[]
+  startDate            DateTime?     
+  endDate              DateTime?     
+  registrationDeadline DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt @default(now())
+  roles                Role[]
+  forms                Form[]
+  responses            Response[]
 }
 
 model Role {
-  user_id  String
-  event_id String
-  role     String
-  user  User  @relation(fields: [user_id], references: [id])
-  event Event @relation(fields: [event_id], references: [id])
-  @@id([user_id, event_id])
+  userId  String
+  eventId String
+  role    String
+  user    User   @relation(fields: [userId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@id([userId, eventId])
 }
 
-model FormQuestion {
-  id          Int   @id @default(autoincrement())
-  event_id    String
-  field_order Int[] 
-  event     Event               @relation(fields: [event_id], references: [id])
-  fields    FormQuestionField[]
-  responses FormResponse[]
+model Form {
+  id          Int         @id @default(autoincrement())
+  eventId     String
+  fieldOrder  Int[]
+  event       Event       @relation(fields: [eventId], references: [id])
+  fields      FormField[]
+  responses   Response[]
 }
 
-model FormQuestionField {
-  id    Int  @id @default(autoincrement())
-  value Json
-  formQuestionId Int?
-  formQuestion   FormQuestion? @relation(fields: [formQuestionId], references: [id])
-  responseFields FormResponseField[]
+model FormField {
+  id             Int           @id @default(autoincrement())
+  value          Json
+  formId         Int?
+  form           Form?         @relation(fields: [formId], references: [id])
+  responseFields ResponseField[]
 }
 
-model FormResponse {
-  id           Int      @id @default(autoincrement())
-  event_id     String
-  submitted_by String
-  submitted_at DateTime @default(now())
-  event          Event               @relation(fields: [event_id], references: [id])
-  user           User                @relation(fields: [submitted_by], references: [id])
-  responseFields FormResponseField[]
-  FormQuestion   FormQuestion?       @relation(fields: [formQuestionId], references: [id])
-  formQuestionId Int?
+model Response {
+  id             Int           @id @default(autoincrement())
+  eventId        String
+  submittedBy    String
+  submittedAt    DateTime      @default(now())
+  formId         Int?
+  event          Event         @relation(fields: [eventId], references: [id])
+  user           User          @relation(fields: [submittedBy], references: [id])
+  form           Form?         @relation(fields: [formId], references: [id])
+  responseFields ResponseField[]
 }
 
-model FormResponseField {
-  id                     Int  @id @default(autoincrement())
-  form_question_field_id Int
-  value                  Json
-  formQuestionField FormQuestionField @relation(fields: [form_question_field_id], references: [id])
-  FormResponse      FormResponse?     @relation(fields: [formResponseId], references: [id])
-  formResponseId    Int?
+model ResponseField {
+  id            Int        @id @default(autoincrement())
+  formFieldId   Int
+  responseId    Int?
+  value         Json
+  formField     FormField   @relation(fields: [formFieldId], references: [id])
+  formResponse  Response?   @relation(fields: [responseId], references: [id])
 }

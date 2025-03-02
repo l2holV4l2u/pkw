@@ -1,9 +1,11 @@
 import { EventContext } from "@contexts";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Input } from "./input";
+import { FormType } from "@types";
 
 export default function FuLayout({
   children,
@@ -14,6 +16,8 @@ export default function FuLayout({
 }) {
   const { isEditing, setFormData, formData } = useContext(EventContext);
   const [isHovered, setIsHovered] = useState(false);
+  const data = formData[index] as FormType;
+  const [header, setHeader] = useState(data.header ? data.header : "");
   const handleDelete = () => {
     setFormData(formData.filter((_, i) => i !== index));
   };
@@ -32,6 +36,15 @@ export default function FuLayout({
     transition,
   };
 
+  useEffect(() => {
+    const updatedFormData = [...formData];
+    updatedFormData[index] = {
+      ...updatedFormData[index],
+      header,
+    };
+    setFormData(updatedFormData);
+  }, [header]);
+
   return (
     <div ref={setNodeRef} style={style}>
       {isEditing ? (
@@ -40,9 +53,12 @@ export default function FuLayout({
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="p-4 pr-0 w-full">{children}</div>
+          <div className="p-4 w-full flex flex-col space-y-4">
+            <Input data={header} setData={setHeader} disabled={!isEditing} />
+            {children}
+          </div>
           {isHovered && (
-            <div className="flex flex-col gap-2 p-4">
+            <div className="flex flex-col gap-2 p-4 pl-0">
               <FaRegTrashCan
                 size={24}
                 onClick={handleDelete}

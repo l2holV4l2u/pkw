@@ -1,28 +1,16 @@
-export type Base = {
+export type BaseFormType = {
   id: string;
   type: string;
   header: string;
 };
 
-export type Section = Base & {
+export type FormSectionType = BaseFormType & {
   description: string;
 };
 
-export type MultipleChoice = Base & {
+// Multiple Choice - includes check box & radio button
+export type FormMCType = BaseFormType & {
   choices: string[];
 };
 
-export type FileUpload = Base & {
-  file: File | null;
-};
-
-export type Date = Base & {
-  date: string;
-};
-
-export type FormDataElement =
-  | Base
-  | Section
-  | MultipleChoice
-  | FileUpload
-  | Date;
+export type FormType = BaseFormType | FormSectionType | FormMCType;
