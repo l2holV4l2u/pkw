@@ -7,16 +7,16 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import RenderFormComponent from "./renderformcomponent";
 
 export function FormDroppable() {
-  const { formData, setFormData } = useContext(EventContext);
+  const { form } = useContext(EventContext);
   const { setNodeRef, isOver } = useDroppable({ id: "FormElementDropArea" });
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setFormData((prev) => {
-        const oldindex = formData.findIndex((item) => item.id === active.id);
-        const newindex = formData.findIndex((item) => item.id === over.id);
-        return arrayMove(prev, oldindex, newindex);
-      });
+      arrayMove(
+        form,
+        form.findIndex((item) => item.id === active.id),
+        form.findIndex((item) => item.id === over.id)
+      );
     }
   };
 
@@ -31,8 +31,8 @@ export function FormDroppable() {
           onDragEnd={handleDragEnd}
           modifiers={[restrictToVerticalAxis]}
         >
-          <SortableContext items={formData.map((item) => item.id)}>
-            {formData.map((item, index) => RenderFormComponent(item, index))}
+          <SortableContext items={form.map((item) => item.id)}>
+            {form.map((item, index) => RenderFormComponent(item, index))}
             {isOver && (
               <div className="p-4">
                 <div className="w-full h-16 bg-blue-100 border-blue-400 rounded-lg border-2 border-dashed" />

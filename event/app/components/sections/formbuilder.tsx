@@ -6,21 +6,18 @@ import { EventContext } from "@contexts";
 import { v4 as uuidv4 } from "uuid";
 
 export function FormBuilder() {
-  const { formData, setFormData } = useContext(EventContext);
+  const { form } = useContext(EventContext);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    const blank = {
-      id: uuidv4(),
-      type: active.id as string,
-      header: "",
-    };
     if (over?.id == "FormElementDropArea") {
-      let updatedFormData = formData;
-      updatedFormData.push(blank);
-      setFormData(updatedFormData);
+      form.push({
+        id: uuidv4(),
+        type: active.id as string,
+        header: "",
+      });
     }
   };
 

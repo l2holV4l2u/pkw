@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { EventContext } from "../contexts/event";
+import { EventProvider, NewEventProvider } from "@/contexts";
 import { Layout, Stepper } from "@/components/layouts";
 import { FormBuilder, GeneralInfo } from "@components/sections";
 import { Navigation } from "@/components/layouts";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { prisma } from "@utils/functions/prisma";
-import { FormDataElement } from "@types";
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
@@ -16,32 +15,32 @@ export async function action({ request }: ActionFunctionArgs) {
       data: {
         name: eventName,
         description: description,
-        start_date: new Date(fromDate).toISOString(),
-        end_date: new Date(toDate).toISOString(),
-        registration_deadline: new Date(fromDate).toISOString(),
+        startDate: new Date(fromDate).toISOString(),
+        endDate: new Date(toDate).toISOString(),
+        registrationDeadline: new Date(fromDate).toISOString(),
         location: location,
       },
     });
 
-    const form = await prisma.formQuestion.create({
-      data: { event_id: event.id },
+    const form = await prisma.form.create({
+      data: { eventId: event.id },
     });
 
-    await prisma.formQuestionField.createMany({
+    await prisma.formField.createMany({
       data: formData.map((field: any) => ({
         value: field,
-        formQuestionId: form.id,
+        formId: form.id,
       })),
     });
 
-    const formQuestionFields = await prisma.formQuestionField.findMany({
-      where: { formQuestionId: form.id },
+    const formQuestionFields = await prisma.formField.findMany({
+      where: { formId: form.id },
       select: { id: true },
     });
 
-    await prisma.formQuestion.update({
+    await prisma.form.update({
       where: { id: form.id },
-      data: { field_order: formQuestionFields.map((field) => field.id) },
+      data: { fieldOrder: formQuestionFields.map((field) => field.id) },
     });
 
     return redirect("/hosted");
@@ -54,46 +53,21 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function NewEvent() {
-  const [eventName, setEventName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [fromDate, setFromDate] = useState<string>("");
-  const [toDate, setToDate] = useState<string>("");
   const [step, setStep] = useState<number>(1);
-  const [inProgress, setInProgress] = useState(true);
-  const [formData, setFormData] = useState<FormDataElement[]>([]);
   return (
-    <EventContext.Provider
-      value={{
-        eventName,
-        setEventName,
-        description,
-        setDescription,
-        location,
-        setLocation,
-        fromDate,
-        setFromDate,
-        toDate,
-        setToDate,
-        step,
-        setStep,
-        inProgress,
-        setInProgress,
-        formData,
-        setFormData,
-        isEditing: true,
-      }}
-    >
-      <Layout
-        label={["Hosted Event", "New Event"]}
-        link={["hosted", "newevent"]}
-        className="space-y-6 items-center"
-      >
-        <Stepper />
-        {step == 1 && <GeneralInfo />}
-        {step == 2 && <FormBuilder />}
-        <Navigation />
-      </Layout>
-    </EventContext.Provider>
+    <EventProvider mode={1}>
+      <NewEventProvider step={step} setStep={setStep}>
+        <Layout
+          label={["Hosted Event", "New Event"]}
+          link={["hosted", "newevent"]}
+          className="space-y-6 items-center"
+        >
+          <Stepper />
+          {step == 1 && <GeneralInfo />}
+          {step == 2 && <FormBuilder />}
+          <Navigation />
+        </Layout>
+      </NewEventProvider>
+    </EventProvider>
   );
 }

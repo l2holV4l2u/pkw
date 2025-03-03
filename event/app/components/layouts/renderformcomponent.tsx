@@ -7,12 +7,9 @@ import {
   Checkbox,
   Date,
 } from "@components/formui";
-import { FormDataElement } from "@types";
+import { FormType } from "@types";
 
-export default function RenderFormComponent(
-  type: FormDataElement,
-  index: number
-) {
+export default function RenderFormComponent(type: FormType, index: number) {
   switch (type.type) {
     case "Section":
       return <Section key={index} index={index} />;

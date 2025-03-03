@@ -4,7 +4,7 @@ import { Card } from "@components/ui";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
-import { FormType, MultipleResponseType } from "@types";
+import { FormType } from "@types";
 import { EventContext } from "@contexts";
 import { useState } from "react";
 
@@ -73,7 +73,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return { event, form };
 }
 
-export default function EventInfo() {
+export default function EventRegister() {
   const { event, form } = useLoaderData<typeof loader>();
   const [formData, setFormData] = useState<FormType[]>(form);
   const [response, setResponse] = useState<ResponseType[]>([]);
@@ -84,64 +84,17 @@ export default function EventInfo() {
         setFormData,
         response,
         setResponse,
-        mode: 0,
+        mode: 2,
       }}
     >
       <Layout
-        label={["Hosted Event", event.name]}
-        link={["hosted", "/"]}
+        label={["Active Event", event.name]}
+        link={["", "/"]}
         className="space-y-6 items-center"
       >
-        {/* Top Stats Cards */}
-        <div className="grid grid-cols-3 gap-4 w-full font-bold">
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Total Participants</p>
-            <p className="text-xl">{event.responses.length}</p>
-          </Card>
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Total Payout</p>
-            <p className="text-xl">$0</p>
-          </Card>
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Status</p>
-            <p className="text-xl">Ongoing</p>
-          </Card>
-        </div>
-        {/* Form Questions */}
-        <Card className="w-full" title="Form">
-          {form.map((val, index) => RenderFormComponent(val, index))}
-        </Card>
         {/* Form Responses */}
-        <Card className="w-full" title="Responses">
-          <ul>
-            {response.length == 0 ? (
-              <div className="p-4">There are no responses yet</div>
-            ) : (
-              event.responses.map((response) => (
-                <li key={response.id} className="mb-4">
-                  <p className="font-semibold">
-                    Submitted by: {response.user.fullName}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Submitted at:{" "}
-                    {new Date(response.submittedAt).toLocaleString()}
-                  </p>
-                  <ul className="mt-2 text-sm">
-                    {response.responseFields.map((field) => (
-                      <li key={field.id} className="text-gray-700">
-                        <p className="font-semibold">
-                          Field ID: {field.formField.id}
-                        </p>
-                        <pre className="text-gray-600">
-                          {JSON.stringify(field.value, null, 2)}
-                        </pre>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))
-            )}
-          </ul>
+        <Card className="w-full" title="Registration Form">
+          {form.map((val, index) => RenderFormComponent(val, index))}
         </Card>
       </Layout>
     </EventContext.Provider>

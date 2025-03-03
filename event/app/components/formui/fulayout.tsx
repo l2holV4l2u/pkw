@@ -1,11 +1,36 @@
 import { EventContext } from "@contexts";
-import { useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Input } from "./input";
 import { FormType } from "@types";
+
+function Body({
+  children,
+  header,
+  setHeader,
+  mode,
+}: {
+  children: React.ReactNode;
+  header: string;
+  setHeader: Dispatch<SetStateAction<string>>;
+  mode: number;
+}) {
+  return (
+    <div className="p-4 w-full flex flex-col space-y-4">
+      <Input data={header} setData={setHeader} disabled={mode != 1} />
+      {children}
+    </div>
+  );
+}
 
 export default function FuLayout({
   children,
@@ -14,16 +39,16 @@ export default function FuLayout({
   children: React.ReactNode;
   index: number;
 }) {
-  const { isEditing, setFormData, formData } = useContext(EventContext);
+  const { mode, form } = useContext(EventContext);
   const [isHovered, setIsHovered] = useState(false);
-  const data = formData[index] as FormType;
+  const data = form[index] as FormType;
   const [header, setHeader] = useState(data.header ? data.header : "");
   const handleDelete = () => {
-    setFormData(formData.filter((_, i) => i !== index));
+    form.filter((_, i) => i !== index);
   };
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
-      id: formData[index].id,
+      id: form[index].id,
     });
   const adjustedTransform = {
     x: transform?.x ?? 0,
@@ -37,26 +62,27 @@ export default function FuLayout({
   };
 
   useEffect(() => {
-    const updatedFormData = [...formData];
-    updatedFormData[index] = {
-      ...updatedFormData[index],
-      header,
-    };
-    setFormData(updatedFormData);
-  }, [header]);
+    if (mode == 1) {
+      form[index].header = header;
+    }
+  }, [header, mode]);
 
   return (
-    <div ref={setNodeRef} style={style}>
-      {isEditing ? (
+    <>
+      {mode == 1 ? (
         <div
           className="flex hover:bg-gray-50 relative w-full"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          ref={setNodeRef}
+          style={style}
         >
-          <div className="p-4 w-full flex flex-col space-y-4">
-            <Input data={header} setData={setHeader} disabled={!isEditing} />
-            {children}
-          </div>
+          <Body
+            children={children}
+            header={header}
+            setHeader={setHeader}
+            mode={mode}
+          />
           {isHovered && (
             <div className="flex flex-col gap-2 p-4 pl-0">
               <FaRegTrashCan
@@ -69,8 +95,13 @@ export default function FuLayout({
           )}
         </div>
       ) : (
-        <div className="p-4 w-full">{children}</div>
+        <Body
+          children={children}
+          header={header}
+          setHeader={setHeader}
+          mode={mode}
+        />
       )}
-    </div>
+    </>
   );
 }

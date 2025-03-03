@@ -1,5 +1,3 @@
-import { useContext, useEffect, useState } from "react";
-import { EventContext } from "@contexts";
 import { MdOutlineFileUpload } from "react-icons/md";
 import FuLayout from "./fulayout";
 

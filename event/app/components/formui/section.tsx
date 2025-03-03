@@ -5,19 +5,18 @@ import FuLayout from "./fulayout";
 import { FormSectionType } from "@types";
 
 export function Section({ index }: { index: number }) {
-  const { formData, setFormData, isEditing } = useContext(EventContext);
-  const data = formData[index] as FormSectionType;
+  const { form, mode } = useContext(EventContext);
+  const data = form[index] as FormSectionType;
   const [description, setDescription] = useState(
     data.description ? data.description : ""
   );
+
   useEffect(() => {
-    const updatedFormData = [...formData];
-    updatedFormData[index] = {
-      ...updatedFormData[index],
-      description,
-    };
-    setFormData(updatedFormData);
+    if (mode == 1) {
+      (form[index] as FormSectionType).description = description;
+    }
   }, [description]);
+
   return (
     <FuLayout index={index}>
       <Input
@@ -25,7 +24,7 @@ export function Section({ index }: { index: number }) {
         className="text-sm text-gray-600"
         data={description}
         setData={setDescription}
-        disabled={!isEditing}
+        disabled={mode != 1}
       />
     </FuLayout>
   );

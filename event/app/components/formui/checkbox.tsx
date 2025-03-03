@@ -2,31 +2,30 @@ import { useContext, useEffect, useState } from "react";
 import { Input } from "./input";
 import { GoPlus } from "react-icons/go";
 import { EventContext } from "@contexts";
-import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import FuLayout from "./fulayout";
 import { FormMCType } from "@types";
 
 export function Checkbox({ index }: { index: number }) {
-  const { formData, setFormData, isEditing } = useContext(EventContext);
-  const data = formData[index] as FormMCType;
+  const { form, mode } = useContext(EventContext);
+  const data = form[index] as FormMCType;
   const [options, setOptions] = useState<string[]>(
-    data.choices ? data.choices : [""]
+    data.choices ? data.choices : []
+  );
+  const [selected, setSelected] = useState<boolean[]>(
+    data.choices ? Array(data.choices.length).fill(false) : []
   );
 
   useEffect(() => {
-    const updatedFormData = [...formData];
-    updatedFormData[index] = {
-      ...updatedFormData[index],
-      choices: options,
-    };
-    setFormData(updatedFormData);
-  }, [options]);
+    if (mode == 1) {
+      (form[index] as FormMCType).choices = options;
+    }
+  }, [options, selected]);
 
   return (
     <FuLayout index={index}>
       {options.map((option, subindex) => (
         <div className="flex items-center gap-2" key={subindex}>
-          <MdOutlineCheckBoxOutlineBlank size={24} color="gray" />
+          <input type="checkbox" value={option} />
           <Input
             placeholder={`Option ${subindex + 1}`}
             className="text-sm font-normal text-gray-600"
@@ -37,11 +36,11 @@ export function Checkbox({ index }: { index: number }) {
               );
               setOptions(newOptions);
             }}
-            disabled={!isEditing}
+            disabled={mode != 1}
           />
         </div>
       ))}
-      {isEditing && (
+      {mode == 1 && (
         <button
           className="flex text-gray-600 items-center gap-2 text-sm"
           onClick={() => setOptions([...options, ""])}

@@ -6,19 +6,16 @@ import FuLayout from "./fulayout";
 import { FormMCType } from "@types";
 
 export function MultipleChoice({ index }: { index: number }) {
-  const { formData, setFormData, isEditing } = useContext(EventContext);
-  const data = formData[index] as FormMCType;
+  const { form, mode } = useContext(EventContext);
+  const data = form[index] as FormMCType;
   const [choices, setChoices] = useState<string[]>(
     data.choices ? data.choices : [""]
   );
 
   useEffect(() => {
-    const updatedFormData = [...formData];
-    updatedFormData[index] = {
-      ...updatedFormData[index],
-      choices,
-    };
-    setFormData(updatedFormData);
+    if (mode == 1) {
+      (form[index] as FormMCType).choices = choices;
+    }
   }, [choices]);
 
   return (
@@ -36,7 +33,7 @@ export function MultipleChoice({ index }: { index: number }) {
               );
               setChoices(newChoices);
             }}
-            disabled={!isEditing}
+            disabled={mode != 1}
           />
         </div>
       ))}

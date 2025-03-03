@@ -2,10 +2,10 @@ import { FaRegFileAlt } from "react-icons/fa";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { HiCheckCircle } from "react-icons/hi";
 import { useContext } from "react";
-import { EventContext } from "../../contexts/event";
+import { NewEventContext } from "@/contexts";
 
 export function Stepper() {
-  const { step, inProgress } = useContext(EventContext);
+  const { step, inProgress } = useContext(NewEventContext);
   const steps = ["General Information", "Make Your Own Form"];
   const stepIcons = [
     <IoInformationCircleOutline size={36} color="black" />,
@@ -16,7 +16,10 @@ export function Stepper() {
     <div className="flex items-center justify-center">
       <div className="flex space-x-4 text-gray-700">
         {steps.map((item, index) => (
-          <div className="flex flex-col space-y-2 items-start w-fit">
+          <div
+            className="flex flex-col space-y-2 items-start w-fit"
+            key={index}
+          >
             <div className="flex space-x-4 items-center h-[36px]">
               {step > index + 1 ? (
                 <HiCheckCircle size={36} color="green" />

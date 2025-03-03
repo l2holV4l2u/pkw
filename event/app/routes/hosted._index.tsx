@@ -28,17 +28,17 @@ export default function EventIndex() {
       ) : (
         events.map((item) => (
           <Card
-            title={item.name}
             key={item.id}
             clickable={true}
             link={"./" + item.id}
             className="p-4"
           >
             <div className="text-gray-700 space-y-1">
+              <h1 className="text-xl text-gray-800 font-bold">{item.name}</h1>
               <p>
-                Date: {convertDate(item.start_date)}
+                Date: {convertDate(item.startDate)}
                 {" - "}
-                {convertDate(item.end_date)}
+                {convertDate(item.endDate)}
               </p>
               <p className="text-sm">Location: {item.location}</p>
               <p className="text-sm text-gray-600">{item.description}</p>

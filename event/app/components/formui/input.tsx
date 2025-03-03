@@ -32,7 +32,7 @@ export function Input({
         className="w-full bg-transparent border-none focus:outline-none focus:ring-0"
         disabled={participant || disabled}
       />
-      {data == "" && (
+      {data === "" && (
         <label
           className={`absolute left-0 top-0 transition-all duration-200 pointer-events-none ${
             participant ? "p-3" : "text-gray-700"
