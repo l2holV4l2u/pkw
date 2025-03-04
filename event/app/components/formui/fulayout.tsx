@@ -39,12 +39,12 @@ export default function FuLayout({
   children: React.ReactNode;
   index: number;
 }) {
-  const { mode, form } = useContext(EventContext);
+  const { mode, form, setForm } = useContext(EventContext);
   const [isHovered, setIsHovered] = useState(false);
   const data = form[index] as FormType;
   const [header, setHeader] = useState(data.header ? data.header : "");
   const handleDelete = () => {
-    form.filter((_, i) => i !== index);
+    setForm(form.filter((_, i) => i !== index));
   };
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
@@ -63,7 +63,11 @@ export default function FuLayout({
 
   useEffect(() => {
     if (mode == 1) {
-      form[index].header = header;
+      setForm((prev) => {
+        const updatedForm = [...prev];
+        updatedForm[index].header = header;
+        return updatedForm;
+      });
     }
   }, [header, mode]);
 
@@ -77,6 +81,11 @@ export default function FuLayout({
           ref={setNodeRef}
           style={style}
         >
+          {isHovered && (
+            <div className="flex flex-col justify-center p-2 pr-0">
+              <RxDragHandleDots2 size={24} {...listeners} {...attributes} />
+            </div>
+          )}
           <Body
             children={children}
             header={header}
@@ -84,13 +93,12 @@ export default function FuLayout({
             mode={mode}
           />
           {isHovered && (
-            <div className="flex flex-col gap-2 p-4 pl-0">
+            <div className="flex flex-col justify-center p-2 pl-0">
               <FaRegTrashCan
                 size={24}
                 onClick={handleDelete}
                 className="cursor-pointer"
               />
-              <RxDragHandleDots2 size={24} {...listeners} {...attributes} />
             </div>
           )}
         </div>

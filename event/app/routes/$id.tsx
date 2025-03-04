@@ -1,12 +1,11 @@
 import { Layout } from "@components/layouts";
-import RenderFormComponent from "@components/layouts/renderformcomponent";
 import { Card } from "@components/ui";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { FormType } from "@types";
-import { EventContext } from "@contexts";
-import { useState } from "react";
+import { EventProvider } from "@contexts";
+import FormViewer from "@components/sections/formviewer";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
@@ -61,42 +60,23 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const form: FormType[] = event.forms[0].fields
     .map((field) => field.value as FormType)
     .filter((field): field is FormType => field !== undefined);
-  /*
-    const response: MultipleResponseType[] = event.responses.map((response) => ({
-      id: response.id,
-      submittedBy: response.user.fullName,
-      submittedAt: response.submittedAt,
-      response.responseField
-    }));
-  */
 
   return { event, form };
 }
 
-export default function EventRegister() {
+export default function EventInfo() {
   const { event, form } = useLoaderData<typeof loader>();
-  const [formData, setFormData] = useState<FormType[]>(form);
-  const [response, setResponse] = useState<ResponseType[]>([]);
   return (
-    <EventContext.Provider
-      value={{
-        formData,
-        setFormData,
-        response,
-        setResponse,
-        mode: 2,
-      }}
-    >
+    <EventProvider mode={2} iniForm={form}>
       <Layout
         label={["Active Event", event.name]}
         link={["", "/"]}
         className="space-y-6 items-center"
       >
-        {/* Form Responses */}
-        <Card className="w-full" title="Registration Form">
-          {form.map((val, index) => RenderFormComponent(val, index))}
+        <Card className="w-full" title="Form">
+          <FormViewer />
         </Card>
       </Layout>
-    </EventContext.Provider>
+    </EventProvider>
   );
 }

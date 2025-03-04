@@ -1,33 +1,37 @@
-export type BaseResType = {
+export type ResBaseType = {
   id: string;
   type: string;
 };
 
+export type ResQAType = ResBaseType & {
+  answer: string;
+};
+
 // Check box type
-export type ResCBType = BaseResType & {
+export type ResCBType = ResBaseType & {
   selected: boolean[];
 };
 
-export type ResMCType = BaseResType & {
+export type ResMCType = ResBaseType & {
   choice: number;
 };
 
-export type ResFileType = BaseResType & {
-  file: File;
+export type ResFileType = ResBaseType & {
+  file: File | null;
 };
 
-export type ResDateType = BaseResType & {
+export type ResDateType = ResBaseType & {
   date: string;
 };
 
 export type ResType =
-  | BaseResType
+  | ResBaseType
   | ResCBType
   | ResMCType
   | ResFileType
   | ResDateType;
 
-export type MultipleResponseType = ResType[] & {
+export type FormResType = ResType[] & {
   id: string;
   submittedBy: string;
   submittedAt: string;

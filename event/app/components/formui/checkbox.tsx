@@ -3,21 +3,32 @@ import { Input } from "./input";
 import { GoPlus } from "react-icons/go";
 import { EventContext } from "@contexts";
 import FuLayout from "./fulayout";
-import { FormMCType } from "@types";
+import { FormMCType, ResCBType } from "@types";
+import { FaCheck } from "react-icons/fa";
 
 export function Checkbox({ index }: { index: number }) {
-  const { form, mode } = useContext(EventContext);
+  const { form, setForm, setRes, mode } = useContext(EventContext);
   const data = form[index] as FormMCType;
   const [options, setOptions] = useState<string[]>(
-    data.choices ? data.choices : []
+    data.choices ? data.choices : [""]
   );
   const [selected, setSelected] = useState<boolean[]>(
-    data.choices ? Array(data.choices.length).fill(false) : []
+    data.choices ? Array(data.choices.length).fill(false) : [""]
   );
 
   useEffect(() => {
     if (mode == 1) {
-      (form[index] as FormMCType).choices = options;
+      setForm((prev) => {
+        const updatedForm = [...prev];
+        (updatedForm[index] as FormMCType).choices = options;
+        return updatedForm;
+      });
+    } else if (mode == 2) {
+      setRes((prev) => {
+        const updatedRes = [...prev];
+        (updatedRes[index] as ResCBType).selected = selected;
+        return updatedRes;
+      });
     }
   }, [options, selected]);
 
@@ -25,7 +36,18 @@ export function Checkbox({ index }: { index: number }) {
     <FuLayout index={index}>
       {options.map((option, subindex) => (
         <div className="flex items-center gap-2" key={subindex}>
-          <input type="checkbox" value={option} />
+          <div
+            className="w-5 h-5 border-2 rounded-md cursor-pointer border-gray-400 flex items-center justify-center"
+            onClick={() =>
+              setSelected((prev) => {
+                const updatedSelected = [...prev];
+                updatedSelected[subindex] = !updatedSelected[subindex];
+                return updatedSelected;
+              })
+            }
+          >
+            {selected[subindex] && <FaCheck size={12} color="#4b5563" />}
+          </div>
           <Input
             placeholder={`Option ${subindex + 1}`}
             className="text-sm font-normal text-gray-600"
@@ -36,7 +58,7 @@ export function Checkbox({ index }: { index: number }) {
               );
               setOptions(newOptions);
             }}
-            disabled={mode != 1}
+            disabled={mode == 2}
           />
         </div>
       ))}

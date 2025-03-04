@@ -5,7 +5,7 @@ import FuLayout from "./fulayout";
 import { FormSectionType } from "@types";
 
 export function Section({ index }: { index: number }) {
-  const { form, mode } = useContext(EventContext);
+  const { form, setForm, mode } = useContext(EventContext);
   const data = form[index] as FormSectionType;
   const [description, setDescription] = useState(
     data.description ? data.description : ""
@@ -13,7 +13,11 @@ export function Section({ index }: { index: number }) {
 
   useEffect(() => {
     if (mode == 1) {
-      (form[index] as FormSectionType).description = description;
+      setForm((prev) => {
+        const updatedForm = [...prev];
+        (updatedForm[index] as FormSectionType).description = description;
+        return updatedForm;
+      });
     }
   }, [description]);
 

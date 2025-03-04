@@ -6,12 +6,12 @@ import { useFetcher } from "@remix-run/react";
 export function Navigation() {
   const { step, setStep, eventName, description, location, fromDate, toDate } =
     useContext(NewEventContext);
-  const { formData } = useContext(EventContext);
+  const { form } = useContext(EventContext);
 
   const fetcher = useFetcher();
 
   function handleSubmit() {
-    const filteredFormData = formData.map(
+    const filteredFormData = form.map(
       ({ id, ...rest }: { id: string; [key: string]: any }) => rest
     );
     const data = {

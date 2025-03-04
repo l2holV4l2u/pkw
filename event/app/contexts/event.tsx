@@ -1,33 +1,44 @@
+import ResTemp from "@components/layouts/restemp";
 import { FormType, ResType } from "@types";
 import {
   createContext,
   Dispatch,
   ReactNode,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 
 export const EventContext = createContext<{
   form: FormType[];
+  setForm: Dispatch<SetStateAction<FormType[]>>;
   res: ResType[];
+  setRes: Dispatch<SetStateAction<ResType[]>>;
   mode: number; // 0 - view, 1 - edit, 2 - response
 }>({
   form: [],
+  setForm: () => {},
   res: [],
+  setRes: () => {},
   mode: 0,
 });
 
 export function EventProvider({
   children,
   mode,
+  iniForm,
 }: {
   children: ReactNode;
   mode: number;
+  iniForm?: FormType[];
 }) {
-  const form: FormType[] = [],
-    res: ResType[] = [];
+  const [form, setForm] = useState<FormType[]>(iniForm || []);
+  const [res, setRes] = useState<ResType[]>(
+    form.length != 0 ? form.map((val) => ResTemp(val.type)) : []
+  );
+
   return (
-    <EventContext.Provider value={{ form, res, mode }}>
+    <EventContext.Provider value={{ form, setForm, res, setRes, mode }}>
       {children}
     </EventContext.Provider>
   );

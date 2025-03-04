@@ -1,7 +1,7 @@
 import { DndContext, DragEndEvent, useDroppable } from "@dnd-kit/core";
 import { Card } from "@components/ui";
 import { EventContext } from "@contexts";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import RenderFormComponent from "./renderformcomponent";
@@ -9,14 +9,17 @@ import RenderFormComponent from "./renderformcomponent";
 export function FormDroppable() {
   const { form } = useContext(EventContext);
   const { setNodeRef, isOver } = useDroppable({ id: "FormElementDropArea" });
+  const [force, setForce] = useState(true);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      arrayMove(
-        form,
-        form.findIndex((item) => item.id === active.id),
-        form.findIndex((item) => item.id === over.id)
-      );
+      const oldIndex = form.findIndex((item) => item.id === active.id);
+      const newIndex = form.findIndex((item) => item.id === over.id);
+      const newForm = arrayMove([...form], oldIndex, newIndex);
+      form.length = 0;
+      form.push(...newForm);
+      setForce(!force);
     }
   };
 
