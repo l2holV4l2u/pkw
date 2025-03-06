@@ -24,12 +24,12 @@ export async function action({ request }: ActionFunctionArgs) {
     }
     const cookieHeader =
       remember == "true"
-        ? cookie.serialize("token", user.id, {
+        ? cookie.serialize("id", user.id, {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 365 * 999,
             path: "/",
           })
-        : cookie.serialize("token", user.id, {
+        : cookie.serialize("id", user.id, {
             httpOnly: true,
             path: "/",
           });
@@ -47,10 +47,10 @@ export default function Login() {
   const actionData = useActionData<string>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState<boolean>(false);
 
-  const handleRememberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRemember(event.target.checked);
+  const handleRememberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRemember(e.target.checked);
   };
 
   return (
@@ -79,6 +79,7 @@ export default function Login() {
                 name="remember"
                 checked={remember}
                 onChange={handleRememberChange}
+                value={remember.toString()}
                 className="mr-2 w-4 h-4 border-2 border-gray-300 bg-white rounded checked:bg-blue-500 checked:border-blue-500"
               />
               Remember this device

@@ -32,9 +32,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { full_name: fullname, email, password: hashedPassword },
+      data: { fullName: fullname, email, password: hashedPassword },
     });
-    const cookieHeader = cookie.serialize("token", user.id, {
+    const cookieHeader = cookie.serialize("id", user.id, {
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 365 * 999,
       path: "/",
