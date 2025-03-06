@@ -31,8 +31,6 @@ export type ResType =
   | ResFileType
   | ResDateType;
 
-export type FormResType = ResType[] & {
-  id: string;
-  submittedBy: string;
-  submittedAt: string;
+export type FormResType = {
+  responseField: ResType[];
 };

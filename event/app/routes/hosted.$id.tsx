@@ -6,60 +6,32 @@ import { prisma } from "@utils/functions/prisma";
 import { FormType } from "@types";
 import { EventProvider } from "@contexts";
 import FormViewer from "@components/sections/formviewer";
+import cookie from "cookie";
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ params, request }: LoaderFunctionArgs) {
+  const cookies = cookie.parse(request.headers.get("cookie") || "");
+  const userId = cookies.id;
   const { id } = params;
-
   const event = await prisma.event.findUnique({
     where: { id },
     include: {
-      forms: {
+      form: {
         include: { fields: true },
-      },
-      responses: {
-        include: {
-          responseFields: {
-            include: { formField: true },
-          },
-          user: true,
-        },
       },
     },
   });
 
-  if (!event) {
-    throw new Response("Event not found", { status: 404 });
-  }
+  if (!event) throw new Response("Event not found", { status: 404 });
+  if (!event.form) throw new Response("Form not found", { status: 404 });
 
-  event.forms = event.forms.map((question) => {
-    if (question.fieldOrder) {
-      question.fields = question.fieldOrder
-        .map((fieldId) => {
-          const field = question.fields.find((field) => field.id === fieldId);
-          if (
-            field &&
-            typeof field.value === "object" &&
-            field.value !== null
-          ) {
-            return {
-              ...field,
-              id: field.id,
-              value: { ...field.value, id: field.id },
-            };
-          }
-          return field ? { ...field, id: field.id } : undefined;
-        })
-        .filter(
-          (field): field is (typeof question.fields)[number] =>
-            field !== undefined
-        );
-    }
-    return question;
-  });
-
-  const form: FormType[] = event.forms[0].fields
-    .map((field) => field.value as FormType)
-    .filter((field): field is FormType => field !== undefined);
+  const tempForm = event.form;
+  const orderedForm = tempForm.fieldOrder
+    .map((fieldId) => {
+      const field = tempForm.fields.find((field) => field.id === fieldId);
+      return field ? { value: field.value, id: field.id } : undefined;
+    })
+    .filter((field) => field !== undefined);
+  const form: FormType[] = orderedForm.map((field) => field.value as FormType);
 
   return { event, form };
 }
@@ -67,7 +39,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function EventInfo() {
   const { event, form } = useLoaderData<typeof loader>();
   return (
-    <EventProvider mode={0} iniForm={form}>
+    <EventProvider mode={0} formInit={form}>
       <Layout
         label={["Hosted Event", event.name]}
         link={["hosted", "/"]}

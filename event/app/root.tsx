@@ -45,9 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const cookies = cookie.parse(request.headers.get("cookie") || "");
-  const token = cookies.token;
+  const id = cookies.id;
   const url = request.url;
-  return !token && !url.includes("authentication")
+  return !id && !url.includes("authentication")
     ? redirect("./authentication/login")
     : null;
 }

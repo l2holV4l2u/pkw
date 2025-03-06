@@ -30,7 +30,7 @@ model Event {
   createdAt            DateTime      @default(now())
   updatedAt            DateTime      @updatedAt @default(now())
   roles                Role[]
-  forms                Form[]
+  form                 Form?
   responses            Response[]
 }
 
@@ -46,9 +46,9 @@ model Role {
 
 model Form {
   id          Int         @id @default(autoincrement())
-  eventId     String
-  fieldOrder  Int[]
   event       Event       @relation(fields: [eventId], references: [id])
+  eventId     String      @unique
+  fieldOrder  Int[]
   fields      FormField[]
   responses   Response[]
 }

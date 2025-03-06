@@ -1,13 +1,12 @@
 import { useContext } from "react";
-import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { EventContext, NewEventContext } from "@/contexts";
 import { useFetcher } from "@remix-run/react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 export function Navigation() {
   const { step, setStep, eventName, description, location, fromDate, toDate } =
     useContext(NewEventContext);
   const { form } = useContext(EventContext);
-
   const fetcher = useFetcher();
 
   function handleSubmit() {
@@ -26,33 +25,25 @@ export function Navigation() {
   }
 
   return (
-    <div className={`flex justify-between items-center w-[50%] text-lg`}>
+    <div
+      className={`flex items-center w-1/2 text-gray-600 gap-1 font-semibold`}
+    >
       {step > 1 && (
         <button
           onClick={() => setStep(step - 1)}
-          className="flex items-center space-x-2"
+          className="flex gap-1 items-center"
         >
-          <GoArrowLeft size={24} color="#4b5563" style={{ strokeWidth: 1 }} />
-          <div className="text-gray-600 font-semibold text-lg">Previous</div>
+          <FaArrowLeft size={16} color="#4b5563" /> Previous
         </button>
       )}
       <div className="flex-1" />
-      {step == 2 ? (
-        <button
-          onClick={() => handleSubmit()}
-          className="text-gray-600 font-semibold "
-        >
-          Submit
-        </button>
-      ) : (
-        <button
-          onClick={() => setStep(step + 1)}
-          className="text-gray-600 font-semibold flex gap-2 items-center"
-        >
-          Next
-        </button>
-      )}
-      <GoArrowRight size={24} color="#4b5563" style={{ strokeWidth: 1 }} />
+      <button
+        onClick={() => (step == 2 ? handleSubmit() : setStep(step + 1))}
+        className="flex gap-1 items-center"
+      >
+        {step == 2 ? "Submit" : "Next"}
+        <FaArrowRight size={16} color="#4b5563" />
+      </button>
     </div>
   );
 }

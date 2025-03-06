@@ -5,7 +5,6 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
-  useEffect,
   useState,
 } from "react";
 
@@ -14,31 +13,44 @@ export const EventContext = createContext<{
   setForm: Dispatch<SetStateAction<FormType[]>>;
   res: ResType[];
   setRes: Dispatch<SetStateAction<ResType[]>>;
+  event: any;
   mode: number; // 0 - view, 1 - edit, 2 - response
 }>({
   form: [],
   setForm: () => {},
   res: [],
   setRes: () => {},
+  event: {},
   mode: 0,
 });
 
 export function EventProvider({
   children,
   mode,
-  iniForm,
+  formInit,
+  eventInit,
 }: {
   children: ReactNode;
   mode: number;
-  iniForm?: FormType[];
+  formInit?: FormType[];
+  eventInit?: any;
 }) {
-  const [form, setForm] = useState<FormType[]>(iniForm || []);
+  const [form, setForm] = useState<FormType[]>(formInit || []);
   const [res, setRes] = useState<ResType[]>(
     form.length != 0 ? form.map((val) => ResTemp(val.type)) : []
   );
 
   return (
-    <EventContext.Provider value={{ form, setForm, res, setRes, mode }}>
+    <EventContext.Provider
+      value={{
+        form,
+        setForm,
+        res,
+        setRes,
+        event: eventInit || {},
+        mode,
+      }}
+    >
       {children}
     </EventContext.Provider>
   );
