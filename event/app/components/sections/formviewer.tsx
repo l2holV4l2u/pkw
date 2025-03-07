@@ -3,36 +3,20 @@ import { EventContext } from "@contexts";
 import { useContext } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 
-export default function FormViewer() {
+export function FormViewer() {
   const { form, event, res, mode } = useContext(EventContext);
 
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append(
-      "res",
-      JSON.stringify({
-        responseField: res,
-      })
-    );
-    formData.append("event", JSON.stringify(event));
-    try {
-      const response = await fetch(window.location.pathname, {
-        method: "POST",
-        body: formData,
-      });
+  async function handleSubmit() {
+    const data = { responseField: res, event };
+    await fetch(window.location.pathname, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  }
 
-      if (response.ok) {
-        alert("Form submitted successfully");
-      } else {
-        alert("Something went wrong. Please try again later.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong. Please try again later.");
-    }
-  };
-
-  console.log(event);
   return (
     <>
       {form.map((val, index) => RenderFormComponent(val, index))}

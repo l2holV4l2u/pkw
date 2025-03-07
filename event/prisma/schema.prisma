@@ -10,9 +10,12 @@ datasource db {
 model User {
   id              String        @id @default(uuid())
   email           String        @unique
-  fullName        String?
+  name            String?
   profilePicture  String?
   contactNo       String?
+  familyNo        String?
+  school          String?
+  thaiId          String?
   updatedAt       DateTime      @updatedAt @default(now())
   password        String
   roles           Role[]

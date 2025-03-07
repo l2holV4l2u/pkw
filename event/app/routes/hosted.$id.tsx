@@ -3,14 +3,11 @@ import { Card } from "@components/ui";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
-import { FormType } from "@types";
+import { FormType, ResSchemaType, ResType } from "@types";
 import { EventProvider } from "@contexts";
-import FormViewer from "@components/sections/formviewer";
-import cookie from "cookie";
+import { FormViewer, ResponseViwer } from "@components/sections";
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
-  const cookies = cookie.parse(request.headers.get("cookie") || "");
-  const userId = cookies.id;
+export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
   const event = await prisma.event.findUnique({
     where: { id },
@@ -33,11 +30,41 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     .filter((field) => field !== undefined);
   const form: FormType[] = orderedForm.map((field) => field.value as FormType);
 
-  return { event, form };
+  const preres = await prisma.response.findMany({
+    where: { eventId: event.id },
+    include: {
+      responseFields: true,
+      user: true,
+    },
+  });
+  const res: ResSchemaType = preres.map((subres) => {
+    return {
+      name: subres.user.fullName,
+      responseFields: subres.responseFields.map((field) => {
+        return {
+          formFieldId: field.formFieldId,
+          value: field.value as ResType,
+        };
+      }),
+      submittedAt: subres.submittedAt,
+      responseId: subres.id,
+    };
+  });
+
+  return { event, form, res };
+}
+
+function StatCard({ title, val }: { title: string; val: string }) {
+  return (
+    <Card className="p-4">
+      <p className="text-sm text-gray-500">{title}</p>
+      <p className="text-xl">{val}</p>
+    </Card>
+  );
 }
 
 export default function EventInfo() {
-  const { event, form } = useLoaderData<typeof loader>();
+  const { event, form, res } = useLoaderData<typeof loader>();
   return (
     <EventProvider mode={0} formInit={form}>
       <Layout
@@ -45,23 +72,16 @@ export default function EventInfo() {
         link={["hosted", "/"]}
         className="space-y-6 items-center"
       >
-        {/* Top Stats Cards */}
         <div className="grid grid-cols-3 gap-4 w-full font-bold">
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Total Participants</p>
-            <p className="text-xl">{event.responses.length}</p>
-          </Card>
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Total Payout</p>
-            <p className="text-xl">$0</p>
-          </Card>
-          <Card className="p-4">
-            <p className="text-sm text-gray-500">Status</p>
-            <p className="text-xl">Ongoing</p>
-          </Card>
+          <StatCard title="Total Participants" val={`${res.length}`} />
+          <StatCard title="Total Payout" val={`${0}`} />
+          <StatCard title="Status" val="Ongoing" />
         </div>
         <Card className="w-full" title="Form">
           <FormViewer />
+        </Card>
+        <Card className="w-full" title="Response">
+          <ResponseViwer res={res} form={form} />
         </Card>
       </Layout>
     </EventProvider>

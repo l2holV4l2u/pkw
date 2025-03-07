@@ -1,7 +1,7 @@
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { Layout } from "@/components/layouts";
-import { Button, Card } from "@/components/ui";
+import { Card } from "@/components/ui";
 import { Event } from "@/types/event";
 
 export async function loader() {

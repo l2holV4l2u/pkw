@@ -24,7 +24,7 @@ export function Card({
     `}
       >
         {title && (
-          <h3 className="text-xl text-gray-800 font-bold absolute top-[-24px] left-2 bg-white p-2">
+          <h3 className="text-xl text-gray-800 font-bold absolute top-[-20px] left-2 bg-white p-1">
             {title}
           </h3>
         )}

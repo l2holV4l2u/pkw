@@ -5,7 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { FormResType, FormType } from "@types";
 import { EventProvider } from "@contexts";
-import FormViewer from "@components/sections/formviewer";
+import { FormViewer } from "@components/sections";
 import EventScraper from "@utils/functions/scraper";
 import cookie from "cookie";
 

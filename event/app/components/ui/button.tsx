@@ -1,24 +1,25 @@
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 
-interface ButtonProps {
+export function Button({
+  link,
+  content,
+  onClick,
+  className,
+}: {
   link?: string;
   content: string;
-}
-
-export function Button({ link, content }: ButtonProps) {
+  onClick?: () => void;
+  className?: string;
+}) {
+  const location = useLocation();
   return (
-    <>
-      {link ? (
-        <Link to={link}>
-          <button className="px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition">
-            {content}
-          </button>
-        </Link>
-      ) : (
-        <button className="px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition">
-          {content}
-        </button>
-      )}
-    </>
+    <Link to={link || location.pathname}>
+      <button
+        onClick={onClick}
+        className={`${className} px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition`}
+      >
+        {content}
+      </button>
+    </Link>
   );
 }

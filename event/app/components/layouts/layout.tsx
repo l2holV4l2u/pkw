@@ -18,11 +18,11 @@ export function Layout({
 }) {
   return (
     <div
-      className={`p-6 flex flex-col space-y-4 h-full bg-white rounded-3xl border-2 border-border ${className}`}
+      className={`p-6 flex flex-col space-y-4 h-full bg-gradient-to-br from-white to-slate-50 rounded-3xl border-2 border-border ${className}`}
     >
       {title && (
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-extrabold text-gray-800">{title}</h1>
+          <h1 className="text-2xl font-extrabold text-text-800">{title}</h1>
           {button}
         </div>
       )}
