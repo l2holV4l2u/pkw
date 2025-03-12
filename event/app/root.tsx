@@ -5,12 +5,16 @@ import {
   redirect,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useLocation,
 } from "@remix-run/react";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import "./tailwind.css";
 import cookie from "cookie";
 import { Sidebar } from "@/components/layouts";
+import { prisma } from "@utils/functions/prisma";
+import { UserSchemaType } from "@types";
+import { UserProvider } from "@contexts";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,21 +51,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const cookies = cookie.parse(request.headers.get("cookie") || "");
   const id = cookies.id;
   const url = request.url;
-  return !id && !url.includes("authentication")
-    ? redirect("./authentication/login")
-    : null;
+  if (!id && !url.includes("authentication")) {
+    redirect("./authentication/login");
+  }
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) throw new Response("User not found", { status: 404 });
+  return JSON.parse(JSON.stringify(user)) as UserSchemaType;
 }
 
 export default function App() {
+  const user = useLoaderData<UserSchemaType>();
   const location = useLocation();
   const isAuthenticationRoute = location.pathname.includes("/authentication");
-
   return (
     <div className="flex min-h-screen bg-background">
       {!isAuthenticationRoute && (
-        <div className="w-64">
-          <Sidebar />
-        </div>
+        <UserProvider user={user}>
+          <div className="w-64">
+            <Sidebar />
+          </div>
+        </UserProvider>
       )}
       <div className="flex-1 min-h-screen p-2">
         <Outlet />

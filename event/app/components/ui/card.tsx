@@ -19,7 +19,7 @@ export function Card({
     return (
       <div
         className={`rounded-xl border-2 border-border shadow-sm space-y-2 relative 
-        ${clickable && "transform transition-transform hover:scale-[1.005]"} 
+        ${clickable && "transition hover:scale-[1.02]"} 
         ${minicard && "bg-gray-100"} ${className} ${title && "pt-2"}
     `}
       >

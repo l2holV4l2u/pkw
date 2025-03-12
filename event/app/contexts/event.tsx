@@ -15,6 +15,7 @@ export const EventContext = createContext<{
   setRes: Dispatch<SetStateAction<ResType[]>>;
   event: any;
   mode: number; // 0 - view, 1 - edit, 2 - response
+  setMode?: Dispatch<SetStateAction<number>>;
 }>({
   form: [],
   setForm: () => {},
@@ -22,16 +23,19 @@ export const EventContext = createContext<{
   setRes: () => {},
   event: {},
   mode: 0,
+  setMode: () => {},
 });
 
 export function EventProvider({
   children,
   mode,
+  setMode,
   formInit,
   eventInit,
 }: {
   children: ReactNode;
   mode: number;
+  setMode: Dispatch<SetStateAction<number>>;
   formInit?: FormType[];
   eventInit?: any;
 }) {
@@ -49,6 +53,7 @@ export function EventProvider({
         setRes,
         event: eventInit || {},
         mode,
+        setMode,
       }}
     >
       {children}

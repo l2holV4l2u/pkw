@@ -1,45 +1,49 @@
-import { Link, useLocation } from "@remix-run/react";
-import placeholder from "@/utils/placeholder.png";
-import { useState } from "react";
 import { HiOutlineCog, HiOutlineHome, HiOutlineTicket } from "react-icons/hi";
+import { Button, Curve, CurveWithLine, Input } from "@components/ui";
+import { Link, useFetcher, useLocation } from "@remix-run/react";
+import placeholder from "@/utils/placeholder.png";
+import { useContext, useState } from "react";
+import { UserContext } from "@contexts";
 import {
   IoChevronDownOutline,
   IoChevronForwardOutline,
   IoChevronUpOutline,
 } from "react-icons/io5";
 
-function Curve() {
-  return (
-    <svg
-      width="18"
-      height="42"
-      viewBox="0 0 18 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M9 0C9 13.3929 9 25 18 25" stroke="gray" stroke-width="2" />
-    </svg>
-  );
-}
+const fields = [
+  { label: "Name", key: "name" },
+  { label: "Email", key: "email" },
+  { label: "Contact Number", key: "contactNo" },
+  { label: "Family Number", key: "familyNo" },
+  { label: "School", key: "school" },
+  { label: "Thai ID", key: "thaiId" },
+];
 
-function CurveWithLine() {
+function ProfileField({ index, formData, setFormData }: any) {
   return (
-    <svg
-      width="18"
-      height="42"
-      viewBox="0 0 18 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M9 0C9 13.3929 9 25 18 25" stroke="gray" stroke-width="2" />
-      <path d="M9 0V42" stroke="gray" stroke-width="2" />
-    </svg>
+    <div className="flex justify-between w-full">
+      <Input
+        field={
+          formData[fields[index].key] == "undefined"
+            ? "Unknown"
+            : formData[fields[index].key]
+        }
+        setField={(val) =>
+          setFormData({ ...formData, [fields[index].key]: val })
+        }
+        label={fields[index].label}
+        type="text"
+      />
+    </div>
   );
 }
 
 export function Sidebar() {
+  const { user } = useContext(UserContext);
   const location = useLocation();
   const currentPath = location.pathname.slice(1);
+  const [formData, setFormData] = useState(user);
+  const [isOpen, setIsOpen] = useState(false);
   const menus = ["Home", "Event", "Setting"];
   const menuLinks = ["", "event", "setting"];
   const submenus = [[], ["Hosted Event", "Registered Event"], []];
@@ -50,15 +54,19 @@ export function Sidebar() {
     <HiOutlineTicket size={18} />,
     <HiOutlineCog size={18} />,
   ];
-
   const toggleSubmenu = (index: number) => {
     let updatedOpenSub = [...openSub];
     updatedOpenSub[index] = !updatedOpenSub[index];
     setOpenSub(updatedOpenSub);
   };
+  const fetcher = useFetcher();
+  const handleSubmit = () => {
+    const data = { id: user.id, formData };
+    fetcher.submit({ data: JSON.stringify(data) }, { method: "post" });
+  };
 
   return (
-    <div className="w-64 fixed h-screen py-8 px-4 flex flex-col justify-between">
+    <div className="w-64 h-screen py-8 px-4 flex flex-col justify-between">
       <div>
         <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
           Event Manager
@@ -134,24 +142,50 @@ export function Sidebar() {
           ))}
         </ul>
       </div>
-
       {/* Bottom Section: Profile Navigation */}
-      <div className="mt-8">
-        <Link
-          to="./profile"
-          className="flex items-center space-x-2 p-1.5 font-medium rounded-md hover:bg-gray-200 transition duration-200"
-        >
-          <img src={placeholder} className="w-12 h-12 rounded-full" />
-          <div className="flex flex-col">
-            <div className="text-gray-700 hover:text-gray-900 text-md">
-              Naruesorn
-            </div>
-            <div className="text-gray-600 hover:text-gray-800 text-sm">
-              M.6 Student
+      <div
+        className="flex items-center space-x-2 p-1.5 font-medium rounded-md hover:bg-gray-200 transition duration-200 mt-8"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <img src={placeholder} className="w-12 h-12 rounded-full" />
+        <div className="flex flex-col">
+          <div className="text-gray-700 hover:text-gray-900 text-md">
+            Naruesorn
+          </div>
+          <div className="text-gray-600 hover:text-gray-800 text-sm">
+            M.6 Student
+          </div>
+        </div>
+      </div>
+      {isOpen && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-128 pointer-events-none">
+            <h2 className="text-lg font-bold mb-4">Edit Profile</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {fields.map((_, index) => (
+                <ProfileField
+                  key={index}
+                  index={index}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              ))}
+              <div className="flex justify-end col-span-2 pointer-events-auto">
+                <Button
+                  content="Save"
+                  onClick={handleSubmit}
+                  className="bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-400 hover:to-blue-600"
+                />
+                <Button
+                  content="Close"
+                  onClick={() => setIsOpen(false)}
+                  className="ml-2 bg-gray-500 hover:bg-gray-600"
+                />
+              </div>
             </div>
           </div>
-        </Link>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { useLoaderData } from "@remix-run/react";
+import { Button, Card, EventCard } from "@/components/ui";
+import { Link, useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { Layout } from "@/components/layouts";
-import { Button, Card } from "@/components/ui";
 import { Event } from "@/types/event";
 
 export async function loader() {
@@ -19,33 +19,27 @@ function convertDate(date: string) {
 export default function EventIndex() {
   const events = useLoaderData<Event[]>();
   return (
-    <Layout
-      title="Hosted Event"
-      button={<Button link="./newevent" content="+ add event" />}
-    >
-      {events.length === 0 ? (
-        <div className="text-gray-500">No events found</div>
-      ) : (
-        events.map((item) => (
-          <Card
-            key={item.id}
-            clickable={true}
-            link={"./" + item.id}
-            className="p-4"
-          >
-            <div className="text-gray-700 space-y-1">
-              <h1 className="text-xl text-gray-800 font-bold">{item.name}</h1>
-              <p>
-                Date: {convertDate(item.startDate)}
-                {" - "}
-                {convertDate(item.endDate)}
-              </p>
-              <p className="text-sm">Location: {item.location}</p>
-              <p className="text-sm text-gray-600">{item.description}</p>
-            </div>
+    <Layout title="Hosted Event">
+      <div className="grid grid-cols-4 gap-4">
+        <Link to="./newevent">
+          <Card className="flex items-center justify-center w-full h-full text-lg font-semibold hover:scale-[1.02] transition">
+            + Add Event
           </Card>
-        ))
-      )}
+        </Link>
+        {events.map((item) => (
+          <EventCard
+            event={{
+              id: item.id,
+              img: null,
+              name: item.name,
+              description: item.description,
+              location: item.location,
+              date:
+                convertDate(item.startDate) + " - " + convertDate(item.endDate),
+            }}
+          />
+        ))}
+      </div>
     </Layout>
   );
 }

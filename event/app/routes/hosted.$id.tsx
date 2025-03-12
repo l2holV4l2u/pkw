@@ -6,6 +6,7 @@ import { prisma } from "@utils/functions/prisma";
 import { FormType, ResSchemaType, ResType } from "@types";
 import { EventProvider } from "@contexts";
 import { FormViewer, ResponseViwer } from "@components/sections";
+import { useState } from "react";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
@@ -39,7 +40,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   });
   const res: ResSchemaType = preres.map((subres) => {
     return {
-      name: subres.user.fullName,
+      name: subres.user.name,
       responseFields: subres.responseFields.map((field) => {
         return {
           formFieldId: field.formFieldId,
@@ -65,8 +66,9 @@ function StatCard({ title, val }: { title: string; val: string }) {
 
 export default function EventInfo() {
   const { event, form, res } = useLoaderData<typeof loader>();
+  const [mode, setMode] = useState(0);
   return (
-    <EventProvider mode={0} formInit={form}>
+    <EventProvider mode={mode} setMode={setMode} formInit={form}>
       <Layout
         label={["Hosted Event", event.name]}
         link={["hosted", "/"]}
