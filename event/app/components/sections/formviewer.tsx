@@ -2,6 +2,7 @@ import RenderFormComponent from "@components/layouts/renderformcomponent";
 import { EventContext } from "@contexts";
 import { useContext } from "react";
 import { FaArrowRight, FaPen } from "react-icons/fa6";
+import { HiPencil } from "react-icons/hi";
 
 export function FormViewer() {
   const { form, event, res, mode, setMode } = useContext(EventContext);
@@ -34,7 +35,7 @@ export function FormViewer() {
         </div>
         {mode != 2 && setMode && (
           <div className="flex justify-end px-4">
-            <FaPen
+            <HiPencil
               size={16}
               onClick={() => setMode(mode == 1 ? 0 : 1)}
               className="cursor-pointer"

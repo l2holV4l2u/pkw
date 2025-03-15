@@ -3,17 +3,10 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
+import { convertDate } from "@utils/functions/misc";
 
 export async function loader() {
   return prisma.event.findMany();
-}
-
-function convertDate(date: string) {
-  return new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 export default function EventIndex() {

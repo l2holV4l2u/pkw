@@ -1,11 +1,27 @@
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
 import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
 import { EventCard } from "@components/ui";
+import { UserSchemaType } from "@types";
 
 export async function loader() {
   return prisma.event.findMany();
+}
+
+export async function action({ request }: LoaderFunctionArgs) {
+  const form = await request.formData();
+  const data = JSON.parse(form.get("data") as string);
+  const { id, formData } = data;
+  if (!id) throw new Response("ID not found", { status: 404 });
+
+  await prisma.user.update({
+    where: { id },
+    data: formData as UserSchemaType,
+  });
+
+  return new Response(null, { status: 200 });
 }
 
 function convertDate(date: string) {

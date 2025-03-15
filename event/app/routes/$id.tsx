@@ -8,6 +8,9 @@ import { EventProvider } from "@contexts";
 import { FormViewer } from "@components/sections";
 import EventScraper from "@utils/functions/scraper";
 import cookie from "cookie";
+import { useState } from "react";
+import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
+import { convertDate } from "@utils/functions/misc";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
@@ -76,16 +79,41 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function EventInfo() {
   const { event, form } = useLoaderData<typeof loader>();
+  const [mode, setMode] = useState(2);
   return (
-    <EventProvider mode={2} formInit={form} eventInit={event}>
+    <EventProvider
+      mode={mode}
+      setMode={setMode}
+      formInit={form}
+      eventInit={event}
+    >
       <Layout
         label={["Active Event", event.name]}
         link={["", "/"]}
         className="space-y-6 items-center"
       >
-        <Card className="w-full" title="Form">
-          <FormViewer />
-        </Card>
+        <div className="flex flex-col w-xl gap-6">
+          <div className="flex flex-col gap-4">
+            <div className="text-2xl font-bold">{event.name}</div>
+            <div>{event.description}</div>
+            <div className="flex items-center gap-2 text-sm">
+              <FaRegCalendar size={14} />
+              {convertDate(event.startDate) +
+                " - " +
+                convertDate(event.endDate)}
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <FaLocationDot size={14} />
+              {event.location}
+            </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="text-xl font-semibold">Register</div>
+            <Card className="w-full">
+              <FormViewer />
+            </Card>
+          </div>
+        </div>
       </Layout>
     </EventProvider>
   );

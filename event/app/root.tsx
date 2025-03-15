@@ -64,17 +64,13 @@ export default function App() {
   const location = useLocation();
   const isAuthenticationRoute = location.pathname.includes("/authentication");
   return (
-    <div className="flex min-h-screen bg-background">
-      {!isAuthenticationRoute && (
-        <UserProvider user={user}>
-          <div className="w-64">
-            <Sidebar />
-          </div>
-        </UserProvider>
-      )}
-      <div className="flex-1 min-h-screen p-2">
-        <Outlet />
+    <UserProvider user={user}>
+      <div className="flex min-h-screen bg-background">
+        {!isAuthenticationRoute && <Sidebar />}
+        <div className="flex-1 min-h-screen p-2">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </UserProvider>
   );
 }

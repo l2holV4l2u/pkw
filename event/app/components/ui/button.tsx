@@ -5,18 +5,23 @@ export function Button({
   content,
   onClick,
   className,
+  disabled,
 }: {
   link?: string;
   content: string;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }) {
   const location = useLocation();
   return (
-    <Link to={link || location.pathname}>
+    <Link to={disabled ? "#" : link || location.pathname}>
       <button
         onClick={onClick}
-        className={`${className} px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition`}
+        disabled={disabled}
+        className={`${className} px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md transition ${
+          disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"
+        }`}
       >
         {content}
       </button>

@@ -159,3 +159,64 @@ export function CurveWithLine() {
     </svg>
   );
 }
+
+export function Logo() {
+  return (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1="16.2929"
+        y1="23.4751"
+        x2="31.4751"
+        y2="8.29289"
+        stroke="black"
+        stroke-width="2"
+      />
+      <line
+        x1="15"
+        y1="24"
+        x2="36.4709"
+        y2="24"
+        stroke="black"
+        stroke-width="2"
+      />
+      <line
+        x1="15.7071"
+        y1="23.2929"
+        x2="29.8492"
+        y2="37.435"
+        stroke="black"
+        stroke-width="2"
+      />
+      <path
+        d="M27 9C27 11.7614 29.2386 14 32 14C34.7614 14 37 11.7614 37 9C37 6.23858 34.7614 4 32 4C29.2386 4 27 6.23858 27 9Z"
+        fill="white"
+        stroke="black"
+        stroke-width="2"
+      />
+      <path
+        d="M27 24C27 26.7614 29.2386 29 32 29C34.7614 29 37 26.7614 37 24C37 21.2386 34.7614 19 32 19C29.2386 19 27 21.2386 27 24Z"
+        fill="white"
+        stroke="black"
+        stroke-width="2"
+      />
+      <path
+        d="M27 39C27 41.7614 29.2386 44 32 44C34.7614 44 37 41.7614 37 39C37 36.2386 34.7614 34 32 34C29.2386 34 27 36.2386 27 39Z"
+        fill="white"
+        stroke="black"
+        stroke-width="2"
+      />
+      <path
+        d="M10 24C10 26.7614 12.2386 29 15 29C17.7614 29 20 26.7614 20 24C20 21.2386 17.7614 19 15 19C12.2386 19 10 21.2386 10 24Z"
+        fill="white"
+        stroke="black"
+        stroke-width="2"
+      />
+    </svg>
+  );
+}

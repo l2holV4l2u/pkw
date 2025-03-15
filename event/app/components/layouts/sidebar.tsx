@@ -1,113 +1,73 @@
+import { Curve, CurveWithLine, Logo } from "@components/ui";
+import { Link, useFetcher, useLocation, useNavigate } from "@remix-run/react";
+import { useState } from "react";
 import { HiOutlineCog, HiOutlineHome, HiOutlineTicket } from "react-icons/hi";
-import { Button, Curve, CurveWithLine, Input } from "@components/ui";
-import { Link, useFetcher, useLocation } from "@remix-run/react";
-import placeholder from "@/utils/placeholder.png";
-import { useContext, useState } from "react";
-import { UserContext } from "@contexts";
 import {
   IoChevronDownOutline,
   IoChevronForwardOutline,
   IoChevronUpOutline,
 } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa6";
+import { FiLogOut } from "react-icons/fi";
 
-const fields = [
-  { label: "Name", key: "name" },
-  { label: "Email", key: "email" },
-  { label: "Contact Number", key: "contactNo" },
-  { label: "Family Number", key: "familyNo" },
-  { label: "School", key: "school" },
-  { label: "Thai ID", key: "thaiId" },
-];
-
-function ProfileField({ index, formData, setFormData }: any) {
-  return (
-    <div className="flex justify-between w-full">
-      <Input
-        field={
-          formData[fields[index].key] == "undefined"
-            ? "Unknown"
-            : formData[fields[index].key]
-        }
-        setField={(val) =>
-          setFormData({ ...formData, [fields[index].key]: val })
-        }
-        label={fields[index].label}
-        type="text"
-      />
-    </div>
-  );
-}
+function handleLogout() {}
 
 export function Sidebar() {
-  const { user } = useContext(UserContext);
   const location = useLocation();
-  const currentPath = location.pathname.slice(1);
-  const [formData, setFormData] = useState(user);
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const curPath = location.pathname.slice(1);
   const menus = ["Home", "Event", "Setting"];
   const menuLinks = ["", "event", "setting"];
   const submenus = [[], ["Hosted Event", "Registered Event"], []];
   const submenuLinks = [[], ["hosted", "registered"], []];
-  const [openSub, setOpenSub] = useState<boolean[]>([false, true, false]);
+  const [openSub, setOpenSub] = useState<boolean>(true);
   const menuSVG = [
-    <HiOutlineHome size={18} />,
-    <HiOutlineTicket size={18} />,
-    <HiOutlineCog size={18} />,
+    <HiOutlineHome size={24} />,
+    <HiOutlineTicket size={24} />,
+    <HiOutlineCog size={24} />,
   ];
-  const toggleSubmenu = (index: number) => {
-    let updatedOpenSub = [...openSub];
-    updatedOpenSub[index] = !updatedOpenSub[index];
-    setOpenSub(updatedOpenSub);
-  };
+  const bottom = ["Profile", "Log out"];
+  const bottomAction = [() => navigate("./profile"), () => handleLogout()];
+  const bottomSVG = [
+    <FaRegUser size={20} strokeWidth={2} />,
+    <FiLogOut size={24} />,
+  ];
   const fetcher = useFetcher();
-  const handleSubmit = () => {
-    const data = { id: user.id, formData };
-    fetcher.submit({ data: JSON.stringify(data) }, { method: "post" });
-  };
 
   return (
-    <div className="w-64 h-screen py-8 px-4 flex flex-col justify-between">
-      <div>
-        <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
-          Event Manager
-        </h2>
-        <ul className="space-y-2">
+    <div className="w-64 h-screen py-8 p-4 flex flex-col justify-between">
+      <div className="flex flex-col items-center gap-4 w-full">
+        <Logo />
+        <ul className="space-y-2 w-full">
           {menus.map((item, index) => (
             <li key={index}>
               {/* Menu */}
-              {submenus[index].length ? (
-                <button
-                  onClick={() => toggleSubmenu(index)}
-                  className="flex w-full items-center justify-between p-1.5 rounded-md font-medium hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition duration-200 "
-                >
-                  <div className="flex items-center space-x-2">
-                    {menuSVG[index]} <div>{item}</div>
-                  </div>
-                  {openSub[index] ? (
+              <button
+                onClick={() =>
+                  submenus[index].length
+                    ? setOpenSub(!openSub)
+                    : navigate(menuLinks[index])
+                }
+                className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
+                  curPath == menuLinks[index] &&
+                  "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {menuSVG[index]} <div>{item}</div>
+                </div>
+                {submenus[index].length != 0 &&
+                  (openSub ? (
                     <IoChevronDownOutline size={18} />
                   ) : (
                     <IoChevronUpOutline size={18} />
-                  )}
-                </button>
-              ) : (
-                <Link
-                  to={"./" + menuLinks[index]}
-                  className={`flex items-center justify-between p-1.5 font-medium rounded-md hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition duration-200 ${
-                    currentPath == menuLinks[index]
-                      ? "bg-white shadow-md font-semibold"
-                      : ""
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    {menuSVG[index]} <div>{item}</div>
-                  </div>
-                  {currentPath == menuLinks[index] && (
-                    <IoChevronForwardOutline size={18} />
-                  )}
-                </Link>
-              )}
+                  ))}
+                {curPath == menuLinks[index] && (
+                  <IoChevronForwardOutline size={18} />
+                )}
+              </button>
               {/* Submenu */}
-              {openSub[index] && (
+              {openSub && (
                 <ul className="relative pl-2">
                   {submenus[index].map((subitem, subindex) => (
                     <li
@@ -123,16 +83,15 @@ export function Sidebar() {
                       </div>
                       <Link
                         to={"/" + submenuLinks[index][subindex]}
-                        className={`p-1.5 w-full text-sm rounded-md hover:bg-gray-200 hover:text-gray-900 text-gray-700 transition duration-200 ${
-                          currentPath.includes(submenuLinks[index][subindex])
-                            ? "bg-white shadow-md font-semibold flex justify-between"
-                            : "font-medium"
+                        className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
+                          curPath.includes(submenuLinks[index][subindex]) &&
+                          "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100 flex justify-between"
                         }`}
                       >
                         {subitem}
-                        {currentPath.includes(
-                          submenuLinks[index][subindex]
-                        ) && <IoChevronForwardOutline size={18} />}
+                        {curPath.includes(submenuLinks[index][subindex]) && (
+                          <IoChevronForwardOutline size={18} />
+                        )}
                       </Link>
                     </li>
                   ))}
@@ -142,50 +101,24 @@ export function Sidebar() {
           ))}
         </ul>
       </div>
-      {/* Bottom Section: Profile Navigation */}
-      <div
-        className="flex items-center space-x-2 p-1.5 font-medium rounded-md hover:bg-gray-200 transition duration-200 mt-8"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <img src={placeholder} className="w-12 h-12 rounded-full" />
-        <div className="flex flex-col">
-          <div className="text-gray-700 hover:text-gray-900 text-md">
-            Naruesorn
-          </div>
-          <div className="text-gray-600 hover:text-gray-800 text-sm">
-            M.6 Student
-          </div>
-        </div>
-      </div>
-      {isOpen && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-128 pointer-events-none">
-            <h2 className="text-lg font-bold mb-4">Edit Profile</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {fields.map((_, index) => (
-                <ProfileField
-                  key={index}
-                  index={index}
-                  formData={formData}
-                  setFormData={setFormData}
-                />
-              ))}
-              <div className="flex justify-end col-span-2 pointer-events-auto">
-                <Button
-                  content="Save"
-                  onClick={handleSubmit}
-                  className="bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-400 hover:to-blue-600"
-                />
-                <Button
-                  content="Close"
-                  onClick={() => setIsOpen(false)}
-                  className="ml-2 bg-gray-500 hover:bg-gray-600"
-                />
-              </div>
+      {/* Profile Navigation */}
+      <div className="flex flex-col gap-2">
+        {bottom.map((item, index) => (
+          <button
+            onClick={bottomAction[index]}
+            className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
+              curPath == "profile" &&
+              "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100 flex justify-between"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              {bottomSVG[index]}
+              <div>{item}</div>
             </div>
-          </div>
-        </div>
-      )}
+            {curPath == "profile" && <IoChevronForwardOutline size={18} />}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

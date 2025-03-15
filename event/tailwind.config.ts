@@ -6,54 +6,35 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: "#E6EFF8",
-          100: "#CCE0F1",
-          200: "#99C2E3",
-          300: "#66A3D4",
-          400: "#3385C6",
-          500: "#3674B5", // Main brand color
-          600: "#2B5D91",
-          700: "#20466D",
-          800: "#152E49",
-          900: "#0A1724",
-        },
-        secondary: {
-          50: "#FBEAE6",
-          100: "#F7D4CF",
-          200: "#EFB0A8",
-          300: "#E68D80",
-          400: "#DE6A59",
-          500: "#C06E52", // Main secondary color
-          600: "#A35846",
-          700: "#854439",
-          800: "#662F2B",
-          900: "#471B1C",
-        },
-        background: "#f7f7f7", // Gray
-        border: "#efeded", // Some shade of gray idk
-        text: {
-          50: "#F9F4F2",
-          100: "#F2E6E0",
-          200: "#E5CDC1",
-          300: "#D8B4A3",
-          400: "#CB9B84",
-          500: "#43281C", // Main text color
-          600: "#351F16",
-          700: "#271710",
-          800: "#190E0A",
-          900: "#0C0705",
+          50: "#E6ECFC",
+          100: "#CCD9FA",
+          200: "#99B3F5",
+          300: "#668EF0",
+          400: "#3369EB",
+          500: "#0044E6", // Main brand color (Cobalt Blue)
+          600: "#0037B8",
+          700: "#002A8A",
+          800: "#001D5C",
+          900: "#000F2E",
         },
         accent: {
-          DEFAULT: "#C06E52",
-          100: "#FBEAE6",
-          200: "#F7D4CF",
-          300: "#E68D80",
-          400: "#DE6A59",
-          500: "#C06E52",
+          50: "#F7EDE1",
+          100: "#EFD9BF",
+          200: "#DFB383",
+          300: "#CF8E47",
+          400: "#BF690A",
+          500: "#9D5508", // Main accent color (Brown)
+          600: "#7A4106",
+          700: "#572D04",
+          800: "#341902",
+          900: "#110601",
         },
-        hover: "#245836", // Darker Green for hover
-        error: "#D94A4A", // Red for error
-        success: "#28a745", // Green for success
+        background: "#f7f7f7", // Light Gray
+        border: "#efeded", // Light Gray Border
+        text: "#43281C", // Dark Brown for text
+        hover: "#245836", // Dark Green for hover
+        error: "#D94A4A", // Red for error messages
+        success: "#28a745", // Green for success messages
       },
       fontFamily: {
         sans: [
@@ -66,6 +47,15 @@ export default {
           "Segoe UI Symbol",
           "Noto Color Emoji",
         ],
+      },
+      width: {
+        s: "20rem",
+        m: "28rem",
+        l: "36rem",
+        xl: "48rem",
+        "2xl": "60rem",
+        "3xl": "72rem",
+        "4xl": "90rem",
       },
     },
   },
