@@ -17,7 +17,7 @@ export function Sidebar() {
   const navigate = useNavigate();
   const curPath = location.pathname.slice(1);
   const menus = ["Home", "Event", "Setting"];
-  const menuLinks = ["", "event", "setting"];
+  const menuLinks = ["home", "event", "setting"];
   const submenus = [[], ["Hosted Event", "Registered Event"], []];
   const submenuLinks = [[], ["hosted", "registered"], []];
   const [openSub, setOpenSub] = useState<boolean>(true);
@@ -48,9 +48,11 @@ export function Sidebar() {
                     ? setOpenSub(!openSub)
                     : navigate(menuLinks[index])
                 }
-                className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
-                  curPath == menuLinks[index] &&
-                  "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100"
+                className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg hover:text-white ${
+                  curPath.includes(menuLinks[index]) &&
+                  submenus[index].length == 0
+                    ? "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100"
+                    : "text-gray-800"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -62,9 +64,10 @@ export function Sidebar() {
                   ) : (
                     <IoChevronUpOutline size={18} />
                   ))}
-                {curPath == menuLinks[index] && (
-                  <IoChevronForwardOutline size={18} />
-                )}
+                {curPath.includes(menuLinks[index]) &&
+                  submenus[index].length == 0 && (
+                    <IoChevronForwardOutline size={18} />
+                  )}
               </button>
               {/* Submenu */}
               {openSub && (
@@ -83,9 +86,10 @@ export function Sidebar() {
                       </div>
                       <Link
                         to={"/" + submenuLinks[index][subindex]}
-                        className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
-                          curPath.includes(submenuLinks[index][subindex]) &&
-                          "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100 flex justify-between"
+                        className={`flex w-full items-center justify-between p-1.5 text-sm rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg hover:text-white ${
+                          curPath.includes(submenuLinks[index][subindex])
+                            ? "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100"
+                            : "text-gray-800"
                         }`}
                       >
                         {subitem}
@@ -106,9 +110,10 @@ export function Sidebar() {
         {bottom.map((item, index) => (
           <button
             onClick={bottomAction[index]}
-            className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg text-gray-800 hover:text-white transition duration-200 ${
-              curPath == "profile" &&
-              "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100 flex justify-between"
+            className={`flex w-full items-center justify-between p-1.5 rounded-md hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-300 hover:shadow-lg hover:text-white ${
+              curPath == "profile"
+                ? "bg-gradient-to-br from-primary-700 to-primary-500 shadow-lg font-semibold text-gray-100"
+                : "text-gray-800"
             }`}
           >
             <div className="flex items-center gap-2">

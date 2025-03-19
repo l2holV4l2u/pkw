@@ -1,5 +1,4 @@
 import { Layout } from "@components/layouts";
-import { Card } from "@components/ui";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
@@ -8,7 +7,6 @@ import { EventProvider } from "@contexts";
 import { FormViewer } from "@components/sections";
 import EventScraper from "@utils/functions/scraper";
 import cookie from "cookie";
-import { useState } from "react";
 import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
 import { convertDate } from "@utils/functions/misc";
 
@@ -79,17 +77,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function EventInfo() {
   const { event, form } = useLoaderData<typeof loader>();
-  const [mode, setMode] = useState(2);
   return (
-    <EventProvider
-      mode={mode}
-      setMode={setMode}
-      formInit={form}
-      eventInit={event}
-    >
+    <EventProvider mode={2} formInit={form} eventInit={event}>
       <Layout
         label={["Active Event", event.name]}
-        link={["", "/"]}
+        link={["home", "/"]}
         className="space-y-6 items-center"
       >
         <div className="flex flex-col w-xl gap-6">
@@ -109,9 +101,7 @@ export default function EventInfo() {
           </div>
           <div className="flex flex-col gap-4">
             <div className="text-xl font-semibold">Register</div>
-            <Card className="w-full">
-              <FormViewer />
-            </Card>
+            <FormViewer />
           </div>
         </div>
       </Layout>

@@ -35,7 +35,7 @@ export function EventProvider({
 }: {
   children: ReactNode;
   mode: number;
-  setMode: Dispatch<SetStateAction<number>>;
+  setMode?: Dispatch<SetStateAction<number>>;
   formInit?: FormType[];
   eventInit?: any;
 }) {
@@ -53,7 +53,7 @@ export function EventProvider({
         setRes,
         event: eventInit || {},
         mode,
-        setMode,
+        setMode: setMode || (() => {}),
       }}
     >
       {children}

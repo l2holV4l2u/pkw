@@ -4,3 +4,4 @@ export * from "./card";
 export * from "./icons";
 export * from "./input";
 export * from "./eventcard";
+export * from "./overlay";

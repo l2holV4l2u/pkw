@@ -11,7 +11,7 @@ export function Navigation() {
 
   function handleSubmit() {
     const filteredFormData = form.map(
-      ({ id, ...rest }: { id: string; [key: string]: any }) => rest
+      ({ id, ...rest }: { id: number; [key: string]: any }) => rest
     );
     const data = {
       eventName,

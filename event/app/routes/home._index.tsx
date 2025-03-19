@@ -36,7 +36,7 @@ export default function Index() {
   const events = useLoaderData<Event[]>();
   return (
     <Layout title="Active Event">
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-4 gap-4">
         {events.length === 0 ? (
           <div className="text-gray-500">No active event</div>
         ) : (

@@ -1,5 +1,5 @@
 export type BaseFormType = {
-  id: string;
+  id: number;
   type: string;
   header: string;
 };
