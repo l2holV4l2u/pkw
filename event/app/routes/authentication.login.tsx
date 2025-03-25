@@ -8,8 +8,8 @@ import cookie from "cookie";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get("Email") as string;
+  const password = formData.get("Password") as string;
   const remember = formData.get("remember") as string;
   try {
     const user = await prisma.user.findUnique({
@@ -25,12 +25,10 @@ export async function action({ request }: ActionFunctionArgs) {
     const cookieHeader =
       remember == "true"
         ? cookie.serialize("id", user.id, {
-            httpOnly: true,
             maxAge: 60 * 60 * 24 * 365 * 999,
             path: "/",
           })
         : cookie.serialize("id", user.id, {
-            httpOnly: true,
             path: "/",
           });
     return redirect("/", {
@@ -48,7 +46,6 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState<boolean>(false);
-
   const handleRememberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRemember(e.target.checked);
   };
@@ -65,10 +62,15 @@ export default function Login() {
           </div>
         )}
         <Form method="post" className="mt-4 space-y-4">
-          <Input field={email} setField={setEmail} label="Email" type="email" />
           <Input
-            field={password}
-            setField={setPassword}
+            data={email}
+            setData={(d) => setEmail(d as string)}
+            label="Email"
+            type="email"
+          />
+          <Input
+            data={password}
+            setData={(d) => setPassword(d as string)}
             label="Password"
             type="password"
           />

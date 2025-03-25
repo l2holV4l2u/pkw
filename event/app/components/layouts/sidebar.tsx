@@ -1,4 +1,4 @@
-import { Card, Curve, CurveWithLine, Logo } from "@components/ui";
+import { Curve, CurveWithLine, Logo } from "@components/ui";
 import { Link, useLocation, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { HiOutlineCog, HiOutlineHome, HiOutlineTicket } from "react-icons/hi";
@@ -11,7 +11,10 @@ import { FaRegUser } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 import { Layout } from "./layout";
 
-function handleLogout() {}
+function handleLogout() {
+  document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  window.location.href = "/";
+}
 
 export function Sidebar() {
   const location = useLocation();

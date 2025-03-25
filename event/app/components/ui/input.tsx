@@ -61,6 +61,7 @@ export function Input({
     default:
       inputElement = (
         <input
+          name={label}
           type={type || "text"}
           value={typeof data === "string" ? data : ""}
           onChange={(e) => setData(e.target.value)}

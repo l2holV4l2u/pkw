@@ -32,10 +32,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { fullName: fullname, email, password: hashedPassword },
+      data: { name: fullname, email, password: hashedPassword },
     });
     const cookieHeader = cookie.serialize("id", user.id, {
-      httpOnly: true,
       maxAge: 60 * 60 * 24 * 365 * 999,
       path: "/",
     });
@@ -71,21 +70,26 @@ export default function Register() {
         )}
         <Form method="post" className="mt-4 space-y-4">
           <Input
-            field={fullname}
-            setField={setFullname}
+            data={fullname}
+            setData={(d) => setFullname(d as string)}
             label="Full Name"
             type="text"
           />
-          <Input field={email} setField={setEmail} label="Email" type="email" />
           <Input
-            field={password}
-            setField={setPassword}
+            data={email}
+            setData={(d) => setEmail(d as string)}
+            label="Email"
+            type="email"
+          />
+          <Input
+            data={password}
+            setData={(d) => setPassword(d as string)}
             label="Password"
             type="password"
           />
           <Input
-            field={confirmPassword}
-            setField={setConfirmPassword}
+            data={confirmPassword}
+            setData={(d) => setConfirmPassword(d as string)}
             label="Confirm Password"
             type="password"
           />

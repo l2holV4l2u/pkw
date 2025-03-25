@@ -51,8 +51,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const cookies = cookie.parse(request.headers.get("cookie") || "");
   const id = cookies.id;
   const url = request.url;
-  if (!id && !url.includes("authentication")) {
-    redirect("./authentication/login");
+  if (!id) {
+    if (!url.includes("authentication")) {
+      throw redirect("./authentication/login");
+    }
+    return null;
   }
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user) throw new Response("User not found", { status: 404 });
@@ -62,12 +65,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function App() {
   const user = useLoaderData<UserSchemaType>();
   const location = useLocation();
-  const isAuthenticationRoute = location.pathname.includes("/authentication");
+  const isAuthRoute = location.pathname.includes("/authentication");
   return (
     <UserProvider user={user}>
       <div className="flex min-h-screen bg-background">
-        {!isAuthenticationRoute && <Sidebar />}
-        <div className="flex-1 min-h-screen p-2 ml-64">
+        {!isAuthRoute && <Sidebar />}
+        <div className={`flex-1 min-h-screen p-2 ${!isAuthRoute && "ml-64"}`}>
           <Outlet />
         </div>
       </div>
