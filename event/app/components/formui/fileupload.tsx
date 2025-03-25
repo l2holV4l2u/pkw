@@ -1,21 +1,18 @@
-import { MdOutlineFileUpload } from "react-icons/md";
 import FuLayout from "./fulayout";
 import { EventContext } from "@contexts";
 import { useContext, useEffect, useState } from "react";
 import { ResFileType } from "@types";
-import { Card } from "@components/ui";
+import { Card, Input } from "@components/ui";
 
 export function FileUpload({ index }: { index: number }) {
-  const { setRes, mode } = useContext(EventContext);
+  const { res, setRes, mode } = useContext(EventContext);
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (mode == 2) {
-      setRes((prev) => {
-        const updatedRes = [...prev];
-        (updatedRes[index] as ResFileType).file = file;
-        return updatedRes;
-      });
+      const updatedRes = [...res];
+      (updatedRes[index] as ResFileType).file = file;
+      setRes(updatedRes);
     }
   }, [file]);
   return (
@@ -27,16 +24,7 @@ export function FileUpload({ index }: { index: number }) {
           </div>
         </Card>
       ) : (
-        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:bg-gray-100 gap-2">
-          <MdOutlineFileUpload size={24} />
-          <div className="text-gray-600 text-sm">Upload File</div>
-          <input
-            type="file"
-            className="hidden"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            disabled={mode != 2}
-          />
-        </label>
+        <Input setData={(data) => setFile(data as File)} type="file" />
       )}
     </FuLayout>
   );

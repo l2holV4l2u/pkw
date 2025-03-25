@@ -2,23 +2,28 @@ import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { FormSidebar } from "@components/layouts";
 import { EventContext } from "@contexts";
-import { v4 as uuidv4 } from "uuid";
 import { FaArrowRight } from "react-icons/fa6";
 import { FormViewer } from "./formviewer";
+import { FormMCType } from "@types";
 
 export function FormBuilder() {
-  const { form, event, res, mode } = useContext(EventContext);
+  const { form, setForm, event, res, mode } = useContext(EventContext);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeID, setActiveID] = useState<string | null>(null);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
+    const type = String(active.id);
     if (over?.id == "FormElementDropArea") {
-      form.push({
+      const template = {
         id: Math.floor(Math.random() * 1_000_000_000),
-        type: active.id as string,
+        type,
         header: "",
-      });
+      };
+      if (type == "Multiple Choice" || type == "Checkbox") {
+        (template as FormMCType).choices = [""];
+      }
+      setForm([...form, template]);
     }
   }
 
@@ -46,7 +51,9 @@ export function FormBuilder() {
       }}
     >
       <div
-        className={`grid grid-cols-10 gap-4 h-[65vh] ${mode == 1 && "h-fit"}`}
+        className={`grid grid-cols-10 gap-4 w-[70vw] h-[60vh] ${
+          mode != 1 && "h-fit w-full"
+        }`}
       >
         <FormViewer />
         <FormSidebar isDragging={isDragging} activeID={activeID} />

@@ -1,29 +1,23 @@
 import ResTemp from "@components/layouts/restemp";
 import { FormType, ResType } from "@types";
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useState,
-} from "react";
+import { createContext, useState } from "react";
 
 export const EventContext = createContext<{
-  form: FormType[];
-  setForm: Dispatch<SetStateAction<FormType[]>>;
-  res: ResType[];
-  setRes: Dispatch<SetStateAction<ResType[]>>;
-  event: any;
   mode: number; // 0 - view, 1 - edit, 2 - response
-  setMode?: Dispatch<SetStateAction<number>>;
+  setMode?: (mode: number) => void;
+  form: FormType[];
+  setForm: (form: FormType[]) => void;
+  res: ResType[];
+  setRes: (res: ResType[]) => void;
+  event: any;
 }>({
+  mode: 0,
+  setMode: () => {},
   form: [],
   setForm: () => {},
   res: [],
   setRes: () => {},
   event: {},
-  mode: 0,
-  setMode: () => {},
 });
 
 export function EventProvider({
@@ -33,9 +27,9 @@ export function EventProvider({
   formInit,
   eventInit,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   mode: number;
-  setMode?: Dispatch<SetStateAction<number>>;
+  setMode?: (mode: number) => void;
   formInit?: FormType[];
   eventInit?: any;
 }) {
@@ -61,70 +55,54 @@ export function EventProvider({
   );
 }
 
-export const NewEventContext = createContext<{
+type GeneralInfoType = {
   eventName: string;
-  setEventName: Dispatch<SetStateAction<string>>;
   description: string;
-  setDescription: Dispatch<SetStateAction<string>>;
   location: string;
-  setLocation: Dispatch<SetStateAction<string>>;
   fromDate: string;
-  setFromDate: Dispatch<SetStateAction<string>>;
   toDate: string;
-  setToDate: Dispatch<SetStateAction<string>>;
-  step: number;
-  setStep: Dispatch<SetStateAction<number>>;
-  inProgress: boolean;
-  setInProgress: Dispatch<SetStateAction<boolean>>;
-}>({
+  pic: File | null;
+};
+
+const defaultGeneralInfo: GeneralInfoType = {
   eventName: "",
-  setEventName: () => {},
   description: "",
-  setDescription: () => {},
   location: "",
-  setLocation: () => {},
   fromDate: "",
-  setFromDate: () => {},
   toDate: "",
-  setToDate: () => {},
-  step: 0,
+  pic: null,
+};
+
+export const NewEventContext = createContext<{
+  generalInfo: GeneralInfoType;
+  setGeneralInfo: (generalInfo: GeneralInfoType) => void;
+  step: number;
+  setStep: (step: number) => void;
+  focusIndex: number | null;
+  setFocusIndex: (focusIndex: number | null) => void;
+}>({
+  generalInfo: defaultGeneralInfo,
+  setGeneralInfo: () => {},
+  step: 1,
   setStep: () => {},
-  inProgress: false,
-  setInProgress: () => {},
+  focusIndex: null,
+  setFocusIndex: () => {},
 });
 
-export function NewEventProvider({
-  children,
-  step,
-  setStep,
-}: {
-  children: ReactNode;
-  step: number;
-  setStep: Dispatch<SetStateAction<number>>;
-}) {
-  const [eventName, setEventName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [fromDate, setFromDate] = useState<string>("");
-  const [toDate, setToDate] = useState<string>("");
-  const [inProgress, setInProgress] = useState(true);
+export function NewEventProvider({ children }: { children: React.ReactNode }) {
+  const [generalInfo, setGeneralInfo] =
+    useState<GeneralInfoType>(defaultGeneralInfo);
+  const [step, setStep] = useState<number>(1);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   return (
     <NewEventContext.Provider
       value={{
-        eventName,
-        setEventName,
-        description,
-        setDescription,
-        location,
-        setLocation,
-        fromDate,
-        setFromDate,
-        toDate,
-        setToDate,
+        generalInfo,
+        setGeneralInfo,
         step,
         setStep,
-        inProgress,
-        setInProgress,
+        focusIndex,
+        setFocusIndex,
       }}
     >
       {children}

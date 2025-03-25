@@ -21,7 +21,7 @@ export type ResFileType = ResBaseType & {
 };
 
 export type ResDateType = ResBaseType & {
-  date: Date;
+  date: string;
 };
 
 export type ResType =

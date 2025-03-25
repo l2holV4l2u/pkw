@@ -1,11 +1,10 @@
 import {
   FileUpload,
-  LongAnswer,
   MultipleChoice,
   Section,
-  ShortAnswer,
   Checkbox,
   Date,
+  QA,
 } from "@components/formui";
 
 export function FormComponent({
@@ -18,10 +17,6 @@ export function FormComponent({
   switch (type) {
     case "Section":
       return <Section key={index} index={index} />;
-    case "Short Answer":
-      return <ShortAnswer key={index} index={index} />;
-    case "Long Answer":
-      return <LongAnswer key={index} index={index} />;
     case "Multiple Choice":
       return <MultipleChoice key={index} index={index} />;
     case "Checkbox":
@@ -31,6 +26,6 @@ export function FormComponent({
     case "Date":
       return <Date key={index} index={index} />;
     default:
-      return null;
+      return <QA key={index} index={index} type={type} />;
   }
 }

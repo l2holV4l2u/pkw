@@ -14,7 +14,9 @@ export function Breadcrumb({
           {index > 0 && <span className="text-gray-600">/</span>}
           <Link
             to={"/" + link[index]}
-            className="hover:underline cursor-pointer"
+            className={`hover:underline cursor-pointer ${
+              index == label.length - 1 && "text-primary-600"
+            }`}
           >
             {item}
           </Link>

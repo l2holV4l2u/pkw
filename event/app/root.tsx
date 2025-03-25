@@ -67,7 +67,7 @@ export default function App() {
     <UserProvider user={user}>
       <div className="flex min-h-screen bg-background">
         {!isAuthenticationRoute && <Sidebar />}
-        <div className="flex-1 min-h-screen p-2">
+        <div className="flex-1 min-h-screen p-2 ml-64">
           <Outlet />
         </div>
       </div>

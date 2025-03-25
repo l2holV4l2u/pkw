@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { EventProvider, NewEventProvider } from "@/contexts";
+import { useContext } from "react";
+import { EventProvider, NewEventContext, NewEventProvider } from "@/contexts";
 import { Layout, Stepper } from "@/components/layouts";
 import { FormBuilder, GeneralInfo } from "@components/sections";
 import { Navigation } from "@/components/layouts";
@@ -52,19 +52,27 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
+function StepSwitcher() {
+  const { step } = useContext(NewEventContext);
+  return (
+    <>
+      {step == 1 && <GeneralInfo />}
+      {step == 2 && <FormBuilder />}
+    </>
+  );
+}
+
 export default function NewEvent() {
-  const [step, setStep] = useState<number>(1);
   return (
     <EventProvider mode={1}>
-      <NewEventProvider step={step} setStep={setStep}>
+      <NewEventProvider>
         <Layout
           label={["Hosted Event", "New Event"]}
           link={["hosted", "newevent"]}
           className="space-y-6 items-center"
         >
           <Stepper />
-          {step == 1 && <GeneralInfo />}
-          {step == 2 && <FormBuilder />}
+          <StepSwitcher />
           <Navigation />
         </Layout>
       </NewEventProvider>

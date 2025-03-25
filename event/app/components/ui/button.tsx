@@ -1,30 +1,42 @@
-import { Link, useLocation } from "@remix-run/react";
+import React from "react";
+
+function typeHandler(type: string | undefined) {
+  switch (type) {
+    case "bordered":
+      return "border-2 border-gray-300 shadow-sm";
+    default:
+      return "";
+  }
+}
 
 export function Button({
-  link,
-  content,
+  children,
   onClick,
   className,
   disabled,
+  type,
+  clickable,
 }: {
   link?: string;
-  content: string;
+  children: React.ReactNode;
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  type?: "bordered";
+  clickable?: boolean;
 }) {
-  const location = useLocation();
   return (
-    <Link to={disabled ? "#" : link || location.pathname}>
-      <button
-        onClick={onClick}
-        disabled={disabled}
-        className={`${className} px-4 py-2 bg-gray-800 text-sm text-white font-semibold rounded-lg shadow-md transition ${
-          disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"
-        }`}
-      >
-        {content}
-      </button>
-    </Link>
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className={`${className} px-4 py-2 rounded-lg shadow-md transition ${
+        disabled && "opacity-50 cursor-not-allowed"
+      }
+      ${clickable && "hover:scale-[1.02] transition-all duration-100"}
+      ${typeHandler(type)}
+      `}
+    >
+      {children}
+    </button>
   );
 }

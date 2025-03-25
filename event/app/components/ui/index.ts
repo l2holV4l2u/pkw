@@ -5,3 +5,5 @@ export * from "./icons";
 export * from "./input";
 export * from "./eventcard";
 export * from "./overlay";
+export * from "./segmentedcontrol";
+export * from "./toggle";

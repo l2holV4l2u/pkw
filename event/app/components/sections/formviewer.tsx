@@ -1,11 +1,11 @@
 import { FormComponent } from "@components/layouts";
-import { Card } from "@components/ui";
 import { EventContext } from "@contexts";
-import { DndContext, DragEndEvent, useDroppable } from "@dnd-kit/core";
+import { DndContext, DragOverEvent, useDroppable } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { useContext } from "react";
 import { FaArrowRight } from "react-icons/fa6";
+import { Card } from "@components/ui";
 
 export function FormViewer() {
   const { form, setForm, event, res, mode } = useContext(EventContext);
@@ -22,7 +22,7 @@ export function FormViewer() {
     });
   }
 
-  function handleDragEnd(event: DragEndEvent) {
+  function handleDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (over && active.id !== over.id) {
       setForm(
@@ -39,11 +39,11 @@ export function FormViewer() {
     <div
       ref={setNodeRef}
       onDragOver={(e) => e.preventDefault()}
-      className="col-span-7 w-full max-h-[65vh]"
+      className="col-span-7 w-full h-full max-h-[60vh]"
     >
       <Card className={`overflow-auto h-full ${mode != 1 && "h-fit"}`}>
         <DndContext
-          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
           modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext items={form.map((item) => item.id)}>
