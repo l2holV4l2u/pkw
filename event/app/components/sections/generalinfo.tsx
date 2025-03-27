@@ -1,80 +1,100 @@
 import { useContext, useState } from "react";
-import { NewEventContext } from "@/contexts";
+import { EventContext } from "@/contexts";
 import { Input, SegmentedControl } from "@/components/ui";
 
-export function GeneralInfo() {
-  const { generalInfo, setGeneralInfo } = useContext(NewEventContext);
+export function GeneralInfo({ variant }: { variant: "grid" | "flex" }) {
+  const { event, setEvent, mode } = useContext(EventContext);
   const dateOptions = ["Range", "Single"];
   const [dateSelected, setDateSelected] = useState(0);
+  console.log(event);
   return (
-    <div className="flex flex-col gap-4 items-start w-[50%]">
+    <div
+      className={`flex flex-col gap-4 items-start ${
+        variant == "grid" ? "w-full" : "w-1/2"
+      }`}
+    >
       <Input
-        data={generalInfo["eventName"]}
-        setData={(data) =>
-          setGeneralInfo({ ...generalInfo, eventName: data as string })
-        }
+        data={event["name"]}
+        setData={(data) => setEvent({ ...event, name: data as string })}
         label="Name"
         placeholder="Type your event name"
+        variant={variant}
+        disabled={mode != 1}
       />
       <Input
-        data={generalInfo["description"]}
-        setData={(data) =>
-          setGeneralInfo({ ...generalInfo, description: data as string })
-        }
+        data={event["description"]}
+        setData={(data) => setEvent({ ...event, description: data as string })}
         label="Description"
         placeholder="How would you describe your event?"
         type="longtext"
+        variant={variant}
+        disabled={mode != 1}
       />
       <Input
-        data={generalInfo["location"]}
-        setData={(data) =>
-          setGeneralInfo({ ...generalInfo, location: data as string })
-        }
+        data={event["location"]}
+        setData={(data) => setEvent({ ...event, location: data as string })}
         label="Location"
         placeholder="Where is this taking place?"
+        variant={variant}
+        disabled={mode != 1}
       />
-      <div className="space-y-2 w-full">
-        <div className="font-semibold text-gray-700">Date</div>
+      <div
+        className={`${
+          variant == "grid" ? "grid grid-cols-2" : "flex flex-col"
+        } w-full gap-2`}
+      >
+        <div className="font-semibold text-gray-700 row-span-2">Date</div>
         <SegmentedControl
           options={dateOptions}
-          setOption={(data) => setDateSelected(data)}
           selected={dateSelected}
+          setSelect={(data) => setDateSelected(data)}
         />
         {dateSelected == 1 ? (
           <Input
-            data={generalInfo["fromDate"]}
+            data={event["startDate"] as Date}
             setData={(data) =>
-              setGeneralInfo({ ...generalInfo, fromDate: data as string })
+              setEvent({ ...event, startDate: data as string })
             }
             type="date"
+            disabled={mode != 1}
           />
         ) : (
           <div className="flex gap-4">
             <Input
-              data={generalInfo["fromDate"]}
+              data={event["startDate"] as Date}
               setData={(data) =>
-                setGeneralInfo({ ...generalInfo, fromDate: data as string })
+                setEvent({ ...event, startDate: data as string })
               }
-              label="From"
+              label="Start"
               type="date"
+              disabled={mode != 1}
             />
             <Input
-              data={generalInfo["toDate"]}
+              data={event["endDate"] as Date}
               setData={(data) =>
-                setGeneralInfo({ ...generalInfo, toDate: data as string })
+                setEvent({ ...event, endDate: data as string })
               }
-              label="To"
+              label="End"
               type="date"
+              disabled={mode != 1}
             />
           </div>
         )}
       </div>
       <Input
-        setData={(data) =>
-          setGeneralInfo({ ...generalInfo, pic: data as File })
-        }
+        data={event["regist"]}
+        setData={(data) => setEvent({ ...event, registDL: data as string })}
+        label="Registration Deadline"
+        type="date"
+        variant={variant}
+        disabled={mode != 1}
+      />
+      <Input
+        setData={(data) => setEvent({ ...event, pic: data as string })}
         label="Event Picture"
         type="file"
+        variant={variant}
+        disabled={mode != 1}
       />
     </div>
   );

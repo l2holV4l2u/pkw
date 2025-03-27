@@ -1,71 +1,37 @@
 import { Layout } from "@components/layouts";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { prisma } from "@utils/functions/prisma";
-import { FormResType, FormType } from "@types";
+import { FormResType } from "@types";
 import { EventProvider } from "@contexts";
 import { FormViewer } from "@components/sections";
-import EventScraper from "@utils/functions/scraper";
 import cookie from "cookie";
 import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
 import { convertDate } from "@utils/functions/misc";
+import { getEventById, getFormById, createResponse } from "@utils/functions";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
-  const event = await prisma.event.findUnique({
-    where: { id },
-    include: {
-      form: {
-        include: { fields: true },
-      },
-    },
-  });
+  if (!id) throw new Response("ID not found", { status: 404 });
 
+  const { event } = await getEventById(id);
   if (!event) throw new Response("Event not found", { status: 404 });
-  if (!event.form) throw new Response("Form not found", { status: 404 });
 
-  const tempForm = event.form;
-  const orderedForm = tempForm.fieldOrder
-    .map((fieldId) => {
-      const field = tempForm.fields.find((field) => field.id === fieldId);
-      return field ? { value: field.value, id: field.id } : undefined;
-    })
-    .filter((field) => field !== undefined);
-  const form: FormType[] = orderedForm.map((field) => field.value as FormType);
+  const { form } = await getFormById(event.id);
+  if (!form) throw new Response("Form not found", { status: 404 });
 
   return { event, form };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData();
-  console.log(data);
   const res: FormResType = JSON.parse(data.get("res") as string);
   const event = JSON.parse(data.get("event") as string);
-  console.log(event);
   const cookies = cookie.parse(request.headers.get("cookie") || "");
   const userId = cookies.id;
-  const { responseField } = res;
-  const { formId, eventId, formFieldIds } = EventScraper(event);
-
   if (!userId) return new Response("User ID not found", { status: 500 });
 
   try {
-    const response = await prisma.response.create({
-      data: {
-        eventId,
-        formId,
-        submittedBy: userId,
-      },
-    });
-
-    await prisma.responseField.createMany({
-      data: responseField.map((field: any, index) => ({
-        value: field,
-        responseId: response.id,
-        formFieldId: formFieldIds[index],
-      })),
-    });
-
+    await createResponse(res, event, userId);
     return new Response("Form submitted successfully", { status: 200 });
   } catch (error) {
     console.error(error);

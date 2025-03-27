@@ -2,9 +2,9 @@ import { Form, Link, redirect, useActionData } from "@remix-run/react";
 import { Input } from "@/components/ui";
 import bcrypt from "bcryptjs";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { prisma } from "@utils/functions/prisma";
 import { useState } from "react";
 import cookie from "cookie";
+import { getUserByEmail } from "@utils/functions/user";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -12,9 +12,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const password = formData.get("Password") as string;
   const remember = formData.get("remember") as string;
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    const { user } = await getUserByEmail(email);
     const passwordMatch = await bcrypt.compare(
       password,
       user ? user.password : ""
@@ -22,15 +20,10 @@ export async function action({ request }: ActionFunctionArgs) {
     if (!user || !passwordMatch) {
       return new Response("Invalid username or password");
     }
-    const cookieHeader =
-      remember == "true"
-        ? cookie.serialize("id", user.id, {
-            maxAge: 60 * 60 * 24 * 365 * 999,
-            path: "/",
-          })
-        : cookie.serialize("id", user.id, {
-            path: "/",
-          });
+    const cookieHeader = cookie.serialize("id", user.id, {
+      maxAge: remember === "true" ? 60 * 60 * 24 * 365 * 999 : undefined,
+      path: "/",
+    });
     return redirect("/", {
       headers: {
         "Set-Cookie": cookieHeader,

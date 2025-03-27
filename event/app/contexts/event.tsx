@@ -10,6 +10,11 @@ export const EventContext = createContext<{
   res: ResType[];
   setRes: (res: ResType[]) => void;
   event: any;
+  setEvent: (event: any) => void;
+  nav: number;
+  setNav: (step: number) => void;
+  focusIndex: number | null;
+  setFocusIndex: (focusIndex: number | null) => void;
 }>({
   mode: 0,
   setMode: () => {},
@@ -18,6 +23,11 @@ export const EventContext = createContext<{
   res: [],
   setRes: () => {},
   event: {},
+  setEvent: () => {},
+  nav: 0,
+  setNav: () => {},
+  focusIndex: null,
+  setFocusIndex: () => {},
 });
 
 export function EventProvider({
@@ -34,10 +44,12 @@ export function EventProvider({
   eventInit?: any;
 }) {
   const [form, setForm] = useState<FormType[]>(formInit || []);
+  const [event, setEvent] = useState(eventInit || {});
   const [res, setRes] = useState<ResType[]>(
     form.length != 0 ? form.map((val) => ResTemp(val.type)) : []
   );
-
+  const [nav, setNav] = useState<number>(1);
+  const [focusIndex, setFocusIndex] = useState<number | null>(null);
   return (
     <EventContext.Provider
       value={{
@@ -45,67 +57,17 @@ export function EventProvider({
         setForm,
         res,
         setRes,
-        event: eventInit || {},
+        event,
+        setEvent,
         mode,
         setMode: setMode || (() => {}),
-      }}
-    >
-      {children}
-    </EventContext.Provider>
-  );
-}
-
-type GeneralInfoType = {
-  eventName: string;
-  description: string;
-  location: string;
-  fromDate: string;
-  toDate: string;
-  pic: File | null;
-};
-
-const defaultGeneralInfo: GeneralInfoType = {
-  eventName: "",
-  description: "",
-  location: "",
-  fromDate: "",
-  toDate: "",
-  pic: null,
-};
-
-export const NewEventContext = createContext<{
-  generalInfo: GeneralInfoType;
-  setGeneralInfo: (generalInfo: GeneralInfoType) => void;
-  step: number;
-  setStep: (step: number) => void;
-  focusIndex: number | null;
-  setFocusIndex: (focusIndex: number | null) => void;
-}>({
-  generalInfo: defaultGeneralInfo,
-  setGeneralInfo: () => {},
-  step: 1,
-  setStep: () => {},
-  focusIndex: null,
-  setFocusIndex: () => {},
-});
-
-export function NewEventProvider({ children }: { children: React.ReactNode }) {
-  const [generalInfo, setGeneralInfo] =
-    useState<GeneralInfoType>(defaultGeneralInfo);
-  const [step, setStep] = useState<number>(1);
-  const [focusIndex, setFocusIndex] = useState<number | null>(null);
-  return (
-    <NewEventContext.Provider
-      value={{
-        generalInfo,
-        setGeneralInfo,
-        step,
-        setStep,
+        nav,
+        setNav,
         focusIndex,
         setFocusIndex,
       }}
     >
       {children}
-    </NewEventContext.Provider>
+    </EventContext.Provider>
   );
 }

@@ -1,4 +1,4 @@
-import { EventContext, NewEventContext } from "@contexts";
+import { EventContext } from "@contexts";
 import { useContext } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -13,8 +13,8 @@ export default function FuLayout({
   children: React.ReactNode;
   index: number;
 }) {
-  const { mode, form, setForm } = useContext(EventContext);
-  const { focusIndex, setFocusIndex } = useContext(NewEventContext);
+  const { mode, form, setForm, focusIndex, setFocusIndex } =
+    useContext(EventContext);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: form[index].id,

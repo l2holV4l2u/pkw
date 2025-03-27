@@ -50,11 +50,7 @@ export function FormBuilder() {
         handleDragEnd(event);
       }}
     >
-      <div
-        className={`grid grid-cols-10 gap-4 w-[70vw] h-[60vh] ${
-          mode != 1 && "h-fit w-full"
-        }`}
-      >
+      <div className="grid grid-cols-10 gap-4 w-full h-[60vh]">
         <FormViewer />
         <FormSidebar isDragging={isDragging} activeID={activeID} />
         {mode == 2 && (

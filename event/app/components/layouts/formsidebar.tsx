@@ -8,7 +8,7 @@ import {
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useContext, useEffect, useState } from "react";
-import { EventContext, NewEventContext } from "@contexts";
+import { EventContext } from "@contexts";
 import { FaPlus, FaXmark } from "react-icons/fa6";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
@@ -219,8 +219,7 @@ export function FormSidebar({
   activeID: string | null;
 }) {
   const [sideMode, setSideMode] = useState(0);
-  const { focusIndex } = useContext(NewEventContext);
-  console.log(focusIndex);
+  const { focusIndex } = useContext(EventContext);
   useEffect(() => {
     setSideMode(focusIndex == null ? 0 : 1);
   }, [focusIndex]);
@@ -238,7 +237,7 @@ export function FormSidebar({
       <SegmentedControl
         options={["Elements", "Properties"]}
         selected={sideMode}
-        setOption={setSideMode}
+        setSelect={setSideMode}
       />
       {sideMode == 1 ? (
         <div className="flex flex-col gap-3">

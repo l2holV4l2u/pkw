@@ -9,8 +9,9 @@ export function Input({
   type,
   disabled,
   className,
+  variant,
 }: {
-  data?: string | File | boolean;
+  data?: string | File | boolean | Date;
   setData: (data: string | File | boolean | null) => void;
   label?: string;
   placeholder?: string;
@@ -24,8 +25,11 @@ export function Input({
     | "text";
   disabled?: boolean;
   className?: string;
+  variant?: "flex" | "grid";
 }) {
   let inputElement: React.ReactNode;
+  console.log(data);
+  console.log(typeof data);
   switch (type) {
     case "longtext":
       inputElement = (
@@ -63,7 +67,11 @@ export function Input({
         <input
           name={label}
           type={type || "text"}
-          value={typeof data === "string" ? data : ""}
+          value={
+            type === "date" && data instanceof Date
+              ? data.toISOString().split("T")[0]
+              : (data as string)
+          }
           onChange={(e) => setData(e.target.value)}
           className="w-full text-sm p-2 border-2 shadow-sm border-gray-300 bg-white text-gray-600 rounded-xl transition"
           placeholder={placeholder}
@@ -74,7 +82,7 @@ export function Input({
 
   return (
     <div
-      className={`flex ${
+      className={`${variant == "grid" ? "grid grid-cols-2" : "flex"} ${
         !className?.includes("flex-row") && "flex-col"
       } w-full gap-2 ${className}`}
     >

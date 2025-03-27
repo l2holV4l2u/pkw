@@ -12,9 +12,9 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import "./tailwind.css";
 import cookie from "cookie";
 import { Sidebar } from "@/components/layouts";
-import { prisma } from "@utils/functions/prisma";
 import { UserSchemaType } from "@types";
 import { UserProvider } from "@contexts";
+import { getUserById } from "@utils/functions/user";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -57,7 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
     return null;
   }
-  const user = await prisma.user.findUnique({ where: { id } });
+  const user = await getUserById(id);
   if (!user) throw new Response("User not found", { status: 404 });
   return JSON.parse(JSON.stringify(user)) as UserSchemaType;
 }

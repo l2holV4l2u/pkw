@@ -17,12 +17,12 @@ function ProfileField({ index, formData, setFormData }: any) {
   return (
     <div className="flex justify-between w-full">
       <Input
-        field={
+        data={
           formData[fields[index].key] == "undefined"
             ? "Unknown"
             : formData[fields[index].key]
         }
-        setField={(val) =>
+        setData={(val) =>
           setFormData({ ...formData, [fields[index].key]: val })
         }
         label={fields[index].label}

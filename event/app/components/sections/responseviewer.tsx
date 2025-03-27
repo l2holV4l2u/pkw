@@ -26,7 +26,7 @@ function ResponseFieldHandler({ val }: { val: ResType }) {
   }
 }
 
-export function ResponseViwer({
+export function ResViewer({
   res,
   form,
 }: {

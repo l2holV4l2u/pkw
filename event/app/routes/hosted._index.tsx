@@ -1,12 +1,12 @@
-import { Button, Card, EventCard } from "@/components/ui";
+import { Card, EventCard } from "@/components/ui";
 import { Link, useLoaderData } from "@remix-run/react";
-import { prisma } from "@utils/functions/prisma";
 import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
-import { convertDate } from "@utils/functions/misc";
+import { getEvents, convertDate } from "@utils/functions";
 
 export async function loader() {
-  return prisma.event.findMany();
+  const { events } = await getEvents();
+  return events;
 }
 
 export default function EventIndex() {

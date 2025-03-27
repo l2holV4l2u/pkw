@@ -5,6 +5,7 @@ import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
 import { EventCard } from "@components/ui";
 import { UserSchemaType } from "@types";
+import { convertDate } from "@utils/functions";
 
 export async function loader() {
   return prisma.event.findMany();
@@ -22,14 +23,6 @@ export async function action({ request }: LoaderFunctionArgs) {
   });
 
   return new Response(null, { status: 200 });
-}
-
-function convertDate(date: string) {
-  return new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 export default function Index() {

@@ -1,24 +1,17 @@
 import { useActionData, Form, Link, redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
-import { PrismaClient } from "@prisma/client";
 import { useState } from "react";
 import { Input } from "@components/ui";
 import cookie from "cookie";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
-
-type ActionData = {
-  success?: string;
-  error?: string;
-};
+import { createUser, getUserByEmail } from "@utils/functions";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const confirmPassword = formData.get("confirm") as string;
-  const fullname = formData.get("full") as string;
+  const name = formData.get("full") as string;
   if (!email || !password || !confirmPassword) {
     return new Response(JSON.stringify({ error: "All fields are required." }));
   }
@@ -26,14 +19,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return new Response(JSON.stringify({ error: "Passwords do not match." }));
   }
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await getUserByEmail(email);
     if (existingUser) {
       return new Response("Email already in use.");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: { name: fullname, email, password: hashedPassword },
-    });
+    const { user } = await createUser(name, email, hashedPassword);
     const cookieHeader = cookie.serialize("id", user.id, {
       maxAge: 60 * 60 * 24 * 365 * 999,
       path: "/",
@@ -51,7 +42,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
-  const actionData = useActionData<ActionData>();
+  const actionData = useActionData<{
+    success?: string;
+    error?: string;
+  }>();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
