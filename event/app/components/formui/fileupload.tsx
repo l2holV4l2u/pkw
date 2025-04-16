@@ -2,7 +2,8 @@ import FuLayout from "./fulayout";
 import { EventContext } from "@contexts";
 import { useContext, useEffect, useState } from "react";
 import { ResFileType } from "@types";
-import { Card, Input } from "@components/ui";
+import { Input } from "@components/customui/input";
+import { Card } from "@components/customui/card";
 
 export function FileUpload({ index }: { index: number }) {
   const { res, setRes, mode } = useContext(EventContext);

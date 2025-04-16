@@ -11,10 +11,11 @@ import {
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import "./tailwind.css";
 import cookie from "cookie";
-import { Sidebar } from "@/components/layouts";
 import { UserSchemaType } from "@types";
 import { UserProvider } from "@contexts";
 import { getUserById } from "@utils/functions/user";
+import { SidebarProvider } from "@components/ui/sidebar";
+import { AppSidebar } from "@components/section/appsidebar";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -67,13 +68,15 @@ export default function App() {
   const location = useLocation();
   const isAuthRoute = location.pathname.includes("/authentication");
   return (
-    <UserProvider user={user}>
-      <div className="flex min-h-screen bg-background">
-        {!isAuthRoute && <Sidebar />}
-        <div className={`flex-1 min-h-screen p-2 ${!isAuthRoute && "ml-64"}`}>
-          <Outlet />
+    <SidebarProvider>
+      <UserProvider user={user}>
+        <div className="flex min-h-screen bg-background w-full">
+          {!isAuthRoute && <AppSidebar />}
+          <div className="flex-1 p-2">
+            <Outlet />
+          </div>
         </div>
-      </div>
-    </UserProvider>
+      </UserProvider>
+    </SidebarProvider>
   );
 }

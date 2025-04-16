@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "@components/ui/button";
 
 export function SegmentedControl({
   options,
@@ -19,8 +19,7 @@ export function SegmentedControl({
           >
             {selected == index ? (
               <Button
-                key={opt}
-                type="bordered"
+                variant={"outline"}
                 className="w-full bg-white h-full font-semibold rounded-xl"
               >
                 {opt}

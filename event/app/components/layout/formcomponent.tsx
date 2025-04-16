@@ -1,11 +1,9 @@
-import {
-  FileUpload,
-  MultipleChoice,
-  Section,
-  Checkbox,
-  Date,
-  QA,
-} from "@components/formui";
+import { Checkbox } from "@components/formui/checkbox";
+import { Date } from "@components/formui/date";
+import { FileUpload } from "@components/formui/fileupload";
+import { MultipleChoice } from "@components/formui/multiplechoice";
+import { QA } from "@components/formui/qa";
+import { Section } from "@components/formui/section";
 
 export function FormComponent({
   type,

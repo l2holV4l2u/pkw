@@ -1,4 +1,5 @@
-import { Breadcrumb } from "@/components/ui";
+import { Breadcrumb } from "@components/customui/breadcrumb";
+import { Card } from "@components/customui/card";
 import React from "react";
 
 export function Layout({
@@ -15,14 +16,14 @@ export function Layout({
   label?: string[];
 }) {
   return (
-    <div
-      className={`p-6 flex flex-col space-y-4 h-full bg-gradient-to-br from-white to-slate-50 rounded-3xl border-2 border-border ${className}`}
+    <Card
+      className={`p-4 space-y-4 w-full h-full bg-gradient-to-br from-white to-slate-50 ${className}`}
     >
       {title && (
         <h1 className="text-2xl font-extrabold text-text-800">{title}</h1>
       )}
       {link && label && <Breadcrumb link={link} label={label} />}
       {children}
-    </div>
+    </Card>
   );
 }

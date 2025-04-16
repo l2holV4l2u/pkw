@@ -1,10 +1,10 @@
 import { useActionData, Form, Link, redirect } from "@remix-run/react";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { useState } from "react";
-import { Input } from "@components/ui";
+import { Input } from "@components/customui/input";
 import cookie from "cookie";
 import bcrypt from "bcryptjs";
-import { createUser, getUserByEmail } from "@utils/functions";
+import { createUser, getUserByEmail } from "@utils/functions/user";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();

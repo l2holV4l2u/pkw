@@ -1,11 +1,11 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "@utils/functions/prisma";
-import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
-import { EventCard } from "@components/ui";
 import { UserSchemaType } from "@types";
-import { convertDate } from "@utils/functions";
+import { EventCard } from "@components/customui/eventcard";
+import { convertDate } from "@utils/functions/misc";
+import { Layout } from "@components/layout/layout";
 
 export async function loader() {
   return prisma.event.findMany();
@@ -28,7 +28,7 @@ export async function action({ request }: LoaderFunctionArgs) {
 export default function Index() {
   const events = useLoaderData<Event[]>();
   return (
-    <Layout title="Active Event">
+    <Layout title="Active Events">
       <div className="grid grid-cols-4 gap-4">
         {events.length === 0 ? (
           <div className="text-gray-500">No active event</div>

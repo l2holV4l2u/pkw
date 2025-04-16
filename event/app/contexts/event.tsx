@@ -1,4 +1,4 @@
-import ResTemp from "@components/layouts/restemp";
+import ResTemp from "@components/layout/restemp";
 import { FormType, ResType } from "@types";
 import { createContext, useState } from "react";
 

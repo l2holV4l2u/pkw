@@ -2,7 +2,7 @@ import FuLayout from "./fulayout";
 import { useContext, useEffect, useState } from "react";
 import { EventContext } from "@contexts";
 import { ResQAType } from "@types";
-import { Input } from "@components/ui";
+import { Input } from "@components/customui/input";
 
 export function QA({ index, type }: { index: number; type: string }) {
   const { mode, res, setRes } = useContext(EventContext);

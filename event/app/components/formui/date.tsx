@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import FuLayout from "./fulayout";
 import { EventContext } from "@contexts";
 import { ResDateType } from "@types";
-import { Input } from "@components/ui";
+import { Input } from "@components/customui/input";
 
 export function Date({ index }: { index: number }) {
   const { res, setRes, mode } = useContext(EventContext);

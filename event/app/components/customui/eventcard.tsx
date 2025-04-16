@@ -1,6 +1,6 @@
 import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
-import { Card } from "./card";
 import { Link } from "@remix-run/react";
+import { Card } from "./card";
 
 export function EventCard({ event }: { event: any }) {
   const { img, name, description, location, date, id } = event;

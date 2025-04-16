@@ -1,4 +1,3 @@
-import { Card, Input, SegmentedControl } from "@/components/ui";
 import { FormElementIcon } from "../formui/icon";
 import {
   DndContext,
@@ -14,6 +13,9 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { FormMCType } from "@types";
 import { RiDraggable } from "react-icons/ri";
+import { Input } from "@components/customui/input";
+import { Card } from "@components/customui/card";
+import { SegmentedControl } from "@components/customui/segmentedcontrol";
 
 function DraggableItem({ childTitle }: { childTitle: string }) {
   const { attributes, listeners, setNodeRef } = useDraggable({

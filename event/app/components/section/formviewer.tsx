@@ -1,11 +1,11 @@
-import { FormComponent } from "@components/layouts";
+import { FormComponent } from "@components/layout/formcomponent";
 import { EventContext } from "@contexts";
 import { DndContext, DragOverEvent, useDroppable } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { useContext } from "react";
 import { FaArrowRight } from "react-icons/fa6";
-import { Card } from "@components/ui";
+import { Card } from "@components/customui/card";
 
 export function FormViewer() {
   const { form, setForm, event, res, mode } = useContext(EventContext);

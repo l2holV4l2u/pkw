@@ -1,25 +1,23 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { EventContext, EventProvider } from "@contexts";
-import { Button, Card, Overlay } from "@components/ui";
-import { Layout, Navbar } from "@components/layouts";
 import { useLoaderData } from "@remix-run/react";
 import { useContext, useState } from "react";
 import { FaPen } from "react-icons/fa";
 import { FiSave } from "react-icons/fi";
 import { FaXmark } from "react-icons/fa6";
 import { FormType } from "@types";
-import {
-  FormBuilder,
-  FormViewer,
-  GeneralInfo,
-  ResViewer,
-} from "@components/sections";
-import {
-  getEventById,
-  getFormById,
-  getResponseById,
-  updateFormById,
-} from "@utils/functions";
+import { Card } from "@components/customui/card";
+import { Overlay } from "@components/customui/overlay";
+import { Button } from "@components/ui/button";
+import { Navbar } from "@components/layout/navbar";
+import { GeneralInfo } from "@components/section/generalinfo";
+import { FormViewer } from "@components/section/formviewer";
+import { FormBuilder } from "@components/section/formbuilder";
+import { ResViewer } from "@components/section/responseviewer";
+import { Layout } from "@components/layout/layout";
+import { getEventById } from "@utils/functions/event";
+import { getFormById, updateFormById } from "@utils/functions/form";
+import { getResponseById } from "@utils/functions/response";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;

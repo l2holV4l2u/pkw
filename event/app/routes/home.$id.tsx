@@ -1,13 +1,15 @@
-import { Layout } from "@components/layouts";
+import { Layout } from "@components/layout/layout";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { FormResType } from "@types";
 import { EventProvider } from "@contexts";
-import { FormViewer } from "@components/sections";
+import { FormViewer } from "@components/section/formviewer";
 import cookie from "cookie";
 import { FaLocationDot, FaRegCalendar } from "react-icons/fa6";
 import { convertDate } from "@utils/functions/misc";
-import { getEventById, getFormById, createResponse } from "@utils/functions";
+import { getEventById } from "@utils/functions/event";
+import { getFormById } from "@utils/functions/form";
+import { createResponse } from "@utils/functions/response";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { id } = params;
@@ -48,7 +50,7 @@ export default function EventInfo() {
       <Layout
         label={["Active Event", event.name]}
         link={["home", "/"]}
-        className="space-y-6 items-center"
+        className="flex flex-col items-center"
       >
         <div className="flex flex-col w-xl gap-6">
           <div className="flex flex-col gap-4">

@@ -1,5 +1,5 @@
 import { Form, Link, redirect, useActionData } from "@remix-run/react";
-import { Input } from "@/components/ui";
+import { Input } from "@components/customui/input";
 import bcrypt from "bcryptjs";
 import { ActionFunctionArgs } from "@remix-run/node";
 import { useState } from "react";

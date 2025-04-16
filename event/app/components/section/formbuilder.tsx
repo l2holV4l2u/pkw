@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { FormSidebar } from "@components/layouts";
+import { FormSidebar } from "@components/layout/formsidebar";
 import { EventContext } from "@contexts";
 import { FaArrowRight } from "react-icons/fa6";
 import { FormViewer } from "./formviewer";

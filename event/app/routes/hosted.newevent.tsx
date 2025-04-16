@@ -1,10 +1,12 @@
-import { useContext } from "react";
-import { EventProvider, EventContext } from "@/contexts";
-import { Layout, Stepper } from "@/components/layouts";
-import { FormBuilder, GeneralInfo } from "@components/sections";
-import { Navigation } from "@/components/layouts";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { createEvent } from "@utils/functions";
+import { EventProvider, EventContext } from "@/contexts";
+import { useContext } from "react";
+import { createEvent } from "@utils/functions/event";
+import { GeneralInfo } from "@components/section/generalinfo";
+import { FormBuilder } from "@components/section/formbuilder";
+import { Layout } from "@components/layout/layout";
+import { Stepper } from "@components/layout/stepper";
+import { Navigation } from "@components/layout/navigation";
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
@@ -35,7 +37,7 @@ export default function NewEvent() {
       <Layout
         label={["Hosted Event", "New Event"]}
         link={["hosted", "newevent"]}
-        className="space-y-6 items-center"
+        className="flex flex-col items-center"
       >
         <Stepper />
         <StepSwitcher />

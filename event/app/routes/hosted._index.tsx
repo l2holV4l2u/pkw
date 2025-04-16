@@ -1,8 +1,10 @@
-import { Card, EventCard } from "@/components/ui";
 import { Link, useLoaderData } from "@remix-run/react";
-import { Layout } from "@/components/layouts";
 import { Event } from "@/types/event";
-import { getEvents, convertDate } from "@utils/functions";
+import { getEvents } from "@utils/functions/event";
+import { Layout } from "@components/layout/layout";
+import { Card } from "@components/customui/card";
+import { EventCard } from "@components/customui/eventcard";
+import { convertDate } from "@utils/functions/misc";
 
 export async function loader() {
   const { events } = await getEvents();

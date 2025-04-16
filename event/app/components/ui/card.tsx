@@ -1,19 +1,18 @@
-export function Card({
-  children,
-  className,
-  clickable,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  clickable?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-xl border-2 border-border shadow-sm space-y-2 relative 
-        ${clickable && "transition hover:scale-[1.02]"} ${className}  
-    `}
-    >
-      {children}
-    </div>
-  );
-}
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+export const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-xl border bg-card text-card-foreground shadow",
+      className
+    )}
+    {...props}
+  />
+));
+Card.displayName = "Card";

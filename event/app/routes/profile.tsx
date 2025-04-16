@@ -1,5 +1,6 @@
-import { Layout } from "@components/layouts";
-import { Button, Input } from "@components/ui";
+import { Input } from "@components/customui/input";
+import { Layout } from "@components/layout/layout";
+import { Button } from "@components/ui/button";
 import { UserContext } from "@contexts";
 import { useFetcher } from "@remix-run/react";
 import { useContext, useState } from "react";
@@ -17,14 +18,11 @@ function ProfileField({ index, formData, setFormData }: any) {
   return (
     <div className="flex justify-between w-full">
       <Input
-        data={
-          formData[fields[index].key] == "undefined"
-            ? "Unknown"
-            : formData[fields[index].key]
-        }
+        data={formData[fields[index].key]}
         setData={(val) =>
           setFormData({ ...formData, [fields[index].key]: val })
         }
+        placeholder="Unknown"
         label={fields[index].label}
         type="text"
       />
